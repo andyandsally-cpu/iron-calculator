@@ -1,7 +1,7 @@
 {
   "name": "Fe+",
-  "short_name": "Iron Calc",
-  "description": "Evidence-based iron modelling and absorption diagnostic tool",
+  "short_name": "Fe+",
+  "description": "Simple Evidence-based iron modelling and absorption diagnostic tool",
   "start_url": "/iron-calculator/",
   "display": "standalone",
   "background_color": "#f8fafc",
