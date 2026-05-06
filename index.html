@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iron Balance Calculator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;font-size:15px;line-height:1.6;padding:1.5rem}
+.app{max-width:720px;margin:0 auto}
+h1{font-size:20px;font-weight:500;margin-bottom:3px}
+.sub{font-size:13px;color:#64748b;margin-bottom:1.5rem}
+.section{margin-bottom:1.25rem}
+.st{font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.2rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.met{background:#f8fafc;border-radius:8px;padding:.65rem .9rem}
+.met-l{font-size:11px;color:#64748b;margin-bottom:3px}
+.met-v{font-size:20px;font-weight:500}
+.met-u{font-size:11px;color:#64748b;margin-left:2px}
+.danger{color:#dc2626}.warning{color:#b45309}.ok{color:#16a34a}.neutral{color:#475569}
+.row{display:grid;grid-template-columns:165px 1fr 74px 22px;align-items:center;gap:8px;margin-bottom:11px}
+.row label{font-size:13px;color:#64748b;line-height:1.3}
+.sw{position:relative}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e2e8f0;border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#3b82f6;cursor:pointer;border:none}
+input[type=range]:disabled{opacity:.35;cursor:not-allowed}
+.rb{position:absolute;top:50%;transform:translateY(-50%);height:4px;border-radius:2px;pointer-events:none;opacity:.25;background:#16a34a}
+.badge{display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600;margin-left:3px}
+.bok{background:#dcfce7;color:#16a34a}.bwarn{background:#fef3c7;color:#b45309}.bhigh{background:#fee2e2;color:#dc2626}
+.ib{width:18px;height:18px;border-radius:50%;border:1px solid #cbd5e1;background:#f8fafc;font-size:10px;font-weight:700;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;user-select:none}
+.tt{display:none;position:absolute;left:24px;top:-4px;width:250px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.5;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.ib:hover .tt,.ib:focus .tt{display:block}
+.tt-d{color:#64748b;margin-bottom:3px}.tt-n{color:#16a34a;font-weight:600;margin-bottom:3px}.tt-s{color:#64748b;font-size:11px}
+.tabs{display:flex;border-bottom:1px solid #e2e8f0;margin-bottom:1rem;gap:0}
+.tab{font-size:13px;padding:7px 16px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:#1e293b;border-bottom-color:#3b82f6;font-weight:500}
+.trow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.5rem}
+.tog{font-size:12px;padding:4px 10px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#f8fafc;color:#64748b;user-select:none}
+.tog.on{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem}
+.pf label{font-size:12px;color:#64748b;display:block;margin-bottom:4px}
+.pf select,.pf input[type=number]{width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b}
+.sb{display:flex;gap:7px;align-items:center;margin-bottom:.9rem;flex-wrap:wrap}
+.sb select{font-size:13px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:7px;flex:1;min-width:120px;background:#fff}
+.sb input[type=text]{font-size:13px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:7px;width:140px;background:#fff}
+button{font-size:13px;padding:5px 12px;cursor:pointer;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#1e293b}
+button:hover{background:#f1f5f9}
+.bp{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.bp:hover{background:#2563eb}
+.ir{display:flex;gap:7px;align-items:center;margin-bottom:6px}
+.ir input{font-size:12px;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff}
+.ar{display:flex;gap:7px;align-items:center;margin-bottom:6px}
+.ar input{font-size:12px;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;background:#fff}
+.note{font-size:12px;color:#64748b;margin-top:6px;line-height:1.5}
+.rl{display:flex;gap:12px;font-size:11px;color:#64748b;margin-top:-4px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.rl span{display:flex;align-items:center;gap:4px}
+.rsw{width:20px;height:4px;border-radius:2px;opacity:.35}
+.eg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.eb{font-size:12px;padding:9px 10px;cursor:pointer;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;color:#1e293b;text-align:center;line-height:1.4}
+.eb:hover{background:#f1f5f9}
+.ca{width:100%;font-size:12px;font-family:monospace;border:1px solid #e2e8f0;border-radius:8px;padding:10px;min-height:160px;resize:vertical;color:#1e293b;background:#f8fafc;margin-top:8px;display:none}
+.sm{font-size:12px;color:#16a34a;margin-top:6px;display:none;font-weight:500}
+.analysis-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.6;display:none}
+.analysis-box.warn{background:#fefce8;border-color:#fde047}
+.analysis-box.danger-box{background:#fef2f2;border-color:#fecaca}
+.analysis-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+@media(max-width:520px){.row{grid-template-columns:130px 1fr 60px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
+@media print{body{background:#fff;padding:.5rem}.tabs,.sb,.trow,.eg{display:none!important}.card{border:1px solid #ccc!important;break-inside:avoid}.ca{display:block!important;border:1px solid #ccc}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Iron balance calculator</h1>
+<p class="sub">Evidence-based iron modelling · Multi-patient · Session storage · Clinical analysis</p>
+
+<div class="section">
+<div class="st">Session</div>
+<div class="card">
+  <div class="sb">
+    <select id="sessionSelect" onchange="loadSession(this.value)"><option value="">— new patient —</option></select>
+    <input type="text" id="sessionName" placeholder="Patient name / ID" value="Patient 1">
+    <button onclick="saveSession()">Save</button>
+    <button onclick="deleteSession()">Delete</button>
+  </div>
+  <div class="pg">
+    <div class="pf"><label>Age</label><input type="number" id="patAge" min="12" max="85" value="28" onchange="applyDefaults();calc()"></div>
+    <div class="pf"><label>Menopausal status</label>
+      <select id="menopause" onchange="applyDefaults();calc()">
+        <option value="pre">Pre-menopausal</option>
+        <option value="peri">Peri-menopausal</option>
+        <option value="post">Post-menopausal</option>
+      </select>
+    </div>
+  </div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:6px">Known conditions — toggle to adjust relevant defaults:</div>
+  <div class="trow">
+    <div class="tog" id="tog-endo" onclick="toggleCond('endo')">Endometriosis</div>
+    <div class="tog" id="tog-adeno" onclick="toggleCond('adeno')">Adenomyosis</div>
+    <div class="tog" id="tog-coeliac" onclick="toggleCond('coeliac')">Coeliac disease</div>
+    <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
+    <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
+    <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
+  </div>
+  <div class="note" id="condNote"></div>
+</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('model')">Balance model</button>
+  <button class="tab" onclick="showTab('actual')">Actual results</button>
+  <button class="tab" onclick="showTab('export')">Analysis &amp; export</button>
+</div>
+
+<div id="tab-model">
+<div class="rl">
+  <span><span class="rsw" style="background:#16a34a"></span>Normal range</span>
+  <span><span class="rsw" style="background:#b45309"></span>Outside normal</span>
+  <span>· hover ? for source and context</span>
+</div>
+
+<div class="section">
+<div class="st">Menstrual blood loss</div>
+<div class="card">
+  <div class="row">
+    <label>Cycle length</label>
+    <div class="sw"><div class="rb" id="rb-cycleLen"></div><input type="range" id="cycleLen" min="21" max="90" value="28" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="cycleLenV" style="font-size:13px;font-weight:500">28d</span><span class="badge" id="bcy"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 28 days (UK average menstrual cycle)</div><div class="tt-n">Normal: 21–35 days</div><div class="tt-s">Source: NICE CG44. Extended cycling regimens (e.g. 63-day tricycling for endometriosis management) can be entered here. PCOS toggle extends default to 35 days.</div></div></div>
+  </div>
+  <div class="row">
+    <label>Bleeding days / cycle</label>
+    <div class="sw"><div class="rb" id="rb-bleedDays"></div><input type="range" id="bleedDays" min="0" max="40" value="5" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="bleedDaysV" style="font-size:13px;font-weight:500">5d</span><span class="badge" id="bbd"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 5 days (UK average). Endometriosis/adenomyosis toggle increases default to 9 days.</div><div class="tt-n">Normal: 3–7 days per cycle</div><div class="tt-s">Source: NICE CG44. Heavy menstrual bleeding (HMB) is defined as >7 days duration or >80ml per cycle. Prolonged bleeding is the primary driver of iron depletion in menstruating women.</div></div></div>
+  </div>
+  <div class="row">
+    <label>Flow intensity</label>
+    <div class="sw"><div class="rb" id="rb-flowInt"></div><input type="range" id="flowInt" min="1" max="5" value="2" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="flowIntV" style="font-size:13px;font-weight:500">Light</span><span class="badge" id="bfi"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: Light-Medium. Endometriosis/adenomyosis toggle increases to Heavy.</div><div class="tt-n">Normal: 1–3 (Light to Medium)</div><div class="tt-s">Approximate volumes per cycle: Very light ~10ml, Light ~20ml, Medium ~45ml, Heavy ~80ml, Very heavy ~120ml+. Clot passage typically indicates Heavy or above. HMB threshold: >80ml. Source: BSH menorrhagia guidelines.</div></div></div>
+  </div>
+  <div class="note" id="bleedNote"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="st">Iron intake &amp; absorption</div>
+<div class="card">
+  <div class="row">
+    <label>Dietary iron (mg/day)</label>
+    <div class="sw"><div class="rb" id="rb-dietIron"></div><input type="range" id="dietIron" min="0" max="20" value="10" step=".5" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="dietIronV" style="font-size:13px;font-weight:500">10mg</span><span class="badge" id="bdi"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10 mg/day (average UK mixed diet). Vegetarian/vegan toggle reduces to 8 mg.</div><div class="tt-n">Normal intake: 8–15 mg/day. NHS recommended for women 19–50: 14.8 mg/day</div><div class="tt-s">Source: NDNS (National Diet & Nutrition Survey) UK. Red meat, fortified cereals, leafy greens are main sources. Vegetarian/vegan diets typically 8–10 mg/day from non-haem sources.</div></div></div>
+  </div>
+  <div class="row">
+    <label>Dietary absorption %</label>
+    <div class="sw"><div class="rb" id="rb-dietAbs"></div><input type="range" id="dietAbs" min="1" max="30" value="10" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="dietAbsV" style="font-size:13px;font-weight:500">10%</span><span class="badge" id="bda"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (typical iron-deficient UK female, mixed diet). Coeliac toggle reduces to 5%. Vegetarian toggle reduces to 7%.</div><div class="tt-n">Normal range: 5–20%</div><div class="tt-s">Source: Hallberg et al, EJCN. Haem iron (meat): 15–35%. Non-haem iron: 2–8% baseline, rises to ~20% in iron deficiency. Inhibited by tea, coffee, calcium. Enhanced by vitamin C. Coeliac disease substantially impairs absorption.</div></div></div>
+  </div>
+  <div class="row">
+    <label>Oral supplement (mg/day)</label>
+    <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="200" value="0" step="5" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="suppDoseV" style="font-size:13px;font-weight:500">0mg</span><span class="badge" id="bsd"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 0 mg. Set to 0 automatically when oral iron intolerance is toggled.</div><div class="tt-n">Typical prescribed dose: 65–200 mg elemental iron/day</div><div class="tt-s">Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Alternate-day dosing shown to improve absorption vs daily by avoiding hepcidin rebound. Source: Moretti et al, Lancet Haematology 2015.</div></div></div>
+  </div>
+  <div class="row">
+    <label>Supplement absorption %</label>
+    <div class="sw"><div class="rb" id="rb-suppAbs"></div><input type="range" id="suppAbs" min="1" max="40" value="10" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="suppAbsV" style="font-size:13px;font-weight:500">10%</span><span class="badge" id="bsa"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (daily dosing). Increase to 15–20% for alternate-day dosing.</div><div class="tt-n">Typical range: 5–20%</div><div class="tt-s">Source: Moretti et al, Lancet Haematology. Daily dosing triggers hepcidin rise, suppressing next-day absorption. Alternate-day avoids this. Bisglycinate and liquid formulations may absorb slightly better. Coeliac reduces absorption further.</div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="st">Starting ferritin &amp; IV infusions</div>
+<div class="card">
+  <div class="row">
+    <label>Starting ferritin (µg/L)</label>
+    <div class="sw"><div class="rb" id="rb-startFerr"></div><input type="range" id="startFerr" min="5" max="300" value="25" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="startFerrV" style="font-size:13px;font-weight:500">25</span><span class="badge" id="bsf"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 25 µg/L. Set to the patient's most recent measured ferritin result.</div><div class="tt-n">Optimal for menstruating women: 50–150 µg/L</div><div class="tt-s">Source: BSH/NICE. Lab lower limit ≈13 µg/L. Symptoms (fatigue, brain fog, poor exercise tolerance) typically appear below 30–50 µg/L even without anaemia. Post-IV infusion ferritin typically rises to 150–250 µg/L. Model uses 1 µg/L ≈ 8 mg stored iron.</div></div></div>
+  </div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:6px">IV infusions — month from start, dose in mg:</div>
+  <div id="infusionList"></div>
+  <button onclick="addInfusion()">+ Add infusion</button>
+  <p class="note">Typical NHS infusion: 500–1000 mg (Ferinject / ferric carboxymaltose, or iron isomaltoside). Raises ferritin by approx 60–125 µg/L per 1000 mg in absence of ongoing significant loss. Source: Ferinject SPC / NICE CG189.</p>
+</div>
+</div>
+
+<div class="section">
+<div class="st">Monthly iron balance</div>
+<div class="grid3" id="metricsGrid"></div>
+<div class="analysis-box" id="analysisBox"><div class="analysis-title" id="analysisTitle"></div><div id="analysisText"></div></div>
+</div>
+</div>
+
+<div id="tab-actual" style="display:none">
+<div class="section">
+<div class="st">Actual ferritin results</div>
+<div class="card">
+  <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter measured ferritin values to back-calculate real net loss rate and implied absorption. Useful for verifying whether model assumptions match reality.</p>
+  <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:150px">Label / date</span><span style="width:80px">Ferritin µg/L</span></div>
+  <div id="actualList"></div>
+  <button onclick="addActual()">+ Add result</button>
+  <div class="note" id="derivedNote"></div>
+</div>
+</div>
+<div class="section"><div class="st">Derived analysis</div><div class="grid2" id="derivedGrid"></div></div>
+</div>
+
+<div id="tab-export" style="display:none">
+<div class="section">
+<div class="st">Clinical analysis &amp; export</div>
+<div class="card">
+  <div class="eg">
+    <div class="eb" onclick="copyGPSection()">📋 Copy GP letter section<br><span style="font-size:11px;color:#64748b">Paste into comprehensive letter</span></div>
+    <div class="eb" onclick="copySummary()">📄 Copy plain summary<br><span style="font-size:11px;color:#64748b">For notes or records</span></div>
+    <div class="eb" onclick="window.print()">🖨 Print / save PDF<br><span style="font-size:11px;color:#64748b">Browser print dialog</span></div>
+  </div>
+  <div class="sm" id="copyMsg">Copied to clipboard</div>
+  <textarea class="ca" id="copyArea" readonly></textarea>
+</div>
+</div>
+</div>
+
+<div class="section" style="margin-top:.25rem">
+<div class="st">Ferritin trajectory — 12 months</div>
+<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+</div>
+
+<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+var infusions=[{month:0,dose:1000}];
+var actuals=[{label:'',ferritin:0},{label:'',ferritin:0}];
+var chartInst=null;
+var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false};
+var flowLabels=['Very light','Light','Medium','Heavy','Very heavy'];
+var flowMl=[10,20,45,80,120];
+var lc={};
+
+var sdefs={
+  cycleLen:{lo:21,hi:35,min:21,max:90},
+  bleedDays:{lo:3,hi:7,min:0,max:40},
+  flowInt:{lo:1,hi:3,min:1,max:5},
+  dietIron:{lo:8,hi:15,min:0,max:20},
+  dietAbs:{lo:5,hi:20,min:1,max:30},
+  suppDose:{lo:0,hi:200,min:0,max:200},
+  suppAbs:{lo:5,hi:20,min:1,max:40},
+  startFerr:{lo:50,hi:150,min:5,max:300}
+};
+
+function applyDefaults(){
+  var age=+document.getElementById('patAge').value||28;
+  var meno=document.getElementById('menopause').value;
+  var post=meno==='post';
+  ['bleedDays','flowInt','cycleLen'].forEach(function(id){document.getElementById(id).disabled=post;});
+  if(!post){
+    sv('cycleLen',conds.pcos?35:meno==='peri'?35:28);
+    sv('bleedDays',conds.endo||conds.adeno?9:meno==='peri'?6:5);
+    sv('flowInt',conds.endo||conds.adeno?3:2);
+  }
+  sv('dietIron',conds.vegan?8:10);
+  sv('dietAbs',conds.coeliac?5:conds.vegan?7:10);
+  if(conds['oral-intol'])sv('suppDose',0);
+  updateCondNote();
+}
+function sv(id,v){var el=document.getElementById(id);if(el&&!el.disabled)el.value=v;}
+function gv(id){return +document.getElementById(id).value||0;}
+
+function toggleCond(c){
+  conds[c]=!conds[c];
+  document.getElementById('tog-'+c).classList.toggle('on',conds[c]);
+  applyDefaults();calc();
+}
+function updateCondNote(){
+  var n=[];
+  if(conds.endo)n.push('Endometriosis: bleeding defaults increased');
+  if(conds.adeno)n.push('Adenomyosis: bleeding defaults increased');
+  if(conds.coeliac)n.push('Coeliac: absorption reduced to 5%');
+  if(conds['oral-intol'])n.push('Oral iron intolerance: supplement set to 0');
+  if(conds.pcos)n.push('PCOS: cycle length extended');
+  if(conds.vegan)n.push('Vegetarian/vegan: dietary iron and absorption adjusted');
+  document.getElementById('condNote').textContent=n.join(' · ');
+}
+
+function updateBadge(elId,val,lo,hi){
+  var b=document.getElementById(elId);if(!b)return;
+  if(val>=lo&&val<=hi){b.className='badge bok';b.textContent='normal';}
+  else if(val<lo){b.className='badge bwarn';b.textContent='below normal';}
+  else{b.className='badge bhigh';b.textContent='above normal';}
+}
+function updateBands(){
+  Object.keys(sdefs).forEach(function(id){
+    var inp=document.getElementById(id);var band=document.getElementById('rb-'+id);
+    if(!inp||!band)return;
+    var def=sdefs[id];
+    var pLo=Math.max(0,(def.lo-def.min)/(def.max-def.min)*100);
+    var pHi=Math.min(100,(def.hi-def.min)/(def.max-def.min)*100);
+    band.style.left=pLo+'%';band.style.width=(pHi-pLo)+'%';
+  });
+}
+
+function addInfusion(){infusions.push({month:1,dose:1000});renderInfusions();calc();}
+function removeInfusion(i){infusions.splice(i,1);renderInfusions();calc();}
+function renderInfusions(){
+  var el=document.getElementById('infusionList');el.innerHTML='';
+  infusions.forEach(function(inf,i){
+    el.innerHTML+='<div class="ir">'+
+      '<span style="font-size:12px;color:#64748b">Month</span>'+
+      '<input type="number" min="0" max="24" value="'+inf.month+'" style="width:50px" onchange="infusions['+i+'].month=+this.value;calc()">'+
+      '<span style="font-size:12px;color:#64748b">Dose (mg)</span>'+
+      '<input type="number" min="100" max="2000" step="100" value="'+inf.dose+'" style="width:70px" onchange="infusions['+i+'].dose=+this.value;calc()">'+
+      '<button onclick="removeInfusion('+i+')" style="padding:3px 8px">×</button></div>';
+  });
+}
+function addActual(){actuals.push({label:'',ferritin:0});renderActuals();}
+function removeActual(i){actuals.splice(i,1);renderActuals();calcDerived();}
+function renderActuals(){
+  var el=document.getElementById('actualList');el.innerHTML='';
+  actuals.forEach(function(a,i){
+    el.innerHTML+='<div class="ar">'+
+      '<input type="text" placeholder="Label / date" value="'+a.label+'" style="width:150px" oninput="actuals['+i+'].label=this.value;calcDerived()">'+
+      '<input type="number" min="0" max="500" value="'+(a.ferritin||'')+'" style="width:70px" placeholder="µg/L" oninput="actuals['+i+'].ferritin=+this.value;calcDerived()">'+
+      '<button onclick="removeActual('+i+')" style="padding:3px 8px">×</button></div>';
+  });
+}
+
+function f2mg(f){return f*8;}
+function mg2f(m){return m/8;}
+function rnd(n){return Math.round(n);}
+function sign(n){return n>=0?'+':'';}
+
+function calc(){
+  var meno=document.getElementById('menopause').value;
+  var post=meno==='post';
+  var cycleLen=gv('cycleLen')||28;
+  var bleedDays=post?0:gv('bleedDays');
+  var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
+  var dietIron=gv('dietIron');
+  var dietAbs=gv('dietAbs')/100;
+  var suppDose=gv('suppDose');
+  var suppAbs=gv('suppAbs')/100;
+  var startFerr=gv('startFerr')||25;
+
+  document.getElementById('cycleLenV').textContent=post?'N/A':cycleLen+'d';
+  document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
+  document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
+  document.getElementById('dietIronV').textContent=dietIron+'mg';
+  document.getElementById('dietAbsV').textContent=rnd(dietAbs*100)+'%';
+  document.getElementById('suppDoseV').textContent=suppDose+'mg';
+  document.getElementById('suppAbsV').textContent=rnd(suppAbs*100)+'%';
+  document.getElementById('startFerrV').textContent=startFerr;
+
+  updateBadge('bcy',cycleLen,21,35);
+  updateBadge('bbd',bleedDays,3,7);
+  updateBadge('bfi',gv('flowInt'),1,3);
+  updateBadge('bdi',dietIron,8,15);
+  updateBadge('bda',rnd(dietAbs*100),5,20);
+  updateBadge('bsd',suppDose,0,200);
+  updateBadge('bsa',rnd(suppAbs*100),5,20);
+  updateBadge('bsf',startFerr,50,150);
+  updateBands();
+
+  var mlPerCycle=post?0:flowMl[flowIdx]*(bleedDays/5);
+  var mgLostCycle=mlPerCycle*0.5;
+  var cyclesPerMonth=post?0:30/cycleLen;
+  var mgLostMonth=mgLostCycle*cyclesPerMonth;
+  var mgAbsMonth=(dietIron*dietAbs+suppDose*suppAbs)*30;
+  var netMonth=mgAbsMonth-mgLostMonth;
+  var ferrChangePM=mg2f(netMonth);
+
+  document.getElementById('bleedNote').textContent=post?
+    'Post-menopausal: no menstrual iron loss included in model.':
+    'Estimated blood loss: '+rnd(mlPerCycle)+' ml/cycle · '+rnd(mgLostCycle)+' mg iron/cycle · '+rnd(mgLostMonth)+' mg/month';
+
+  var lossClass=mgLostMonth>40?'danger':mgLostMonth>20?'warning':'ok';
+  var netClass=netMonth<-5?'danger':netMonth<5?'warning':'ok';
+  document.getElementById('metricsGrid').innerHTML=
+    mc('Iron lost/month',rnd(mgLostMonth),'mg',lossClass)+
+    mc('Iron absorbed/month',rnd(mgAbsMonth),'mg','ok')+
+    mc('Net balance/month',sign(netMonth)+rnd(netMonth),'mg',netClass);
+
+  var months=13;var ferrLine=[startFerr];
+  for(var m=1;m<months;m++){
+    var inf=0;infusions.forEach(function(iv){if(rnd(iv.month)===m)inf+=mg2f(iv.dose);});
+    ferrLine.push(Math.max(0,+(ferrLine[m-1]+ferrChangePM+inf).toFixed(1)));
+  }
+
+  lc={cycleLen,bleedDays,flowIdx,dietIron,dietAbs:rnd(dietAbs*100),suppDose,suppAbs:rnd(suppAbs*100),
+    startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),
+    ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
+    m12ferr:ferrLine[12]};
+
+  updateAnalysis();
+
+  var labels=Array.from({length:months},function(_,i){return i===0?'Start':'M'+i;});
+  var ds=[
+    {label:'Projected ferritin',data:ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3},
+    {label:'Optimal (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Minimum (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+  ];
+  var va=actuals.filter(function(a){return a.ferritin>0;});
+  if(va.length){
+    var ad=new Array(months).fill(null);
+    va.forEach(function(a,i){if(i<months)ad[i]=a.ferritin;});
+    ds.push({label:'Actual results',data:ad,borderColor:'#ea580c',borderWidth:0,pointRadius:7,showLine:false,fill:false});
+  }
+  if(chartInst)chartInst.destroy();
+  chartInst=new Chart(document.getElementById('ferrChart'),{
+    type:'line',data:{labels,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?c.raw+' µg/L':'n/a');}}}},
+      scales:{y:{min:0,max:Math.max(300,rnd(Math.max.apply(null,ferrLine)*1.2)),title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}
+  });
+  document.getElementById('chartLegend').innerHTML=
+    li('#3b82f6','Projected ferritin')+li('#16a34a','Optimal (50 µg/L)',true)+li('#dc2626','Minimum (30 µg/L)',true)+
+    (va.length?li('#ea580c','Actual results'):'');
+  calcDerived();
+}
+
+function updateAnalysis(){
+  var box=document.getElementById('analysisBox');
+  var title=document.getElementById('analysisTitle');
+  var text=document.getElementById('analysisText');
+  var c=lc;
+  var lines=[];
+  var severity='ok';
+
+  if(c.meno==='post'){
+    lines.push('Post-menopausal status: menstrual iron losses are not a significant factor. Iron balance is driven entirely by dietary intake and absorption.');
+    if(c.netMonth<-3){lines.push('Net monthly deficit of '+Math.abs(c.netMonth)+' mg despite no menstrual losses suggests dietary intake or absorption may be insufficient. Investigation of underlying cause warranted.');severity='warn';}
+    else{lines.push('Iron balance appears adequate. Routine monitoring at annual intervals is appropriate unless symptoms develop.');}
+  } else {
+    var severe=c.mgLostMonth>60;var moderate=c.mgLostMonth>30&&!severe;
+    if(c.mgLostMonth>80){lines.push('Very high monthly iron loss ('+c.mgLostMonth+' mg/month). This significantly exceeds what dietary intake and supplementation can typically replace. At this rate, ferritin is expected to reach '+rnd(c.m12ferr)+' µg/L within 12 months without intervention.');severity='danger';}
+    else if(c.mgLostMonth>40){lines.push('Elevated monthly iron loss ('+c.mgLostMonth+' mg/month). This exceeds typical dietary absorption capacity (10–15 mg/month from diet alone). Supplementation or bleeding control is likely required to maintain stores.');severity='warn';}
+    else if(c.mgLostMonth>20){lines.push('Moderate monthly iron loss ('+c.mgLostMonth+' mg/month). Adequate dietary intake with good absorption may be sufficient, but monitoring is warranted.');}
+    else{lines.push('Iron loss is within the range that a well-balanced diet can typically compensate for.');}
+
+    if(c.netMonth<-10){
+      lines.push('Monthly deficit of '+Math.abs(c.netMonth)+' mg means current intake cannot keep pace with losses. Ferritin is projected to '+rnd(c.m12ferr)+' µg/L over 12 months.');
+      if(c.suppDose===0&&!conds['oral-intol']){lines.push('Consider: oral iron supplementation (alternate-day dosing may improve absorption and tolerability — Moretti et al, Lancet Haematology 2015, NICE CG189).');}
+      if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion is indicated per NICE CG189 where oral supplementation is insufficient or contraindicated. A typical 1000 mg infusion (Ferinject) would be expected to raise ferritin by approximately '+rnd(mg2f(1000))+' µg/L in the absence of ongoing loss.');}
+      lines.push('Addressing the underlying bleeding cause (e.g. gynaecological investigation, hormonal management) is the most effective long-term approach to stabilising iron stores.');
+      severity='danger';
+    } else if(c.netMonth<0){
+      lines.push('Small monthly deficit ('+Math.abs(c.netMonth)+' mg/month). Stores are slowly depleting. Optimising diet and absorption — vitamin C with meals, reducing tea/coffee at mealtimes — may be sufficient. Monitor ferritin at 3-month intervals.');
+      severity='warn';
+    } else if(c.netMonth<5){
+      lines.push('Iron balance is marginally positive. Stores should stabilise. Monitor ferritin at 3–6 month intervals to confirm trend.');
+    } else {
+      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to rise to approximately '+rnd(c.m12ferr)+' µg/L over 12 months. Recheck ferritin in 3 months to confirm stores are recovering as projected.');
+    }
+
+    if(c.startFerr<30){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 30 µg/L threshold for depleted stores (BSH/NICE). Symptoms of iron deficiency (fatigue, brain fog, poor exercise tolerance) are likely even without anaemia.');}
+    else if(c.startFerr<50){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 50 µg/L level associated with optimal function in menstruating women.');}
+  }
+
+  box.style.display='block';
+  box.className='analysis-box'+(severity==='danger'?' danger-box':severity==='warn'?' warn':'');
+  title.textContent=severity==='danger'?'Clinical analysis — action recommended':severity==='warn'?'Clinical analysis — monitor closely':'Clinical analysis — stable';
+  text.innerHTML=lines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
+}
+
+function mc(label,value,unit,cls){
+  return '<div class="met"><div class="met-l">'+label+'</div>'+
+    '<div class="met-v '+(cls||'")>'+value+'<span class="met-u">'+unit+'</span></div></div>';
+}
+function li(color,label,dashed){
+  var s=dashed?'border-top:2px dashed '+color+';width:14px;height:0;display:inline-block;':'display:inline-block;background:'+color+';width:10px;height:10px;border-radius:2px;';
+  return '<span style="display:flex;align-items:center;gap:5px"><span style="'+s+'"></span>'+label+'</span>';
+}
+
+function calcDerived(){
+  var valid=actuals.filter(function(a){return a.ferritin>0;});
+  if(valid.length<2){document.getElementById('derivedNote').textContent='Enter at least 2 ferritin results to derive real absorption rate.';document.getElementById('derivedGrid').innerHTML='';return;}
+  document.getElementById('derivedNote').textContent='';
+  var first=valid[0],last=valid[valid.length-1];
+  var ferrDiff=last.ferritin-first.ferritin;
+  var mgDiff=f2mg(ferrDiff);
+  var infMg=0;infusions.forEach(function(iv){infMg+=iv.dose;});
+  var cycleLen=gv('cycleLen')||28;
+  var bleedDays=gv('bleedDays');
+  var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
+  var mlPerCycle=flowMl[flowIdx]*(bleedDays/5);
+  var mgLostCycle=mlPerCycle*0.5;
+  var months=valid.length-1||1;
+  var estLoss=mgLostCycle*(months*30/cycleLen);
+  var impliedAbs=(mgDiff+estLoss-infMg);
+  var impliedApm=impliedAbs/months;
+  var dietIron=gv('dietIron');var suppDose=gv('suppDose');
+  var totalMonthly=(dietIron+suppDose)*30;
+  var impliedRate=totalMonthly>0?(impliedApm/totalMonthly*100):null;
+  var lc2=estLoss/months>40?'danger':estLoss/months>20?'warning':'ok';
+  document.getElementById('derivedGrid').innerHTML=
+    mc('Ferritin change',sign(ferrDiff)+rnd(ferrDiff),'µg/L',ferrDiff>=0?'ok':'danger')+
+    mc('Net iron change',sign(mgDiff)+rnd(mgDiff),'mg',mgDiff>=0?'ok':'danger')+
+    mc('Est. loss in period',rnd(estLoss),'mg',lc2)+
+    mc('Implied absorption/month',rnd(impliedApm),'mg',impliedApm>0?'ok':'danger')+
+    (impliedRate!=null?mc('Implied absorption rate',rnd(impliedRate),'%',impliedRate>15?'ok':impliedRate>5?'warning':'danger'):'')+
+    mc('Infusions in period',rnd(infMg),'mg','neutral');
+}
+
+function buildGPText(){
+  var c=lc;var nm=document.getElementById('sessionName').value||'Patient';
+  var condList=Object.keys(conds).filter(function(k){return conds[k];}).join(', ')||'none documented';
+  var lines=['IRON BALANCE ANALYSIS','Patient: '+nm,'Generated: '+new Date().toLocaleDateString('en-GB'),'','PARAMETERS USED:',
+    'Cycle length: '+(c.meno==='post'?'post-menopausal':c.cycleLen+' days'),
+    'Bleeding days per cycle: '+c.bleedDays+' days (clinical normal: 3–7 days)',
+    'Estimated menstrual blood loss: '+c.mlPerCycle+' ml/cycle = '+c.mgLostCycle+' mg iron/cycle',
+    'Monthly iron loss: '+c.mgLostMonth+' mg/month',
+    'Dietary iron: '+c.dietIron+' mg/day at '+c.dietAbs+'% absorption',
+    'Oral supplement: '+c.suppDose+' mg/day at '+c.suppAbs+'% absorption',
+    'Total iron absorbed per month: '+c.mgAbsMonth+' mg/month',
+    'Net monthly balance: '+sign(c.netMonth)+c.netMonth+' mg/month',
+    'Starting ferritin: '+c.startFerr+' µg/L',
+    '12-month projected ferritin: '+rnd(c.m12ferr)+' µg/L',
+    'Known conditions: '+condList,''];
+
+  lines.push('CLINICAL ANALYSIS:');
+  var c2=lc;
+  if(c2.meno==='post'){
+    lines.push('Post-menopausal status: menstrual losses are not a factor.');
+    lines.push(c2.netMonth<-3?'Net deficit of '+Math.abs(c2.netMonth)+' mg/month despite no menstrual losses. Dietary intake or absorption may be insufficient.':'Iron balance appears adequate for post-menopausal status.');
+  } else {
+    lines.push('Monthly iron loss of '+c2.mgLostMonth+' mg (estimated from '+c2.bleedDays+' bleeding days at '+flowLabels[c2.flowIdx]+' flow).');
+    if(c2.netMonth<0){
+      lines.push('Monthly deficit: '+Math.abs(c2.netMonth)+' mg/month. Current intake cannot maintain stores at this loss rate.');
+      lines.push('Projected ferritin in 12 months without intervention: '+rnd(c2.m12ferr)+' µg/L.');
+      if(conds['oral-intol']){lines.push('Oral iron intolerance documented. IV iron infusion is indicated (NICE CG189).');}
+      else if(c2.suppDose===0){lines.push('No current oral supplementation. Alternate-day oral iron may be considered (Moretti et al, Lancet Haematology 2015).');}
+      lines.push('Addressing the underlying bleeding source is the most effective long-term approach.');
+    } else {
+      lines.push('Iron balance is currently positive ('+sign(c2.netMonth)+c2.netMonth+' mg/month). Ferritin projected to reach '+rnd(c2.m12ferr)+' µg/L in 12 months.');
+      lines.push('Monitor ferritin at 3-month intervals to confirm stores are recovering.');
+    }
+    if(c2.startFerr<30)lines.push('Current ferritin ('+c2.startFerr+' µg/L) is below the 30 µg/L depleted stores threshold (BSH/NICE). Treatment is indicated.');
+  }
+  lines.push('','[AI-assisted estimate based on population averages and patient-reported inputs. For clinical discussion only — not a substitute for clinical assessment.]');
+  return lines.join('\n');
+}
+
+function buildSummary(){
+  var c=lc;var nm=document.getElementById('sessionName').value||'Patient';
+  return 'Iron Balance Summary — '+nm+' — '+new Date().toLocaleDateString('en-GB')+'\n'+
+    'Ferritin: '+c.startFerr+' µg/L | Loss: '+c.mgLostMonth+' mg/month | Absorbed: '+c.mgAbsMonth+' mg/month | Net: '+sign(c.netMonth)+c.netMonth+' mg/month | 12-month projection: '+rnd(c.m12ferr)+' µg/L\n'+
+    '[AI-assisted estimate — not clinical advice]';
+}
+
+function copyGPSection(){var t=buildGPText();doCopy(t);}
+function copySummary(){var t=buildSummary();doCopy(t);}
+function doCopy(txt){
+  try{navigator.clipboard.writeText(txt);}catch(e){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  var ca=document.getElementById('copyArea');ca.style.display='block';ca.value=txt;
+  var msg=document.getElementById('copyMsg');msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);
+}
+
+function saveSession(){
+  var name=document.getElementById('sessionName').value||('Patient '+Date.now());
+  var sliders=['cycleLen','bleedDays','flowInt','dietIron','dietAbs','suppDose','suppAbs','startFerr'];
+  var data={name,age:document.getElementById('patAge').value,meno:document.getElementById('menopause').value,
+    conds:Object.assign({},conds),infusions:JSON.parse(JSON.stringify(infusions)),
+    actuals:JSON.parse(JSON.stringify(actuals)),
+    sliders:sliders.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{})};
+  try{
+    var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');
+    s[name]=data;localStorage.setItem('ironSessions',JSON.stringify(s));
+    refreshList(name);
+    var msg=document.getElementById('copyMsg');msg.textContent='Session saved';msg.style.display='block';
+    setTimeout(function(){msg.style.display='none';msg.textContent='Copied to clipboard';},1500);
+  }catch(e){alert('Could not save — browser storage may be disabled.');}
+}
+function loadSession(name){
+  if(!name)return;
+  try{
+    var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');var d=s[name];if(!d)return;
+    document.getElementById('sessionName').value=d.name||name;
+    document.getElementById('patAge').value=d.age||28;
+    document.getElementById('menopause').value=d.meno||'pre';
+    conds=Object.assign({endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false},d.conds||{});
+    Object.keys(conds).forEach(function(k){document.getElementById('tog-'+k).classList.toggle('on',conds[k]);});
+    infusions=d.infusions||[{month:0,dose:1000}];
+    actuals=d.actuals||[{label:'',ferritin:0},{label:'',ferritin:0}];
+    if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
+    renderInfusions();renderActuals();updateCondNote();calc();
+  }catch(e){}
+}
+function deleteSession(){
+  var name=document.getElementById('sessionSelect').value;if(!name)return;
+  if(!confirm('Delete session "'+name+'"?'))return;
+  try{var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');delete s[name];localStorage.setItem('ironSessions',JSON.stringify(s));refreshList('');}catch(e){}
+}
+function refreshList(sel){
+  try{
+    var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');
+    var el=document.getElementById('sessionSelect');
+    el.innerHTML='<option value="">— new patient —</option>';
+    Object.keys(s).forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;if(n===sel)o.selected=true;el.appendChild(o);});
+  }catch(e){}
+}
+function showTab(t){
+  ['model','actual','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['model','actual','export'][i]===t);});
+}
+refreshList('');renderInfusions();renderActuals();updateBands();calc();
+</script>
+</body>
+</html>
