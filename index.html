@@ -171,10 +171,68 @@ button:hover{background:#f1f5f9}
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 0 mg. Set to 0 automatically when oral iron intolerance is toggled.</div><div class="tt-n">Typical prescribed dose: 65–200 mg elemental iron/day</div><div class="tt-s">Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Alternate-day dosing shown to improve absorption vs daily by avoiding hepcidin rebound. Source: Moretti et al, Lancet Haematology 2015.</div></div></div>
   </div>
   <div class="row">
-    <label>Supplement absorption %</label>
+    <label>Supplement absorption %<br><span style="font-size:11px;color:#94a3b8">baseline — habit modifiers below adjust this</span></label>
     <div class="sw"><div class="rb" id="rb-suppAbs"></div><input type="range" id="suppAbs" min="1" max="40" value="10" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="suppAbsV" style="font-size:13px;font-weight:500">10%</span><span class="badge" id="bsa"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (daily dosing). Increase to 15–20% for alternate-day dosing.</div><div class="tt-n">Typical range: 5–20%</div><div class="tt-s">Source: Moretti et al, Lancet Haematology. Daily dosing triggers hepcidin rise, suppressing next-day absorption. Alternate-day avoids this. Bisglycinate and liquid formulations may absorb slightly better. Coeliac reduces absorption further.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (daily dosing). Increase to 15-20% for alternate-day dosing. Habit modifiers below adjust this automatically.</div><div class="tt-n">Typical range: 5-20%</div><div class="tt-s">Source: Moretti et al, Lancet Haematology. Daily dosing triggers hepcidin rise, suppressing next-day absorption. Alternate-day avoids this. Bisglycinate and liquid formulations may absorb slightly better. Coeliac reduces absorption further.</div></div></div>
+  </div>
+
+  <div style="margin-top:14px;border-top:1px solid #f1f5f9;padding-top:12px">
+    <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Absorption habit modifiers <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">— adjusts effective supplement absorption</span></div>
+
+    <div class="row">
+      <label>Vitamin C with supplement<br><span style="font-size:11px;color:#94a3b8">e.g. orange juice, 200mg tablet</span></label>
+      <div class="sw"><input type="range" id="modVitC" min="0" max="100" value="0" step="5" oninput="calc()"></div>
+      <div style="display:flex;align-items:center;gap:3px"><span id="modVitCV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
+      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you take vitamin C (200mg+) or drink orange juice at the same time as your iron supplement?</div><div class="tt-n">Enhancer: up to +80% absorption on those doses</div><div class="tt-s">Vitamin C reduces ferric to ferrous iron and chelates it, dramatically increasing non-haem absorption. 200mg vitamin C roughly doubles absorption. Source: Hallberg et al, EJCN; Siegenberg et al, Am J Clin Nutr 1991.</div></div></div>
+    </div>
+
+    <div class="row">
+      <label>Taken 2hr+ from food &amp; tea/coffee<br><span style="font-size:11px;color:#94a3b8">on empty stomach, away from hot drinks</span></label>
+      <div class="sw"><input type="range" id="modTiming" min="0" max="100" value="50" step="5" oninput="calc()"></div>
+      <div style="display:flex;align-items:center;gap:3px"><span id="modTimingV" style="font-size:13px;font-weight:500">50%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
+      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often is your supplement taken at least 2 hours away from food, tea, and coffee?</div><div class="tt-n">Enhancer: +30-50% on optimally timed doses vs taken with food</div><div class="tt-s">Polyphenols in tea/coffee and phytates in food bind iron. Taking iron on an empty stomach avoids these inhibitors. Source: Morck et al; Disler et al, Gut 1975.</div></div></div>
+    </div>
+
+    <div class="row">
+      <label>Tea/coffee within 1hr of supplement<br><span style="font-size:11px;color:#e57373">inhibitor</span></label>
+      <div class="sw"><input type="range" id="modTea" min="0" max="100" value="0" step="5" oninput="calc()"></div>
+      <div style="display:flex;align-items:center;gap:3px"><span id="modTeaV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
+      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you drink tea or coffee within 1 hour of taking your supplement?</div><div class="tt-n">Inhibitor: -40 to -60% absorption on those doses</div><div class="tt-s">Polyphenols (tannic acid) form insoluble complexes with iron. Black tea can reduce iron absorption by up to 60%. Coffee has a similar but slightly weaker effect. Source: Morck et al, Am J Clin Nutr 1983.</div></div></div>
+    </div>
+
+    <div class="row">
+      <label>Calcium/dairy within 1hr of supplement<br><span style="font-size:11px;color:#e57373">inhibitor</span></label>
+      <div class="sw"><input type="range" id="modCa" min="0" max="100" value="0" step="5" oninput="calc()"></div>
+      <div style="display:flex;align-items:center;gap:3px"><span id="modCaV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
+      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you eat dairy or take calcium supplements within 1 hour of your iron supplement?</div><div class="tt-n">Inhibitor: -25 to -40% absorption on those doses</div><div class="tt-s">Calcium competes with iron for the same intestinal transporter (DMT1). 300mg calcium reduces iron absorption by ~40%. Source: Hallberg et al, Am J Clin Nutr 1991.</div></div></div>
+    </div>
+
+    <div class="row">
+      <label>Antacids / PPIs regular use<br><span style="font-size:11px;color:#e57373">e.g. omeprazole, Gaviscon</span></label>
+      <div class="sw"><input type="range" id="modAntacid" min="0" max="100" value="0" step="5" oninput="calc()"></div>
+      <div style="display:flex;align-items:center;gap:3px"><span id="modAntacidV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">regularity</span></div>
+      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Do you regularly use antacids or PPIs (omeprazole, lansoprazole, Gaviscon, Rennie etc)?</div><div class="tt-n">Inhibitor: -30 to -50% overall supplement absorption</div><div class="tt-s">Stomach acid converts ferric iron (Fe3+) to absorbable ferrous iron (Fe2+). PPIs reduce acid, substantially impairing absorption. A commonly missed cause of refractory iron deficiency. Source: Sharma et al, Aliment Pharmacol Ther 2004.</div></div></div>
+    </div>
+
+    <div style="margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:12px;color:#475569">Effective supplement absorption after modifiers:</span>
+      <span id="effAbsDisplay" style="font-size:16px;font-weight:600;color:#1e293b">10%</span>
+      <span id="effAbsBadge" class="badge"></span>
+      <span style="font-size:11px;color:#94a3b8">(this rate is used in all calculations)</span>
+    </div>
+
+    <details style="margin-top:10px">
+      <summary style="font-size:12px;color:#64748b;cursor:pointer;user-select:none;padding:4px 0">Other factors affecting absorption (reference notes)</summary>
+      <div style="margin-top:8px;font-size:12px;color:#475569;line-height:1.7;background:#f8fafc;border-radius:8px;padding:10px 12px">
+        <p style="margin-bottom:6px"><strong>Formulation:</strong> Ferrous forms (sulfate, fumarate, bisglycinate) absorb better than ferric. Bisglycinate may absorb 2-4x better than sulfate with fewer GI side effects. Liquid iron may suit those with severe GI intolerance.</p>
+        <p style="margin-bottom:6px"><strong>Alternate-day dosing:</strong> Daily iron raises hepcidin, suppressing next-day absorption. Every-other-day dosing can yield similar total absorption with fewer side effects. Set baseline absorption to 15-20% if dosing alternate-day. Source: Moretti et al, Lancet Haematology 2015.</p>
+        <p style="margin-bottom:6px"><strong>Hepcidin and inflammation:</strong> Active infection or inflammation raises hepcidin, blocking absorption regardless of dose. Check CRP alongside ferritin — elevated CRP can cause falsely reassuring ferritin readings.</p>
+        <p style="margin-bottom:6px"><strong>H. pylori:</strong> H. pylori impairs gastric acid and competes for iron. Refractory deficiency not responding to supplements warrants H. pylori testing. Source: NICE CG184.</p>
+        <p style="margin-bottom:6px"><strong>Phytates:</strong> Found in wholegrains, legumes, nuts, seeds. Bind non-haem iron strongly. Soaking, sprouting, or fermenting reduces phytate content. Especially relevant for vegetarian/vegan diets.</p>
+        <p style="margin-bottom:0"><strong>Alcohol:</strong> Acute use can transiently increase iron absorption. Chronic heavy use damages the GI tract, impairing absorption and causing occult blood loss.</p>
+      </div>
+    </details>
   </div>
 </div>
 </div>
@@ -380,6 +438,34 @@ function mg2f(m){return m/8;}
 function rnd(n){return Math.round(n);}
 function sign(n){return n>=0?'+':'';}
 
+function calcModifiers(baseAbs){
+  var vitC    = gv('modVitC')   / 100;
+  var timing  = gv('modTiming') / 100;
+  var tea     = gv('modTea')    / 100;
+  var ca      = gv('modCa')     / 100;
+  var antac   = gv('modAntacid')/ 100;
+
+  var enhancer = 1 + (vitC * 0.80) + (timing * 0.40);
+  var inhibitor = Math.max(1 - (tea * 0.50) - (ca * 0.35) - (antac * 0.40), 0.10);
+
+  var effAbs = Math.min(Math.max(baseAbs * enhancer * inhibitor, 0.01), 0.40);
+
+  document.getElementById('modVitCV').textContent    = gv('modVitC')    + '%';
+  document.getElementById('modTimingV').textContent  = gv('modTiming')  + '%';
+  document.getElementById('modTeaV').textContent     = gv('modTea')     + '%';
+  document.getElementById('modCaV').textContent      = gv('modCa')      + '%';
+  document.getElementById('modAntacidV').textContent = gv('modAntacid') + '%';
+
+  var effPct = Math.round(effAbs * 100);
+  document.getElementById('effAbsDisplay').textContent = effPct + '%';
+  var badge = document.getElementById('effAbsBadge');
+  if(effPct >= 12){badge.className='badge bok';badge.textContent='good';}
+  else if(effPct >= 6){badge.className='badge bwarn';badge.textContent='moderate';}
+  else{badge.className='badge bhigh';badge.textContent='poor';}
+
+  return effAbs;
+}
+
 function calc(){
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
@@ -389,7 +475,8 @@ function calc(){
   var dietIron=gv('dietIron');
   var dietAbs=gv('dietAbs')/100;
   var suppDose=gv('suppDose');
-  var suppAbs=gv('suppAbs')/100;
+  var suppAbsBase=gv('suppAbs')/100;
+  var suppAbs=calcModifiers(suppAbsBase);
   var startFerr=gv('startFerr')||25;
 
   document.getElementById('cycleLenV').textContent=post?'N/A':cycleLen+'d';
@@ -440,7 +527,7 @@ function calc(){
   var baseDate2=startDateVal2?new Date(startDateVal2):new Date();
   var monthNames2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtMonth(offset){var d=new Date(baseDate2.getFullYear(),baseDate2.getMonth()+offset,1);return monthNames2[d.getMonth()]+' '+d.getFullYear();}
-  lc={cycleLen,bleedDays,flowIdx,dietIron,dietAbs:rnd(dietAbs*100),suppDose,suppAbs:rnd(suppAbs*100),fmtMonth,
+  lc={cycleLen,bleedDays,flowIdx,dietIron,dietAbs:rnd(dietAbs*100),suppDose,suppAbsBase:rnd(suppAbsBase*100),suppAbs:rnd(suppAbs*100),fmtMonth,
     startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
@@ -571,7 +658,7 @@ function buildGPText(){
     'Estimated menstrual blood loss: '+c.mlPerCycle+' ml/cycle = '+c.mgLostCycle+' mg iron/cycle',
     'Monthly iron loss: '+c.mgLostMonth+' mg/month',
     'Dietary iron: '+c.dietIron+' mg/day at '+c.dietAbs+'% absorption',
-    'Oral supplement: '+c.suppDose+' mg/day at '+c.suppAbs+'% absorption',
+    'Oral supplement: '+c.suppDose+' mg/day | Baseline absorption: '+c.suppAbsBase+'% | Effective (after habits): '+c.suppAbs+'%',
     'Total iron absorbed per month: '+c.mgAbsMonth+' mg/month',
     'Net monthly balance: '+sign(c.netMonth)+c.netMonth+' mg/month',
     'Starting ferritin: '+c.startFerr+' µg/L',
@@ -618,7 +705,7 @@ function doCopy(txt){
 
 function saveSession(){
   var name=document.getElementById('sessionName').value||('Patient '+Date.now());
-  var sliders=['cycleLen','bleedDays','flowInt','dietIron','dietAbs','suppDose','suppAbs','startFerr'];
+  var sliders=['cycleLen','bleedDays','flowInt','dietIron','dietAbs','suppDose','suppAbs','startFerr','modVitC','modTiming','modTea','modCa','modAntacid'];
   var data={name,age:document.getElementById('patAge').value,meno:document.getElementById('menopause').value,startDate:document.getElementById('startDate').value,
     conds:Object.assign({},conds),infusions:JSON.parse(JSON.stringify(infusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
