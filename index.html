@@ -271,6 +271,7 @@ function applyDefaults(){
   sv('dietAbs',conds.coeliac?5:conds.vegan?7:10);
   if(conds['oral-intol'])sv('suppDose',0);
   updateCondNote();
+  calc();
 }
 function sv(id,v){var el=document.getElementById(id);if(el&&!el.disabled)el.value=v;}
 function gv(id){return +document.getElementById(id).value||0;}
@@ -278,7 +279,7 @@ function gv(id){return +document.getElementById(id).value||0;}
 function toggleCond(c){
   conds[c]=!conds[c];
   document.getElementById('tog-'+c).classList.toggle('on',conds[c]);
-  applyDefaults();calc();
+  applyDefaults();
 }
 function updateCondNote(){
   var n=[];
@@ -473,7 +474,7 @@ function updateAnalysis(){
 
 function mc(label,value,unit,cls){
   return '<div class="met"><div class="met-l">'+label+'</div>'+
-    '<div class="met-v '+(cls||'")>'+value+'<span class="met-u">'+unit+'</span></div></div>';
+    '<div class="met-v '+(cls||'')+'" >'+value+'<span class="met-u">'+unit+'</span></div></div>';
 }
 function li(color,label,dashed){
   var s=dashed?'border-top:2px dashed '+color+';width:14px;height:0;display:inline-block;':'display:inline-block;background:'+color+';width:10px;height:10px;border-radius:2px;';
