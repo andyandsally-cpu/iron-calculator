@@ -152,88 +152,31 @@ button:hover{background:#f1f5f9}
 <div class="section">
 <div class="st">Iron intake &amp; absorption</div>
 <div class="card">
+  <p style="font-size:12px;color:#64748b;background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;padding:8px 12px;margin-bottom:12px">
+    <strong>How this works:</strong> Enter what goes <em>in</em> (diet quality, supplement dose, habits). The model calculates what must be absorbed based on your ferritin trend. When you add real blood results, absorption is <em>derived</em> from them — becoming a diagnostic signal rather than a guess.
+  </p>
+
   <div class="row">
-    <label>Dietary iron (mg/day)</label>
-    <div class="sw"><div class="rb" id="rb-dietIron"></div><input type="range" id="dietIron" min="0" max="20" value="10" step=".5" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:3px"><span id="dietIronV" style="font-size:13px;font-weight:500">10mg</span><span class="badge" id="bdi"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10 mg/day (average UK mixed diet). Vegetarian/vegan toggle reduces to 8 mg.</div><div class="tt-n">Normal intake: 8–15 mg/day. NHS recommended for women 19–50: 14.8 mg/day</div><div class="tt-s">Source: NDNS (National Diet & Nutrition Survey) UK. Red meat, fortified cereals, leafy greens are main sources. Vegetarian/vegan diets typically 8–10 mg/day from non-haem sources.</div></div></div>
+    <label>Diet quality<br><span style="font-size:11px;color:#94a3b8">affects dietary iron available</span></label>
+    <div class="sw"><div class="rb" id="rb-dietQ"></div><input type="range" id="dietQ" min="1" max="5" value="3" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="dietQV" style="font-size:13px;font-weight:500">Average</span><span class="badge" id="bdq"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Rate your overall diet for iron-containing foods: red meat, oily fish, leafy greens, fortified cereals, legumes.</div><div class="tt-n">Maps to dietary iron: Poor=6mg/day, Low=8mg/day, Average=10mg/day, Good=13mg/day, Excellent=16mg/day</div><div class="tt-s">Source: NDNS UK. NHS recommended intake women 19-50: 14.8 mg/day. Vegetarian/vegan toggle adjusts downward as non-haem iron is less bioavailable. Dietary iron contributes ~5-15mg net to stores per month depending on deficiency state.</div></div></div>
   </div>
+
   <div class="row">
-    <label>Dietary absorption %</label>
-    <div class="sw"><div class="rb" id="rb-dietAbs"></div><input type="range" id="dietAbs" min="1" max="30" value="10" step="1" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:3px"><span id="dietAbsV" style="font-size:13px;font-weight:500">10%</span><span class="badge" id="bda"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (typical iron-deficient UK female, mixed diet). Coeliac toggle reduces to 5%. Vegetarian toggle reduces to 7%.</div><div class="tt-n">Normal range: 5–20%</div><div class="tt-s">Source: Hallberg et al, EJCN. Haem iron (meat): 15–35%. Non-haem iron: 2–8% baseline, rises to ~20% in iron deficiency. Inhibited by tea, coffee, calcium. Enhanced by vitamin C. Coeliac disease substantially impairs absorption.</div></div></div>
-  </div>
-  <div class="row">
-    <label>Oral supplement (mg/day)</label>
+    <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">elemental iron mg/day</span></label>
     <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="200" value="0" step="5" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="suppDoseV" style="font-size:13px;font-weight:500">0mg</span><span class="badge" id="bsd"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 0 mg. Set to 0 automatically when oral iron intolerance is toggled.</div><div class="tt-n">Typical prescribed dose: 65–200 mg elemental iron/day</div><div class="tt-s">Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Alternate-day dosing shown to improve absorption vs daily by avoiding hepcidin rebound. Source: Moretti et al, Lancet Haematology 2015.</div></div></div>
-  </div>
-  <div class="row">
-    <label>Supplement absorption %<br><span style="font-size:11px;color:#94a3b8">baseline — habit modifiers below adjust this</span></label>
-    <div class="sw"><div class="rb" id="rb-suppAbs"></div><input type="range" id="suppAbs" min="1" max="40" value="10" step="1" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:3px"><span id="suppAbsV" style="font-size:13px;font-weight:500">10%</span><span class="badge" id="bsa"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 10% (daily dosing). Increase to 15-20% for alternate-day dosing. Habit modifiers below adjust this automatically.</div><div class="tt-n">Typical range: 5-20%</div><div class="tt-s">Source: Moretti et al, Lancet Haematology. Daily dosing triggers hepcidin rise, suppressing next-day absorption. Alternate-day avoids this. Bisglycinate and liquid formulations may absorb slightly better. Coeliac reduces absorption further.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Elemental iron per day — not tablet weight. Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Ferrous bisglycinate varies — check label. Set 0 if not supplementing.</div><div class="tt-n">Typical prescribed elemental dose: 65-200 mg/day</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set 0 automatically when oral iron intolerance is toggled.</div></div></div>
   </div>
 
   <div style="margin-top:14px;border-top:1px solid #f1f5f9;padding-top:12px">
-    <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Absorption habit modifiers <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">— adjusts effective supplement absorption</span></div>
-
-    <div class="row">
-      <label>Vitamin C with supplement<br><span style="font-size:11px;color:#94a3b8">e.g. orange juice, 200mg tablet</span></label>
-      <div class="sw"><input type="range" id="modVitC" min="0" max="100" value="0" step="5" oninput="calc()"></div>
-      <div style="display:flex;align-items:center;gap:3px"><span id="modVitCV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
-      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you take vitamin C (200mg+) or drink orange juice at the same time as your iron supplement?</div><div class="tt-n">Enhancer: up to +80% absorption on those doses</div><div class="tt-s">Vitamin C reduces ferric to ferrous iron and chelates it, dramatically increasing non-haem absorption. 200mg vitamin C roughly doubles absorption. Source: Hallberg et al, EJCN; Siegenberg et al, Am J Clin Nutr 1991.</div></div></div>
-    </div>
-
-    <div class="row">
-      <label>Taken 2hr+ from food &amp; tea/coffee<br><span style="font-size:11px;color:#94a3b8">on empty stomach, away from hot drinks</span></label>
-      <div class="sw"><input type="range" id="modTiming" min="0" max="100" value="50" step="5" oninput="calc()"></div>
-      <div style="display:flex;align-items:center;gap:3px"><span id="modTimingV" style="font-size:13px;font-weight:500">50%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
-      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often is your supplement taken at least 2 hours away from food, tea, and coffee?</div><div class="tt-n">Enhancer: +30-50% on optimally timed doses vs taken with food</div><div class="tt-s">Polyphenols in tea/coffee and phytates in food bind iron. Taking iron on an empty stomach avoids these inhibitors. Source: Morck et al; Disler et al, Gut 1975.</div></div></div>
-    </div>
-
-    <div class="row">
-      <label>Tea/coffee within 1hr of supplement<br><span style="font-size:11px;color:#e57373">inhibitor</span></label>
-      <div class="sw"><input type="range" id="modTea" min="0" max="100" value="0" step="5" oninput="calc()"></div>
-      <div style="display:flex;align-items:center;gap:3px"><span id="modTeaV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
-      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you drink tea or coffee within 1 hour of taking your supplement?</div><div class="tt-n">Inhibitor: -40 to -60% absorption on those doses</div><div class="tt-s">Polyphenols (tannic acid) form insoluble complexes with iron. Black tea can reduce iron absorption by up to 60%. Coffee has a similar but slightly weaker effect. Source: Morck et al, Am J Clin Nutr 1983.</div></div></div>
-    </div>
-
-    <div class="row">
-      <label>Calcium/dairy within 1hr of supplement<br><span style="font-size:11px;color:#e57373">inhibitor</span></label>
-      <div class="sw"><input type="range" id="modCa" min="0" max="100" value="0" step="5" oninput="calc()"></div>
-      <div style="display:flex;align-items:center;gap:3px"><span id="modCaV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">of doses</span></div>
-      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How often do you eat dairy or take calcium supplements within 1 hour of your iron supplement?</div><div class="tt-n">Inhibitor: -25 to -40% absorption on those doses</div><div class="tt-s">Calcium competes with iron for the same intestinal transporter (DMT1). 300mg calcium reduces iron absorption by ~40%. Source: Hallberg et al, Am J Clin Nutr 1991.</div></div></div>
-    </div>
-
-    <div class="row">
-      <label>Antacids / PPIs regular use<br><span style="font-size:11px;color:#e57373">e.g. omeprazole, Gaviscon</span></label>
-      <div class="sw"><input type="range" id="modAntacid" min="0" max="100" value="0" step="5" oninput="calc()"></div>
-      <div style="display:flex;align-items:center;gap:3px"><span id="modAntacidV" style="font-size:13px;font-weight:500">0%</span><span style="font-size:11px;color:#94a3b8">regularity</span></div>
-      <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Do you regularly use antacids or PPIs (omeprazole, lansoprazole, Gaviscon, Rennie etc)?</div><div class="tt-n">Inhibitor: -30 to -50% overall supplement absorption</div><div class="tt-s">Stomach acid converts ferric iron (Fe3+) to absorbable ferrous iron (Fe2+). PPIs reduce acid, substantially impairing absorption. A commonly missed cause of refractory iron deficiency. Source: Sharma et al, Aliment Pharmacol Ther 2004.</div></div></div>
-    </div>
-
-    <div style="margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span style="font-size:12px;color:#475569">Effective supplement absorption after modifiers:</span>
-      <span id="effAbsDisplay" style="font-size:16px;font-weight:600;color:#1e293b">10%</span>
-      <span id="effAbsBadge" class="badge"></span>
-      <span style="font-size:11px;color:#94a3b8">(this rate is used in all calculations)</span>
-    </div>
-
-    <details style="margin-top:10px">
-      <summary style="font-size:12px;color:#64748b;cursor:pointer;user-select:none;padding:4px 0">Other factors affecting absorption (reference notes)</summary>
-      <div style="margin-top:8px;font-size:12px;color:#475569;line-height:1.7;background:#f8fafc;border-radius:8px;padding:10px 12px">
-        <p style="margin-bottom:6px"><strong>Formulation:</strong> Ferrous forms (sulfate, fumarate, bisglycinate) absorb better than ferric. Bisglycinate may absorb 2-4x better than sulfate with fewer GI side effects. Liquid iron may suit those with severe GI intolerance.</p>
-        <p style="margin-bottom:6px"><strong>Alternate-day dosing:</strong> Daily iron raises hepcidin, suppressing next-day absorption. Every-other-day dosing can yield similar total absorption with fewer side effects. Set baseline absorption to 15-20% if dosing alternate-day. Source: Moretti et al, Lancet Haematology 2015.</p>
-        <p style="margin-bottom:6px"><strong>Hepcidin and inflammation:</strong> Active infection or inflammation raises hepcidin, blocking absorption regardless of dose. Check CRP alongside ferritin — elevated CRP can cause falsely reassuring ferritin readings.</p>
-        <p style="margin-bottom:6px"><strong>H. pylori:</strong> H. pylori impairs gastric acid and competes for iron. Refractory deficiency not responding to supplements warrants H. pylori testing. Source: NICE CG184.</p>
-        <p style="margin-bottom:6px"><strong>Phytates:</strong> Found in wholegrains, legumes, nuts, seeds. Bind non-haem iron strongly. Soaking, sprouting, or fermenting reduces phytate content. Especially relevant for vegetarian/vegan diets.</p>
-        <p style="margin-bottom:0"><strong>Alcohol:</strong> Acute use can transiently increase iron absorption. Chronic heavy use damages the GI tract, impairing absorption and causing occult blood loss.</p>
-      </div>
-    </details>
+    <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Derived absorption</div>
+    <p style="font-size:12px;color:#64748b;margin-bottom:10px">Calculated from your inputs and real results — not entered directly. Add ferritin results in the <strong>Actual results</strong> tab to unlock the observed value.</p>
+    <div class="grid2" id="absMetrics" style="margin-bottom:8px"></div>
+    <div id="absDiagnostic" style="display:none;font-size:12px;border-radius:8px;padding:10px 12px;line-height:1.6;margin-top:6px"></div>
   </div>
+
 </div>
 </div>
 
@@ -264,8 +207,8 @@ button:hover{background:#f1f5f9}
 <div class="section">
 <div class="st">Actual ferritin results</div>
 <div class="card">
-  <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter measured ferritin values to back-calculate real net loss rate and implied absorption. Useful for verifying whether model assumptions match reality.</p>
-  <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:150px">Label / date</span><span style="width:80px">Ferritin µg/L</span></div>
+  <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter real ferritin blood test results. The model will derive your actual absorption rate from these — a more reliable signal than any estimate. Use real dates (dd/mm/yyyy or yyyy-mm-dd) for accurate time-based calculations.</p>
+  <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:110px">Date of test</span><span style="width:80px">Ferritin µg/L</span><span style="width:80px">Supp mg/day</span></div>
   <div id="actualList"></div>
   <button onclick="addActual()">+ Add result</button>
   <div class="note" id="derivedNote"></div>
@@ -339,7 +282,8 @@ button:hover{background:#f1f5f9}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 var infusions=[{month:0,dose:1000}];
-var actuals=[{label:'',ferritin:0},{label:'',ferritin:0}];
+window.derivedFerrPM=null;
+var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
 var chartInst=null;
 var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false};
 var flowLabels=['Very light','Light','Medium','Heavy','Very heavy'];
@@ -350,10 +294,8 @@ var sdefs={
   cycleLen:{lo:21,hi:35,min:21,max:90},
   bleedDays:{lo:3,hi:7,min:0,max:40},
   flowInt:{lo:1,hi:3,min:1,max:5},
-  dietIron:{lo:8,hi:15,min:0,max:20},
-  dietAbs:{lo:5,hi:20,min:1,max:30},
+  dietQ:{lo:3,hi:5,min:1,max:5},
   suppDose:{lo:0,hi:200,min:0,max:200},
-  suppAbs:{lo:5,hi:20,min:1,max:40},
   startFerr:{lo:50,hi:150,min:5,max:300}
 };
 
@@ -367,8 +309,7 @@ function applyDefaults(){
     sv('bleedDays',conds.endo||conds.adeno?9:meno==='peri'?6:5);
     sv('flowInt',conds.endo||conds.adeno?3:2);
   }
-  sv('dietIron',conds.vegan?8:10);
-  sv('dietAbs',conds.coeliac?5:conds.vegan?7:10);
+  // dietQ: coeliac reduces by 1 step, vegan no change (already in calc)
   if(conds['oral-intol'])sv('suppDose',0);
   updateCondNote();
 }
@@ -384,7 +325,7 @@ function updateCondNote(){
   var n=[];
   if(conds.endo)n.push('Endometriosis: bleeding defaults increased');
   if(conds.adeno)n.push('Adenomyosis: bleeding defaults increased');
-  if(conds.coeliac)n.push('Coeliac: absorption reduced to 5%');
+  if(conds.coeliac)n.push('Coeliac: dietary iron contribution reduced (malabsorption)');
   if(conds['oral-intol'])n.push('Oral iron intolerance: supplement set to 0');
   if(conds.pcos)n.push('PCOS: cycle length extended');
   if(conds.vegan)n.push('Vegetarian/vegan: dietary iron and absorption adjusted');
@@ -421,14 +362,15 @@ function renderInfusions(){
       '<button onclick="removeInfusion('+i+')" style="padding:3px 8px">×</button></div>';
   });
 }
-function addActual(){actuals.push({label:'',ferritin:0});renderActuals();}
+function addActual(){actuals.push({date:'',ferritin:0,supp:gv('suppDose')});renderActuals();}
 function removeActual(i){actuals.splice(i,1);renderActuals();calcDerived();}
 function renderActuals(){
   var el=document.getElementById('actualList');el.innerHTML='';
   actuals.forEach(function(a,i){
     el.innerHTML+='<div class="ar">'+
-      '<input type="text" placeholder="Label / date" value="'+a.label+'" style="width:150px" oninput="actuals['+i+'].label=this.value;calcDerived()">'+
+      '<input type="text" placeholder="yyyy-mm-dd" value="'+(a.date||'')+'" style="width:110px" oninput="actuals['+i+'].date=this.value;calcDerived()">'+
       '<input type="number" min="0" max="500" value="'+(a.ferritin||'')+'" style="width:70px" placeholder="µg/L" oninput="actuals['+i+'].ferritin=+this.value;calcDerived()">'+
+      '<input type="number" min="0" max="200" value="'+(a.supp!=null?a.supp:'')+'" style="width:65px" placeholder="supp mg" title="Elemental supplement mg/day during this period" oninput="actuals['+i+'].supp=+this.value;calcDerived()">'+
       '<button onclick="removeActual('+i+')" style="padding:3px 8px">×</button></div>';
   });
 }
@@ -438,32 +380,21 @@ function mg2f(m){return m/8;}
 function rnd(n){return Math.round(n);}
 function sign(n){return n>=0?'+':'';}
 
-function calcModifiers(baseAbs){
-  var vitC    = gv('modVitC')   / 100;
-  var timing  = gv('modTiming') / 100;
-  var tea     = gv('modTea')    / 100;
-  var ca      = gv('modCa')     / 100;
-  var antac   = gv('modAntacid')/ 100;
-
-  var enhancer = 1 + (vitC * 0.80) + (timing * 0.40);
-  var inhibitor = Math.max(1 - (tea * 0.50) - (ca * 0.35) - (antac * 0.40), 0.10);
-
-  var effAbs = Math.min(Math.max(baseAbs * enhancer * inhibitor, 0.01), 0.40);
-
-  document.getElementById('modVitCV').textContent    = gv('modVitC')    + '%';
-  document.getElementById('modTimingV').textContent  = gv('modTiming')  + '%';
-  document.getElementById('modTeaV').textContent     = gv('modTea')     + '%';
-  document.getElementById('modCaV').textContent      = gv('modCa')      + '%';
-  document.getElementById('modAntacidV').textContent = gv('modAntacid') + '%';
-
-  var effPct = Math.round(effAbs * 100);
-  document.getElementById('effAbsDisplay').textContent = effPct + '%';
-  var badge = document.getElementById('effAbsBadge');
-  if(effPct >= 12){badge.className='badge bok';badge.textContent='good';}
-  else if(effPct >= 6){badge.className='badge bwarn';badge.textContent='moderate';}
-  else{badge.className='badge bhigh';badge.textContent='poor';}
-
-  return effAbs;
+function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth){
+  var el=document.getElementById('absMetrics');
+  if(!el)return;
+  var isObserved=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined;
+  var obsLabel=isObserved?'Observed (from results)':'Estimated (literature)';
+  var litSupp=suppDose>0?suppDose*0.04*30:0;
+  el.innerHTML=
+    mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
+    mc('Supplement contribution',rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo',suppDose>0?'ok':'neutral')+
+    mc('Total absorbed — '+obsLabel,rnd(mgAbsMonth),'mg/mo',isObserved?(mgAbsMonth>totalLossMonth?'ok':'danger'):'warning')+
+    mc('Total losses (menstrual+basal)',rnd(totalLossMonth),'mg/mo',totalLossMonth>50?'danger':totalLossMonth>30?'warning':'ok');
+  if(!isObserved){
+    var hint=document.getElementById('absDiagnostic');
+    if(hint){hint.className='';hint.style.display='block';hint.innerHTML='<p style="font-size:12px;color:#64748b;margin:0">Absorption shown is a literature estimate. Add real ferritin results in the <strong>Actual results</strong> tab to derive your observed rate and unlock diagnostic interpretation.</p>';}
+  }
 }
 
 function calc(){
@@ -472,29 +403,31 @@ function calc(){
   var cycleLen=gv('cycleLen')||28;
   var bleedDays=post?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var dietIron=gv('dietIron');
-  var dietAbs=gv('dietAbs')/100;
+  // Diet quality -> mg/day lookup
+  var dietQIdx=gv('dietQ')||3;
+  var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
+  var dietQmg=[0,6,8,10,13,16];
+  var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
+  // Net dietary contribution to stores (iron-deficient state boosts absorption;
+  // net = gross absorbed minus basal utilisation; calibrated to ~10-15mg/month for average diet)
+  var dietNetMonth=dietIronMgDay*0.04*30; // ~4% of total dietary iron reaches stores net (Camaschella NEJM 2015)
+
   var suppDose=gv('suppDose');
-  var suppAbsBase=gv('suppAbs')/100;
-  var suppAbs=calcModifiers(suppAbsBase);
   var startFerr=gv('startFerr')||25;
+  var basalLossMonth=30; // ~1mg/day non-menstrual losses (gut lining, skin, sweat)
 
   document.getElementById('cycleLenV').textContent=post?'N/A':cycleLen+'d';
   document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
   document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
-  document.getElementById('dietIronV').textContent=dietIron+'mg';
-  document.getElementById('dietAbsV').textContent=rnd(dietAbs*100)+'%';
+  document.getElementById('dietQV').textContent=dietQLabels[dietQIdx];
   document.getElementById('suppDoseV').textContent=suppDose+'mg';
-  document.getElementById('suppAbsV').textContent=rnd(suppAbs*100)+'%';
   document.getElementById('startFerrV').textContent=startFerr;
 
   updateBadge('bcy',cycleLen,21,35);
   updateBadge('bbd',bleedDays,3,7);
   updateBadge('bfi',gv('flowInt'),1,3);
-  updateBadge('bdi',dietIron,8,15);
-  updateBadge('bda',rnd(dietAbs*100),5,20);
+  updateBadge('bdq',dietQIdx,3,5);
   updateBadge('bsd',suppDose,0,200);
-  updateBadge('bsa',rnd(suppAbs*100),5,20);
   updateBadge('bsf',startFerr,50,150);
   updateBands();
 
@@ -502,9 +435,21 @@ function calc(){
   var mgLostCycle=mlPerCycle*0.5;
   var cyclesPerMonth=post?0:30/cycleLen;
   var mgLostMonth=mgLostCycle*cyclesPerMonth;
-  var mgAbsMonth=(dietIron*dietAbs+suppDose*suppAbs)*30;
-  var netMonth=mgAbsMonth-mgLostMonth;
-  var ferrChangePM=mg2f(netMonth);
+  var totalLossMonth=mgLostMonth+basalLossMonth;
+
+  // === DERIVED ABSORPTION ===
+  // Use observed data if available (>=2 real results), otherwise use literature defaults
+  var derivedAbsMonth=null; // will be set by calcDerived if real data present
+  var suppLitDefault=suppDose>0?Math.min(suppDose*0.04,4.0)*30:0; // literature: ~4% net, cap 4mg/day
+  var mgAbsMonthEst=dietNetMonth+suppLitDefault; // estimate when no real data
+  var ferrChangePM=mg2f(mgAbsMonthEst-totalLossMonth);
+  // Override with derived if calcDerived has computed it
+  if(window.derivedFerrPM!==undefined&&window.derivedFerrPM!==null){
+    ferrChangePM=window.derivedFerrPM;
+    derivedAbsMonth=totalLossMonth+f2mg(ferrChangePM); // back-solve for abs
+  }
+  var mgAbsMonth=derivedAbsMonth!==null?derivedAbsMonth:mgAbsMonthEst;
+  var netMonth=mgAbsMonth-totalLossMonth;
 
   document.getElementById('bleedNote').textContent=post?
     'Post-menopausal: no menstrual iron loss included in model.':
@@ -512,10 +457,14 @@ function calc(){
 
   var lossClass=mgLostMonth>40?'danger':mgLostMonth>20?'warning':'ok';
   var netClass=netMonth<-5?'danger':netMonth<5?'warning':'ok';
+  var absLabel=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined?'Absorbed/month (observed)':'Absorbed/month (estimated)';
+  var absBadge=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined?'ok':'warning';
   document.getElementById('metricsGrid').innerHTML=
-    mc('Iron lost/month',rnd(mgLostMonth),'mg',lossClass)+
-    mc('Iron absorbed/month',rnd(mgAbsMonth),'mg','ok')+
+    mc('Iron lost/month',rnd(totalLossMonth),'mg',lossClass)+
+    mc(absLabel,rnd(mgAbsMonth),'mg',absBadge)+
     mc('Net balance/month',sign(netMonth)+rnd(netMonth),'mg',netClass);
+  // Update absorption panel in intake section
+  updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth);
 
   var months=13;var ferrLine=[startFerr];
   for(var m=1;m<months;m++){
@@ -527,7 +476,7 @@ function calc(){
   var baseDate2=startDateVal2?new Date(startDateVal2):new Date();
   var monthNames2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtMonth(offset){var d=new Date(baseDate2.getFullYear(),baseDate2.getMonth()+offset,1);return monthNames2[d.getMonth()]+' '+d.getFullYear();}
-  lc={cycleLen,bleedDays,flowIdx,dietIron,dietAbs:rnd(dietAbs*100),suppDose,suppAbsBase:rnd(suppAbsBase*100),suppAbs:rnd(suppAbs*100),fmtMonth,
+  lc={cycleLen,bleedDays,flowIdx,dietQ:dietQIdx,dietIronMgDay:rnd(dietIronMgDay*10)/10,dietNetMonth:rnd(dietNetMonth),suppDose,basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
     startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
@@ -563,7 +512,7 @@ function calc(){
   document.getElementById('chartLegend').innerHTML=
     li('#3b82f6','Projected ferritin')+li('#16a34a','Optimal (50 µg/L)',true)+li('#dc2626','Minimum (30 µg/L)',true)+
     (va.length?li('#ea580c','Actual results'):'');
-  calcDerived();
+  if(!window._inCalcDerived) calcDerived();
 }
 
 function updateAnalysis(){
@@ -619,34 +568,185 @@ function li(color,label,dashed){
   return '<span style="display:flex;align-items:center;gap:5px"><span style="'+s+'"></span>'+label+'</span>';
 }
 
+function parseDate(s){
+  if(!s)return null;
+  var d=new Date(s);
+  if(!isNaN(d))return d;
+  // try dd/mm/yyyy
+  var p=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+  if(p)return new Date(p[3],p[2]-1,p[1]);
+  return null;
+}
+
 function calcDerived(){
+  window._inCalcDerived=true;
+  window.derivedFerrPM=null; // reset
   var valid=actuals.filter(function(a){return a.ferritin>0;});
-  if(valid.length<2){document.getElementById('derivedNote').textContent='Enter at least 2 ferritin results to derive real absorption rate.';document.getElementById('derivedGrid').innerHTML='';return;}
-  document.getElementById('derivedNote').textContent='';
-  var first=valid[0],last=valid[valid.length-1];
+  var noteEl=document.getElementById('derivedNote');
+  var gridEl=document.getElementById('derivedGrid');
+  if(valid.length<2){
+    noteEl.textContent='Add at least 2 ferritin results with dates to derive your real absorption rate.';
+    gridEl.innerHTML='';window.derivedFerrPM=null;return;
+  }
+  noteEl.textContent='';
+
+  // Sort by date if dates present, else by entry order
+  var sorted=valid.slice().sort(function(a,b){
+    var da=parseDate(a.date),db=parseDate(b.date);
+    if(da&&db)return da-db;
+    return 0;
+  });
+
+  var first=sorted[0],last=sorted[sorted.length-1];
   var ferrDiff=last.ferritin-first.ferritin;
   var mgDiff=f2mg(ferrDiff);
+
+  // Calculate months elapsed
+  var months=sorted.length-1; // fallback: assume 1 month per entry
+  var da=parseDate(first.date),db=parseDate(last.date);
+  var datesValid=da&&db&&db>da;
+  if(datesValid) months=(db-da)/(1000*60*60*24*30.44);
+  if(months<0.25)months=0.25;
+
+  // Infusions in period
   var infMg=0;infusions.forEach(function(iv){infMg+=iv.dose;});
+
+  // Iron losses in period
+  var meno=document.getElementById('menopause').value;
+  var post=meno==='post';
   var cycleLen=gv('cycleLen')||28;
-  var bleedDays=gv('bleedDays');
+  var bleedDays=post?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var mlPerCycle=flowMl[flowIdx]*(bleedDays/5);
-  var mgLostCycle=mlPerCycle*0.5;
-  var months=valid.length-1||1;
-  var estLoss=mgLostCycle*(months*30/cycleLen);
-  var impliedAbs=(mgDiff+estLoss-infMg);
-  var impliedApm=impliedAbs/months;
-  var dietIron=gv('dietIron');var suppDose=gv('suppDose');
-  var totalMonthly=(dietIron+suppDose)*30;
-  var impliedRate=totalMonthly>0?(impliedApm/totalMonthly*100):null;
-  var lc2=estLoss/months>40?'danger':estLoss/months>20?'warning':'ok';
+  var mlPerCycle=post?0:flowMl[flowIdx]*(bleedDays/5);
+  var mgLostCycleEst=mlPerCycle*0.5;
+  var basalLoss=30*months; // ~1mg/day basal
+  var menstrualLoss=mgLostCycleEst*(months*30/cycleLen);
+  var totalLoss=menstrualLoss+basalLoss;
+
+  var ferrPM=ferrDiff/months;
+  // Store for use by calc()
+  window.derivedFerrPM=ferrPM;
+
+  // Derived absorption: only meaningful when oral absorption dominates
+  // When a large IV infusion occurred, the ferritin change reflects IV iron not oral absorption
+  // Skip the absorption derivation in that case — use IV drop-rate analysis instead
+  var ivDominates=infMg>200; // IV >200mg makes oral absorption derivation unreliable
+  var impliedAbsPM=null;
+  var impliedAbsTotal=null;
+  if(!ivDominates){
+    // absorbed = Δferritin×8 + total losses - infusions
+    impliedAbsTotal=mgDiff+totalLoss-infMg;
+    impliedAbsPM=impliedAbsTotal/months;
+  }
+
+  // Supplement context: use first period's supplement dose if entered
+  var suppDose=first.supp!=null&&first.supp>0?first.supp:gv('suppDose');
+  // Literature expected absorption for this supplement dose
+  var litExpectedAbs=suppDose>0?suppDose*0.04*30:0; // ~4% net, calibrated
+  var dietQIdx=gv('dietQ')||3;
+  var dietQmg=[0,6,8,10,13,16];
+  var dietIronDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
+  var dietAbsEst=dietIronDay*0.04*30;
+  var litTotalEst=litExpectedAbs+dietAbsEst;
+
+  // === DIAGNOSTIC INTERPRETATION ===
+  var diagLines=[];
+  var diagSeverity='ok';
+
+  // 1. Is absorption adequate for losses?
+  if(ivDominates){
+    diagLines.push('IV infusion dominates this period — oral absorption cannot be reliably derived. See infusion analysis below for loss-rate interpretation.');
+  } else if(impliedAbsPM<totalLoss/months){
+    diagLines.push('Absorption ('+rnd(impliedAbsPM)+' mg/month) is insufficient to cover total losses ('+rnd(totalLoss/months)+' mg/month). Iron stores are depleting.');
+    diagSeverity='danger';
+  } else {
+    diagLines.push('Absorption ('+rnd(impliedAbsPM)+' mg/month) is covering total losses ('+rnd(totalLoss/months)+' mg/month). Iron stores are '+(ferrPM>0?'recovering':'stable')+'.');
+  }
+
+  // 2. Compare against literature expectation for supplement (skip if IV dominates)
+  if(!ivDominates&&suppDose>0&&litTotalEst>0&&impliedAbsPM!==null){
+    var ratio=impliedAbsPM/litTotalEst;
+    if(ratio<0.5){
+      diagLines.push('Observed absorption (~'+rnd(impliedAbsPM)+' mg/month) is significantly below the expected range for '+suppDose+'mg elemental iron/day (expected ~'+rnd(litTotalEst)+' mg/month). Possible causes: poor supplement timing or habits, coeliac disease, H. pylori, PPI/antacid use, or formulation issues. Worth investigating.');
+      if(diagSeverity!=='danger')diagSeverity='warn';
+    } else if(ratio<0.75){
+      diagLines.push('Absorption is somewhat below expectation for this supplement dose ('+rnd(ratio*100)+'% of expected). Check timing — 2hr from food, tea, and coffee — and consider whether alternate-day dosing might improve response.');
+      if(diagSeverity==='ok')diagSeverity='warn';
+    } else if(ratio>1.8){
+      diagLines.push('Observed absorption appears higher than expected. If ferritin is rising well, this is positive — but check whether CRP/inflammation was elevated at testing, which can suppress ferritin and make recovery appear faster than it is.');
+    } else {
+      diagLines.push('Absorption is within the expected range for diet and supplement ('+rnd(ratio*100)+'% of expected). Response appears normal.');
+    }
+  }
+
+  // 3. Loss signal (only meaningful when absorption is derived)
+  if(!ivDominates&&ferrPM<-3&&impliedAbsPM!==null&&impliedAbsPM>litTotalEst*0.8){
+    diagLines.push('Absorption appears adequate, yet ferritin is falling ('+rnd(ferrPM)+' µg/L/month). This suggests losses may be higher than modelled — possible unrecognised bleeding, more heavy flow days than reported, or gastrointestinal blood loss. Review loss inputs or investigate further.');
+    if(diagSeverity==='ok')diagSeverity='warn';
+  }
+
+  // 4. Positive signal
+  if(ferrPM>=4&&impliedAbsPM>=litTotalEst*0.7){
+    diagLines.push('Ferritin is rising at '+rnd(ferrPM*10)/10+' µg/L/month — a good response. Continue current regimen and recheck in 3 months.');
+  }
+
+  // 5. INFUSION-AWARE DIAGNOSTICS
+  // Detect if infusions occurred between results
+  var ivBetween=infusions.filter(function(iv){return iv.dose>0;});
+  if(ivBetween.length>0&&suppDose===0){
+    // No oral supplement — IV only scenario
+    var totalIVmg=ivBetween.reduce(function(s,iv){return s+iv.dose;},0);
+    var expectedPeakRise=totalIVmg/8; // ~8mg per µg/L
+    var actualFerrChange=ferrDiff;
+
+    // Expected drop per month from losses alone (no supplement)
+    var expectedDropPM=-(totalLoss/months)/8; // µg/L/month if no supplement
+    var expectedDropTotal=expectedDropPM*months;
+
+    if(ferrDiff<expectedPeakRise*0.6){
+      // Post-infusion ferritin didn't rise as expected
+      diagLines.push('IV infusion(s) totalling '+totalIVmg+'mg were given. Expected ferritin rise ~'+rnd(expectedPeakRise)+' µg/L — observed change was only '+sign(ferrDiff)+rnd(ferrDiff)+' µg/L. Possible explanations: (1) elevated hepcidin/inflammation at time of infusion blocking iron utilisation — check CRP; (2) ferritin reading suppressed by active inflammation giving falsely low reading; (3) very high ongoing losses consuming the infused iron before the next blood test.');
+      if(diagSeverity!=='danger') diagSeverity='warn';
+    } else if(ferrDiff>=expectedPeakRise*0.6){
+      // Peak was adequate — now assess the rate of decline
+      var expectedIfNoLoss=expectedPeakRise; // how much ferritin should have risen with zero loss
+      var lossDrivenDrop=expectedIfNoLoss-ferrDiff; // how much was consumed by losses
+      var lossDrivenPM=lossDrivenDrop/months;
+      var expectedLossPM=(totalLoss/months)/8;
+
+      if(lossDrivenPM>expectedLossPM*1.5){
+        diagLines.push('Infusion response was adequate (ferritin rose as expected). However, ferritin is dropping at ~'+rnd(lossDrivenPM)+' µg/L/month — significantly faster than the modelled loss rate of '+rnd(expectedLossPM)+' µg/L/month. This points to losses being higher than the model assumes, not an absorption problem. Consider whether bleeding is heavier than reported, or whether there is an unidentified blood loss source.');
+        if(diagSeverity!=='danger') diagSeverity='warn';
+      } else {
+        diagLines.push('Infusion response was good and the subsequent decline rate ('+rnd(lossDrivenPM)+' µg/L/month) is consistent with modelled losses. Absorption is not the issue — ongoing losses are driving the requirement for repeat infusions. The modelled loss rate of '+rnd(expectedLossPM)+' µg/L/month implies infusions will be needed approximately every '+rnd(expectedPeakRise/expectedLossPM)+' months to maintain ferritin above the target floor.');
+      }
+      if(diagSeverity==='ok') diagLines.push('No oral supplement is being taken — IV iron is the sole repletion route. See the Infusion Planner tab for a maintenance schedule illustration.');
+    }
+  } else if(ivBetween.length>0&&suppDose>0){
+    // Mixed: IV + oral
+    diagLines.push('Both IV infusion(s) ('+ivBetween.reduce(function(s,iv){return s+iv.dose;},0)+'mg total) and oral supplementation ('+suppDose+'mg/day) are in use. The derived absorption rate reflects the combined effect of both.');
+  }
+
+  // Display
+  var cls=diagSeverity==='danger'?'danger-box':diagSeverity==='warn'?'warn':'';
   document.getElementById('derivedGrid').innerHTML=
-    mc('Ferritin change',sign(ferrDiff)+rnd(ferrDiff),'µg/L',ferrDiff>=0?'ok':'danger')+
-    mc('Net iron change',sign(mgDiff)+rnd(mgDiff),'mg',mgDiff>=0?'ok':'danger')+
-    mc('Est. loss in period',rnd(estLoss),'mg',lc2)+
-    mc('Implied absorption/month',rnd(impliedApm),'mg',impliedApm>0?'ok':'danger')+
-    (impliedRate!=null?mc('Implied absorption rate',rnd(impliedRate),'%',impliedRate>15?'ok':impliedRate>5?'warning':'danger'):'')+
-    mc('Infusions in period',rnd(infMg),'mg','neutral');
+    mc('Ferritin trend',sign(ferrPM)+rnd(ferrPM*10)/10,'µg/L/mo',ferrPM>=1?'ok':ferrPM>-1?'warning':'danger')+
+    mc('Months observed',rnd(months*10)/10,'mo','neutral')+
+    mc('Est. menstrual loss',rnd(menstrualLoss/months),'mg/mo',menstrualLoss/months>40?'danger':menstrualLoss/months>20?'warning':'ok')+
+    mc('Basal loss',rnd(basalLoss/months),'mg/mo','neutral')+
+    mc('Infusions in period',rnd(infMg),'mg','neutral')+
+    (impliedAbsPM!==null?mc('Derived absorption',rnd(impliedAbsPM),'mg/mo',impliedAbsPM>20?'ok':impliedAbsPM>10?'warning':'danger'):mc('Derived absorption','IV dominated','',  'neutral'));
+
+  var diagBox=document.getElementById('absDiagnostic');
+  if(diagBox){
+    diagBox.className='analysis-box '+cls;
+    diagBox.style.display='block';
+    diagBox.innerHTML='<div class="analysis-title">Absorption diagnostic</div>'+
+      diagLines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
+  }
+
+  // derivedFerrPM is now set — calc() will pick it up on next run
+  window._inCalcDerived=false;
 }
 
 function buildGPText(){
@@ -657,9 +757,10 @@ function buildGPText(){
     'Bleeding days per cycle: '+c.bleedDays+' days (clinical normal: 3–7 days)',
     'Estimated menstrual blood loss: '+c.mlPerCycle+' ml/cycle = '+c.mgLostCycle+' mg iron/cycle',
     'Monthly iron loss: '+c.mgLostMonth+' mg/month',
-    'Dietary iron: '+c.dietIron+' mg/day at '+c.dietAbs+'% absorption',
-    'Oral supplement: '+c.suppDose+' mg/day | Baseline absorption: '+c.suppAbsBase+'% | Effective (after habits): '+c.suppAbs+'%',
-    'Total iron absorbed per month: '+c.mgAbsMonth+' mg/month',
+    'Diet quality: '+['','Poor','Low','Average','Good','Excellent'][c.dietQ]+' ('+c.dietIronMgDay+' mg/day, net ~'+c.dietNetMonth+' mg/month to stores)',
+    'Oral supplement: '+c.suppDose+' mg elemental/day',
+    'Total absorbed per month: '+c.mgAbsMonth+' mg/month'+(window.derivedFerrPM!=null?' (observed from blood results)':' (literature estimate)'),
+    'Total losses: menstrual '+c.mgLostMonth+' mg/month + basal '+c.basalLossMonth+' mg/month',
     'Net monthly balance: '+sign(c.netMonth)+c.netMonth+' mg/month',
     'Starting ferritin: '+c.startFerr+' µg/L',
     'Projected ferritin at '+c.fmtMonth(12)+': '+rnd(c.m12ferr)+' µg/L',
@@ -705,7 +806,7 @@ function doCopy(txt){
 
 function saveSession(){
   var name=document.getElementById('sessionName').value||('Patient '+Date.now());
-  var sliders=['cycleLen','bleedDays','flowInt','dietIron','dietAbs','suppDose','suppAbs','startFerr','modVitC','modTiming','modTea','modCa','modAntacid'];
+  var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr'];
   var data={name,age:document.getElementById('patAge').value,meno:document.getElementById('menopause').value,startDate:document.getElementById('startDate').value,
     conds:Object.assign({},conds),infusions:JSON.parse(JSON.stringify(infusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
@@ -729,7 +830,7 @@ function loadSession(name){
     conds=Object.assign({endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false},d.conds||{});
     Object.keys(conds).forEach(function(k){document.getElementById('tog-'+k).classList.toggle('on',conds[k]);});
     infusions=d.infusions||[{month:0,dose:1000}];
-    actuals=d.actuals||[{label:'',ferritin:0},{label:'',ferritin:0}];
+    actuals=d.actuals||[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
     if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
     renderInfusions();renderActuals();updateCondNote();calc();
   }catch(e){}
@@ -752,16 +853,18 @@ function calcIV(){
   var cycleLen=gv('cycleLen')||28;
   var bleedDays=post?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var dietIron=gv('dietIron');
-  var dietAbs=gv('dietAbs')/100;
+  var dietQIdx2=gv('dietQ')||3;
+  var dietQmg2=[0,6,8,10,13,16];
+  var dietIronDay2=conds.vegan?dietQmg2[dietQIdx2]*0.75:dietQmg2[dietQIdx2];
   var startFerr=gv('startFerr')||25;
 
   var mlPerCycle=post?0:flowMl[flowIdx]*(bleedDays/5);
   var mgLostCycle=mlPerCycle*0.5;
   var cyclesPerMonth=post?0:30/cycleLen;
   var mgLostMonth=mgLostCycle*cyclesPerMonth;
-  var mgAbsDietMonth=dietIron*dietAbs*30; // diet only, no supp
-  var netDietMonth=mgAbsDietMonth-mgLostMonth;
+  var mgAbsDietMonth=dietIronDay2*0.04*30; // net diet contribution
+  var basalIV=30;
+  var netDietMonth=mgAbsDietMonth-mgLostMonth-basalIV;
   var ferrDietPM=mg2f(netDietMonth);
 
   // Simulate month by month — trigger infusion when ferritin hits floor
