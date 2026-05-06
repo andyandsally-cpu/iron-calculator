@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3b82f6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Iron Calc">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Iron Balance Calculator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -71,6 +77,10 @@ button:hover{background:#f1f5f9}
 </style>
 </head>
 <body>
+<div id="updateBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#3b82f6;color:#fff;padding:12px 16px;font-size:13px;align-items:center;justify-content:space-between;gap:12px;z-index:999;box-shadow:0 -2px 8px rgba(0,0,0,.15)">
+  <span>A new version is available.</span>
+  <button onclick="window.location.reload()" style="background:#fff;color:#3b82f6;border:none;border-radius:6px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer">Update now</button>
+</div>
 <div class="app">
 <h1>Iron balance calculator</h1>
 <p class="sub">Evidence-based iron modelling · Multi-patient · Session storage · Clinical analysis</p>
@@ -964,5 +974,21 @@ function showTab(t){
 }
 refreshList('');renderInfusions();renderActuals();updateBands();calc();
 </script>
+  <script>
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        reg.addEventListener('updatefound', function(){
+          var newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function(){
+            if(newWorker.state==='installed' && navigator.serviceWorker.controller){
+              // New version available — show update banner
+              var banner = document.getElementById('updateBanner');
+              if(banner) banner.style.display='flex';
+            }
+          });
+        });
+      });
+    }
+  </script>
 </body>
 </html>
