@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <title>Fe+ — Iron Balance Tool</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231e3a5f'/%3E%3Ctext x='18' y='72' font-family='Arial' font-size='62' font-weight='700' fill='white'%3EFe%3C/text%3E%3Ctext x='74' y='48' font-family='Arial' font-size='38' font-weight='700' fill='%233b82f6'%3E+%3C/text%3E%3C/svg%3E">
 <style>
@@ -36,7 +38,8 @@ input[type=range]:disabled{opacity:.35;cursor:not-allowed}
 .tt-d{color:#64748b;margin-bottom:3px}.tt-n{color:#16a34a;font-weight:600;margin-bottom:3px}.tt-s{color:#64748b;font-size:11px}
 .tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:0;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;background:#fff;padding:0 24px}
 .tabs::-webkit-scrollbar{display:none}
-.tab{font-size:13px;padding:10px 16px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
+.tab{font-size:13px;padding:10px 14px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
+@media(max-width:600px){.tab{font-size:12px;padding:8px 10px}}
 .tab.active{color:#1e3a5f;border-bottom-color:#1e3a5f;font-weight:600}
 .fe-header{background:#1e3a5f;padding:10px 24px;display:flex;align-items:center;gap:12px}
 .tab.active{color:#1e293b;border-bottom-color:#3b82f6;font-weight:500}
@@ -652,6 +655,25 @@ button:hover{background:#f1f5f9}
 <div class="grid3" id="metricsGrid"></div>
 <div class="analysis-box" id="analysisBox"><div class="analysis-title" id="analysisTitle"></div><div id="analysisText"></div></div>
 </div>
+
+
+<div class="section" style="margin-top:.25rem">
+<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
+<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+</div>
+
+<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
+<div class="st">Historic ferritin record</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
+<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
+</div>
+
+<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
+</div>
 </div>
 
 <div id="tab-actual" style="display:none">
@@ -1179,24 +1201,6 @@ button:hover{background:#f1f5f9}
 <div class="st">Letter preview</div>
 <div id="letterPreview" style="font-size:13px;line-height:1.75;color:#1e293b;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;white-space:pre-wrap;font-family:Georgia,serif"></div>
 </div>
-</div>
-
-<div class="section" style="margin-top:.25rem">
-<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
-<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
-<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
-<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
-</div>
-
-<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
-<div class="st">Historic ferritin record</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
-<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
-</div>
-
-<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -3737,7 +3741,7 @@ function showTab(t){
   if(t==='tips')calcTips();
   if(t==='tolerability')calcTolerability();
 }
-refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
 </script>
 
 <style>
