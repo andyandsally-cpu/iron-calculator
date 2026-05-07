@@ -69,31 +69,8 @@ button:hover{background:#f1f5f9}
 .analysis-box.danger-box{background:#fef2f2;border-color:#fecaca}
 .analysis-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 @media(max-width:520px){.row{grid-template-columns:130px 1fr 60px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
-/* ── PAYWALL ─────────────────────────────────────────────────────────────── */
-#paywallModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:16px}
-#paywallModal.show{display:flex}
-.paywall-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
-.paywall-icon{font-size:40px;margin-bottom:10px}
-.paywall-title{font-size:20px;font-weight:700;color:#1e293b;margin-bottom:6px}
-.paywall-sub{font-size:13px;color:#64748b;line-height:1.55;margin-bottom:18px}
-.paywall-feature{font-size:13px;color:#2d6a9f;font-weight:600;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 14px;margin-bottom:18px}
-.paywall-btn{display:block;background:#1e3a5f;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;margin-bottom:10px;transition:background .15s}
-.paywall-btn:hover{background:#2d6a9f}
-.paywall-free-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.8}
-.paywall-dismiss{font-size:12px;color:#94a3b8;cursor:pointer;text-decoration:underline;border:none;background:none;padding:4px}
-.paywall-restore{font-size:11px;color:#94a3b8;margin-top:10px}
-/* ── PAYWALL ─────────────────────────────────────────────────────────── */
-#paywallModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:16px}
-#paywallModal.show{display:flex}
-.paywall-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
-.paywall-title{font-size:20px;font-weight:700;color:#1e293b;margin-bottom:6px}
-.paywall-sub{font-size:13px;color:#64748b;line-height:1.55;margin-bottom:12px}
-.paywall-feature{font-size:13px;color:#2d6a9f;font-weight:600;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 14px;margin-bottom:14px}
-.paywall-btn{display:block;background:#1e3a5f;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;margin-bottom:10px}
-.paywall-free-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:10px;line-height:1.8}
-@media print{#paywallModal{display:none!important}}
-#paywallModal{display:none!important}}
-
+@media print{
+  body{background:#fff;padding:.5rem}
   .tabs,.sb,.trow,.eg,.card button,#draftBanner,.ib,.pf,button{display:none!important}
   .ca{display:block!important;border:1px solid #ccc}
   #letterPreview{border:none!important;padding:0!important;font-size:11pt;line-height:1.8;font-family:Georgia,serif}
@@ -151,7 +128,7 @@ button:hover{background:#f1f5f9}
     </div>
     <div style="display:flex;align-items:center;gap:3px">
       <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement dose set to zero<br>• Strategy tab shows infusion as Phase 1 option<br>• Phase 2 maintenance shows low-dose oral alternatives (bisglycinate, liquid iron sachets) and infusion-only option<br>• GP letter requests infusion referral instead of prescription</div><div class="tt-s">Oral iron intolerance means standard prescribed doses cannot be tolerated. This does not necessarily rule out all oral iron — bisglycinate and liquid iron are often much better tolerated. An IV infusion is the most effective solution for recovery. Source: BSH 2021.</div></div></div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement dose set to zero<br>• Strategy tab shows infusion as Phase 1 option<br>• Phase 2 maintenance shows low-dose oral alternatives (bisglycinate, Spatone) and infusion-only option<br>• GP letter requests infusion referral instead of prescription</div><div class="tt-s">Oral iron intolerance means standard prescribed doses cannot be tolerated. This does not necessarily rule out all oral iron — bisglycinate and liquid iron are often much better tolerated. An IV infusion is the most effective solution for recovery. Source: BSH 2021.</div></div></div>
     </div>
     <div style="display:flex;align-items:center;gap:3px">
       <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
@@ -174,7 +151,7 @@ button:hover{background:#f1f5f9}
   <button class="tab" onclick="showTab('strategy')">Strategy</button>
   <button class="tab" onclick="showTab('tips')">Tips &amp; what-if</button>
   <button class="tab" onclick="showTab('tolerability')">Side effects &amp; tolerability</button>
-  <button class="tab" onclick="showTab('export')">GP discussion</button>
+  <button class="tab" onclick="showTab('export')">GP letter</button>
 </div>
 
 <div id="tab-about">
@@ -198,7 +175,7 @@ button:hover{background:#f1f5f9}
     <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
   </svg>
   <div style="color:#f1f5f9;flex:1;min-width:200px">
-    <div style="font-size:26px;font-weight:700;margin-bottom:5px;letter-spacing:-0.5px">Fe+ Iron Balance Tool</div>
+    <div style="font-size:26px;font-weight:700;margin-bottom:5px">Fe+ Iron Balance Tool</div>
     <div style="font-size:13px;color:#94a3b8;line-height:1.6">Being told "your bloods are fine" when you feel terrible is one of the most common and frustrating experiences with iron deficiency. This tool explains why that happens — and helps you prepare a better conversation with your GP.</div>
   </div>
 </div>
@@ -561,7 +538,7 @@ button:hover{background:#f1f5f9}
       <input type="radio" name="formulation" id="form-bisglycinate" value="bisglycinate" onchange="calc()" style="cursor:pointer">
       <span>Ferrous bisglycinate 20mg <span style="color:#94a3b8">(20mg actual iron · OTC · best tolerated)</span></span>
     </label>
-    <div class="ib" tabindex="0" style="margin-left:2px">?<div class="tt"><div class="tt-d">Both are prescribed iron supplements available on the NHS. The difference is the tablet weight and how much actual iron each contains.</div><div class="tt-n"><strong>Ferrous sulfate 200mg</strong> — 65mg actual iron per tablet. Most commonly prescribed. Can cause nausea, constipation or dark stools in some people, especially on an empty stomach.<br><br><strong>Ferrous fumarate 210mg</strong> — 69mg actual iron per tablet. Marginally more iron per tablet. Generally considered slightly better tolerated than sulfate, though evidence is mixed. A useful alternative if sulfate causes GI side effects.<br><br><strong>Ferrous bisglycinate 20mg</strong> — 20mg actual iron per capsule. OTC only (not NHS prescribed). Chelated to glycine so does not release free iron in the gut — dramatically fewer side effects. Absorption is estimated to be better than standard iron salts per mg (typically 1.5–2× higher, though this varies by dose and individual — the evidence base is less robust than for sulfate/fumarate). Best for sensitive stomachs, maintenance, or those who cannot tolerate prescribed iron. Sold as Gentle Iron, OptiFer, and similar brands.</div><div class="tt-s">Ferrous (Fe²⁺) forms absorb significantly better than ferric (Fe³⁺) supplements. Enteric-coated or slow-release tablets are NOT recommended — they bypass the stomach where most absorption occurs. Liquid iron sachets (e.g. Spatone) contain only 5mg actual iron and are only suitable if maintenance needs are very low — check the Tolerability tab.</div></div></div>
+    <div class="ib" tabindex="0" style="margin-left:2px">?<div class="tt"><div class="tt-d">Both are prescribed iron supplements available on the NHS. The difference is the tablet weight and how much actual iron each contains.</div><div class="tt-n"><strong>Ferrous sulfate 200mg</strong> — 65mg actual iron per tablet. Most commonly prescribed. Can cause nausea, constipation or dark stools in some people, especially on an empty stomach.<br><br><strong>Ferrous fumarate 210mg</strong> — 69mg actual iron per tablet. Marginally more iron per tablet. Generally considered slightly better tolerated than sulfate, though evidence is mixed. A useful alternative if sulfate causes GI side effects.<br><br><strong>Ferrous bisglycinate 20mg</strong> — 20mg actual iron per capsule. OTC only (not NHS prescribed). Chelated to glycine so does not release free iron in the gut — dramatically fewer side effects. Absorption is estimated to be better than standard iron salts per mg (typically 1.5–2× higher, though this varies by dose and individual — the evidence base is less robust than for sulfate/fumarate). Best for sensitive stomachs, maintenance, or those who cannot tolerate prescribed iron. Sold as Gentle Iron, OptiFer, and similar brands.</div><div class="tt-s">Ferrous (Fe²⁺) forms absorb significantly better than ferric (Fe³⁺) supplements. Enteric-coated or slow-release tablets are NOT recommended — they bypass the stomach where most absorption occurs. Liquid iron sachets (Spatone etc.) contain only 5mg actual iron and are only suitable if maintenance needs are very low — check the Tolerability tab.</div></div></div>
   </div>
   <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
     ⚠️ <strong>Above 3 tablets (195mg actual iron) per day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — extra tablets pass through unabsorbed and increase the risk of side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better results. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
@@ -812,7 +789,7 @@ button:hover{background:#f1f5f9}
       </label>
       <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
         <input type="radio" name="ointolMaint" value="spatone" onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
-        <span><strong>Option B — Liquid iron sachets (e.g. Spatone):</strong> 1–2 sachets per day (5mg actual iron each). Very well tolerated — worth trying if losses are small. May not fully cover higher loss needs.</span>
+        <span><strong>Option B — Liquid iron (Spatone):</strong> 1–2 sachets per day (5mg actual iron each). Very well tolerated — worth trying if losses are small. May not fully cover higher loss needs.</span>
       </label>
       <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
         <input type="radio" name="ointolMaint" value="bisglycinate" onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
@@ -877,7 +854,7 @@ button:hover{background:#f1f5f9}
       <option value="0">No hormone treatment — current loss unchanged</option>
       <option value="45">Combined oral contraceptive pill — reduces loss by ~45% (NICE NG88)</option>
       <option value="50">Tranexamic acid — reduces loss by ~50% (NICE NG88; non-hormonal)</option>
-      <option value="80">Norethisterone — reduces loss by ~20–80% (varies by dose and regimen)</option>
+      <option value="80">Norethisterone — reduces loss by ~80% (variable; NICE NG88)</option>
       <option value="85">Mirena IUS (hormonal coil) — reduces loss by ~85% on average (NICE NG88)</option>
     </select>
     <div id="tipsHormoneNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
@@ -1031,7 +1008,7 @@ button:hover{background:#f1f5f9}
       <tr>
         <td style="padding:8px 10px;font-weight:700;color:#1e293b">Liquid iron sachets<br><span style="font-weight:400;font-size:10px;color:#94a3b8">(e.g. Spatone, Floradix)</span></td>
         <td style="padding:8px 10px;text-align:center">1 sachet</td>
-        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#ca8a04">5–14mg<br><span style="font-size:10px;color:#94a3b8">typically 5mg per sachet</span></td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#ca8a04">5–14mg<br><span style="font-size:10px;color:#94a3b8">typically 5mg (Spatone)</span></td>
         <td style="padding:8px 10px;text-align:center">★★★☆☆<br><span style="font-size:10px;color:#64748b">~20–30% absorbed</span></td>
         <td style="padding:8px 10px;text-align:center;color:#15803d">Very low</td>
         <td style="padding:8px 10px;text-align:center;color:#94a3b8">✗ OTC only</td>
@@ -1152,7 +1129,7 @@ button:hover{background:#f1f5f9}
 
 <div id="tab-export" style="display:none">
 <div class="section">
-<div class="st">GP discussion summary</div>
+<div class="st">GP letter — pre-authorisation request</div>
 <div class="card">
   <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Complete the fields below, then preview and copy the letter. The content is generated from all data entered across the tool — the more complete the inputs, the stronger the letter.</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
@@ -1202,11 +1179,7 @@ button:hover{background:#f1f5f9}
 <div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
 </div>
 
-<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0;text-align:center">
-  ⚠️ This tool provides estimates to support a conversation with your GP — not a substitute for clinical assessment.<br>
-  <a href="privacy.html" style="color:#94a3b8;text-decoration:underline">Privacy policy</a> · 
-  <a href="terms.html" style="color:#94a3b8;text-decoration:underline">Terms of use</a>
-</p>
+<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -1214,8 +1187,6 @@ button:hover{background:#f1f5f9}
 var infusions=[{month:0,dose:1000}];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
-var chartInst=null;
-var historicChartInst=null;
 var tipsChartInst=null;
 window.strategyScenario=null;
 window.revisedScenario=null; // stores revised projection from last actual result
@@ -1505,8 +1476,6 @@ function calc(){
   var cycleLen=rawCycleLen>364?365:rawCycleLen;
   var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var dietQIdx=gv('dietQ')||3;
-  var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
   var dietQmg=[0,6,8,10,13,16];
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
@@ -1658,16 +1627,14 @@ function calc(){
 
   // BLUE = treatment plan (hero line)
   if(hasStrategy){
-    ds.push({label:'Supplement plan (Phase 1 recovery → Phase 2 maintenance)',data:window.strategyScenario.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
+    ds.push({label:'Treatment plan (Phase 1 recovery → Phase 2 maintenance)',data:window.strategyScenario.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
   }
 
   // ORANGE dashed = what happens if supplementation stops after reaching target
   var stopLine=null;
   if(hasStrategy&&lc){
     var sc2=window.strategyScenario;
-    // FIXED: post-target decline uses replete absorption rate (4%) — ferritin is at target, not depleted
-    var repleteAbsRate=0.04;
-    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*repleteAbsRate,4.0)*30)/8:0;
+    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*(lc.tieredAbsRate||0.04),4.0)*30)/8:0;
     var postStopRate=(lc.ferrChangePM||0)-suppFerrPM2;
     var ivBoost2=sc2.ivDose>0?mg2f(sc2.ivDose):0;
     var stopArr=[startFerr];
@@ -1726,7 +1693,7 @@ function calc(){
 
   // End-of-line labels
   var endLabelMap={
-    'Supplement plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Supplement plan',color:'#3b82f6'},
+    'Treatment plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Treatment plan',color:'#3b82f6'},
     'If supplementation stops after reaching target':{text:'If you stop after target',color:'#f97316'},
     'Revised projection from last blood test':{text:'Revised projection',color:'#7c3aed'}
   };
@@ -1751,7 +1718,7 @@ function calc(){
   chartInst.update();
 
   var titleEl=document.getElementById('chartTitle');
-  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · supplement plan vs stopping after target':'');
+  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · treatment plan vs stopping after target':'');
 
   var explainer=document.getElementById('chartExplainer');
   if(explainer){
@@ -1759,7 +1726,7 @@ function calc(){
     if(hasStrategy){
       var sc=window.strategyScenario;
       var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an estimated immediate boost (actual ferritin response varies widely — ±50% or more — depending on inflammation and iron utilisation).':'';
-      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Supplement plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
+      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
       if(stopLine){
         var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
         var stopBreakdown='';
@@ -1790,7 +1757,7 @@ function calc(){
   }
 
   document.getElementById('chartLegend').innerHTML=
-    (hasStrategy?li('#3b82f6','Blue — Supplement plan (Phase 1: recovery · Phase 2: maintenance)'):'')+
+    (hasStrategy?li('#3b82f6','Blue — Treatment plan (Phase 1: recovery · Phase 2: maintenance)'):'')+
     (stopLine?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
     (hasRevised?li('#7c3aed','Purple dashed — Revised projection from last blood test',true):'')+
     li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
@@ -2214,12 +2181,10 @@ function calcTips(){
   var hormoneReduction=+(document.getElementById('tipsHormoneTx').value)||0;
   var hormoneLine=null;
   var hormoneFerrPM=baseFerrPM;
-  // FIXED: apply formulation absorption multiplier throughout calcTips
-  var tipsFmMult=lc&&lc.suppFormulation?lc.suppFormulation.absMultiplier:1.0;
   if(hormoneReduction>0&&!post){
     var reducedMgLostMonth=c.mgLostMonth*(1-hormoneReduction/100);
     var reducedTotalLoss=reducedMgLostMonth+(c.basalLossMonth||30);
-    var suppAbsMonth=suppDose>0?Math.min(suppDose*tieredRate*tipsFmMult,4.0)*30:0;
+    var suppAbsMonth=suppDose>0?Math.min(suppDose*tieredRate,4.0)*30:0;
     var newNetMonth=(newDietNet+suppAbsMonth)-reducedTotalLoss;
     hormoneFerrPM=mg2f(newNetMonth);
     hormoneLine=[startFerr];
@@ -2230,8 +2195,10 @@ function calcTips(){
   var inflammLine=null;
   var inflammFerrPM=baseFerrPM;
   if(tipsInflamOn){
+    // Restore absorption to full tiered rate (inflammation was impairing it)
+    // Use a boosted rate — 1.5x current tiered rate, max at the fully healthy rate for this ferritin
     var healthyRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
-    var suppAbsInflam=suppDose>0?Math.min(suppDose*healthyRate*tipsFmMult,4.0)*30:0;
+    var suppAbsInflam=suppDose>0?Math.min(suppDose*healthyRate,4.0)*30:0;
     var newNetInflam=(newDietNet+suppAbsInflam)-totalLossMonth;
     inflammFerrPM=mg2f(newNetInflam);
     inflammLine=[startFerr];
@@ -2245,7 +2212,7 @@ function calcTips(){
     var reducedLoss=hormoneReduction>0&&!post?
       (c.mgLostMonth*(1-hormoneReduction/100))+(c.basalLossMonth||30):
       totalLossMonth;
-    var suppAbsC=suppDose>0?Math.min(suppDose*healthyRateC*tipsFmMult,4.0)*30:0;
+    var suppAbsC=suppDose>0?Math.min(suppDose*healthyRateC,4.0)*30:0;
     var newNetC=(newDietNet+suppAbsC)-reducedLoss;
     var combinedFerrPM=mg2f(newNetC);
     combinedLine=[startFerr];
@@ -2256,7 +2223,7 @@ function calcTips(){
   var hmNoteEl=document.getElementById('tipsHormoneNote');
   if(hmNoteEl){
     if(hormoneReduction>0&&!post){
-      var txName=['','Combined pill (~45% reduction)','Tranexamic acid (~50% reduction — non-hormonal, taken during period only)','Norethisterone (~20–80% depending on dose/regimen)','Mirena IUS (~85% reduction on average)'][
+      var txName=['','Combined pill (~45% reduction)','Tranexamic acid (~50% reduction — non-hormonal, taken during period only)','Norethisterone (~80% reduction — variable)','Mirena IUS (~85% reduction on average)'][
         [0,45,50,80,85].indexOf(hormoneReduction)];
       if(!txName) txName='Selected treatment';
       var origLoss=rnd(c.mgLostMonth);
@@ -2444,7 +2411,7 @@ function calcTolerability(){
     var dietAbsPerMonth=lc.dietNetMonth||0;
     var totalWithSpatone=spatoneAbsPerMonth+dietAbsPerMonth;
     if(deficitAfterDiet<=0){
-      liEl.innerHTML='Based on your settings, diet alone covers your losses — liquid iron sachets would be more than sufficient for maintenance. <strong>1 iron water sachet per day (e.g. Spatone)</strong> (5mg actual iron, ~1.25mg absorbed) would provide useful additional iron on top of diet.';
+      liEl.innerHTML='Based on your settings, diet alone covers your losses — liquid iron sachets would be more than sufficient for maintenance. <strong>1 sachet of Spatone per day</strong> (5mg actual iron, ~1.25mg absorbed) would provide useful additional iron on top of diet.';
     } else if(totalWithSpatone>=lc.totalLossMonth){
       liEl.innerHTML='<strong>Yes — liquid iron may be sufficient for your maintenance needs.</strong> One Spatone sachet/day provides approximately '+rnd(spatoneAbsPerMonth)+' mg absorbed iron per month from supplementation. Combined with diet ('+rnd(dietAbsPerMonth)+' mg/month), this should cover your total losses of '+rnd(lc.totalLossMonth)+' mg/month. Liquid iron is not suitable for recovery (Phase 1) — but for Phase 2 maintenance it is a viable, very well-tolerated option.';
     } else if(totalWithSpatone>=lc.totalLossMonth*0.7){
@@ -2515,14 +2482,12 @@ function renderTolChart(){
   });
 
   var compSuppElem=fixedElemPerDay!==null?fixedElemPerDay:suppElem;
-  // FIXED: apply formulation absorption multiplier (bisglycinate 1.6×)
-  var tolFmMult=lc&&lc.suppFormulation?lc.suppFormulation.absMultiplier:1.0;
-  var compSuppAbs=compSuppElem>0?Math.min(compSuppElem*tieredRate*tolFmMult,4.0)*30*compMult:0;
+  var compSuppAbs=compSuppElem>0?Math.min(compSuppElem*tieredRate,4.0)*30*compMult:0;
   // For alt-day: only 15 doses/month
   var isAltDay=tolState['altday'];
   var isBisglycTol=lc&&lc.suppFormulation&&lc.suppFormulation.abbr==='bisglycinate';
   var altDayMult=isBisglycTol?1.03:1.15; // bisglycinate already bypasses hepcidin partially
-  if(isAltDay&&compSuppElem>0) compSuppAbs=Math.min(compSuppElem*tieredRate*tolFmMult*altDayMult,4.8)*15;
+  if(isAltDay&&compSuppElem>0) compSuppAbs=Math.min(compSuppElem*tieredRate*altDayMult,4.8)*15;
 
   var compNetMonth=(c.dietNetMonth||0)+compSuppAbs-c.totalLossMonth;
   var compFerrPM=mg2f(compNetMonth);
@@ -2960,8 +2925,7 @@ function buildGPLetter(){
   var totalLossMonth=(c.basalLossMonth||30)+(c.mgLostMonth||0);
   var dietNet=c.dietNetMonth||0;
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
-  // Maintenance uses replete absorption rate (4%) — ferritin is at target during maintenance
-  var maintAbsRateL=0.04;
+  var maintAbsRateL=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
   var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(maintAbsRateL*30)/5)*5:0;
   var fmL=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate',otc:false};
   var maintTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/fmL.elemPerTab*30/4.3):0;
@@ -3000,7 +2964,7 @@ function buildGPLetter(){
   L.push('');
 
   // Opening — personal, direct
-  L.push('I am writing to ask for your help with my iron deficiency, which has been an ongoing problem for me for some time. I would like to discuss a prescription for iron supplementation and, if possible, whether it would be possible to arrange a small number of follow-up blood tests so I can monitor my progress.');
+  L.push('I am writing to ask for your help with my iron deficiency, which has been an ongoing problem for me for some time. I would like to request a prescription for iron supplementation and, if possible, pre-approval for a small number of follow-up blood tests so I can monitor my progress without needing to go through the triage system each time.');
   L.push('');
   L.push('I have been using an iron balance planning tool to help me understand my ferritin levels and prepare for this conversation — the figures and proposed schedule in this letter come from that. I wanted to be transparent about this so you can see where the numbers are coming from.');
   L.push('');
@@ -3079,7 +3043,7 @@ function buildGPLetter(){
     L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+baselineFerr+' µg/L), which I think is recent enough to use as a starting point.');
     L.push('');
   }
-  L.push('I would like to ask whether it would be possible to arrange a short series of follow-up ferritin tests so I can book them directly with the phlebotomy clinic. This would help me monitor progress without needing a separate GP appointment each time, and would mean I can flag any concerns promptly if my levels are not improving as expected.');
+  L.push('I would like to ask whether it would be possible to pre-authorise a short series of follow-up ferritin tests, so I can book them directly with the phlebotomy clinic without needing to go through triage each time. I understand this kind of arrangement can sometimes be agreed in advance for ongoing conditions, and it would make it much easier to stay on top of monitoring without taking up unnecessary GP appointments.');
   L.push('');
   L.push('The schedule I am proposing is:');
   L.push('');
@@ -3500,9 +3464,7 @@ function calcStrategy(){
   // Back-calculate elemental supplement needed using tiered absorption rate
   // At maintenance, ferritin should be at target (>=50), so use the replete rate (4%)
   // but if currently below 50, use the current tiered rate as a more accurate basis
-  // FIXED: maintenance uses replete absorption rate (4%) — at maintenance ferritin is at target
-  // Using start-ferritin tiered rate would underestimate maintenance dose needed
-  var maintAbsRate=0.04;
+  var maintAbsRate=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04; // at least 4% for maintenance
   var maintDailyMg=deficitAfterDiet/(maintAbsRate*30);
   // Alternate-day: Moretti et al shows improved fractional absorption — evidence suggests
   // meaningfully better per-dose absorption (not just 10%); framed conservatively here
@@ -3578,10 +3540,10 @@ function calcStrategy(){
         '</div>';
     } else if(ointolOption==='spatone'){
       oralIntolNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:10px 14px;font-size:12px;color:#854d0e;line-height:1.6">'+
-        '<strong>Option B selected — Liquid iron sachets (e.g. Spatone):</strong> '+
+        '<strong>Option B selected — Spatone liquid iron:</strong> '+
         (spatoneCoversIt?
           'Your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month) is small enough that <strong>'+sachetsNeeded2+' Spatone sachet'+(sachetsNeeded2===1?'':'s')+' per day</strong> ('+sachetsNeeded2*5+'mg actual iron · ~'+rnd(sachetsNeeded2*spatoneAbsPerSachet2)+'mg absorbed/month) should cover it. Take mixed in orange juice. Available OTC — no prescription needed.':
-          'Your deficit ('+rnd(deficitAfterDiet)+' mg/month) is higher than liquid iron sachets cover reliably. <strong>2–3 sachets/day</strong> will slow ferritin decline after an infusion but may not fully maintain levels. Best used alongside infusion-based maintenance.')+
+          'Your deficit ('+rnd(deficitAfterDiet)+' mg/month) is higher than Spatone covers reliably. <strong>2–3 sachets/day</strong> will slow ferritin decline after an infusion but may not fully maintain levels. Best used alongside infusion-based maintenance.')+
         ' Each sachet is labelled 250ml natural iron-rich water — actual iron content is 5mg per sachet. Absorption varies — typically 15–25% depending on timing and whether taken with food or juice; taking with orange juice improves absorption (Persson et al, Acta Obstet Gynecol 2003). The ~25% figure used here is an optimistic estimate; real-world absorption may be closer to 15–20%.'+
         '</div>';
     } else if(ointolOption==='bisglycinate'){
@@ -3751,262 +3713,92 @@ function showTab(t){
   if(t==='tips')calcTips();
   if(t==='tolerability')calcTolerability();
 }
-
-// ── PAYWALL ──────────────────────────────────────────────────────────────────
-// Bypass code hash (SHA-256 of "ducatifund" lowercase)
-var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
-
-function sha256(str){
-  // Simple check against stored hash using SubtleCrypto async — or just check localStorage
-  // For URL bypass we store permanently on first visit
-}
-
-function isUnlocked(){
-  return localStorage.getItem('ironToolUnlocked')==='true';
-}
-
-function requireUnlock(featureName){
-  if(isUnlocked()) return true;
-  var el=document.getElementById('paywallFeature');
-  if(el) el.textContent=featureName;
-  document.getElementById('paywallModal').classList.add('show');
-  return false;
-}
-
-function closePaywall(){
-  document.getElementById('paywallModal').classList.remove('show');
-}
-
-function restoreAccess(){
-  // Simple trust-based restore — MVP approach
-  var confirmed=window.confirm('This will restore your paid access on this device. Only use this if you have already purchased the full version.');
-  if(confirmed){
-    localStorage.setItem('ironToolUnlocked','true');
-    closePaywall();
-    location.reload();
-  }
-}
-
-function checkBypassCode(){
-  // Check URL parameter ?code=XXXX
-  var params=new URLSearchParams(window.location.search);
-  var code=params.get('code');
-  if(!code) return;
-  // Hash the code and compare (using async SubtleCrypto)
-  var encoder=new TextEncoder();
-  var data=encoder.encode(code.toLowerCase().trim());
-  crypto.subtle.digest('SHA-256',data).then(function(hashBuffer){
-    var hashArray=Array.from(new Uint8Array(hashBuffer));
-    var hashHex=hashArray.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-    if(hashHex===BYPASS_HASH){
-      localStorage.setItem('ironToolUnlocked','true');
-      // Clean URL (remove code param)
-      var url=new URL(window.location.href);
-      url.searchParams.delete('code');
-      window.history.replaceState({},'',url.toString());
-      console.log('Iron Balance Tool: access unlocked.');
-    }
-  });
-}
-
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();
-
-// Close modal on backdrop click
-document.getElementById('paywallModal').addEventListener('click',function(e){
-  if(e.target===this) closePaywall();
-});
-
-// Update tab click handlers to gate paid tabs
-(function(){
-  var paidTabs=['strategy','tips','tolerability','export'];
-  var tabNames={
-    strategy:'Strategy tab — Phase 1 &amp; 2 planning',
-    tips:'Tips &amp; what-if explorer',
-    tolerability:'Side effects &amp; tolerability',
-    export:'GP discussion summary'
-  };
-  // Patch showTab to check unlock
-  var _origShowTab=showTab;
-  showTab=function(t){
-    if(paidTabs.indexOf(t)>-1&&!isUnlocked()){
-      var el=document.getElementById('paywallFeature');
-      if(el) el.innerHTML=tabNames[t]||t;
-      document.getElementById('paywallModal').classList.add('show');
-      return;
-    }
-    _origShowTab(t);
-  };
-
-  // Also gate session save/restore
-  var _origSaveSession=typeof saveSession==='function'?saveSession:null;
-  if(_origSaveSession){
-    saveSession=function(){
-      if(!isUnlocked()){requireUnlock('Session save & restore');return;}
-      _origSaveSession();
-    };
-  }
-
-  // Show unlock badge on paid tab buttons
-  if(!isUnlocked()){
-    document.querySelectorAll('.tab').forEach(function(btn){
-      var onclick=btn.getAttribute('onclick')||'';
-      var match=onclick.match(/showTab\('(\w+)'\)/);
-      if(match&&paidTabs.indexOf(match[1])>-1){
-        btn.style.position='relative';
-        var badge=document.createElement('span');
-        badge.textContent='🔒';
-        badge.style.cssText='font-size:9px;position:absolute;top:-2px;right:-2px;line-height:1';
-        btn.appendChild(badge);
-      }
-    });
-  }
-})();
-
 </script>
-<!-- ── PAYWALL MODAL ──────────────────────────────────────────────────────── -->
-<div id="paywallModal" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
-  <div class="paywall-box">
-    <div class="paywall-icon">🔒</div>
-    <div class="paywall-title" id="paywallTitle">Full version required</div>
-    <div class="paywall-sub">This feature is part of the full Iron Balance Tool.</div>
-    <div class="paywall-feature" id="paywallFeature">Strategy &amp; GP discussion summary</div>
-    <div class="paywall-free-list">
-      <strong>Already free:</strong><br>
-      ✓ About iron &amp; ferritin (full)<br>
-      ✓ Balance model (full)<br>
-      ✓ Actual results &amp; chart (full)
-    </div>
-    <div class="paywall-free-list" style="background:#fefce8;border-color:#fde047">
-      <strong>Full version unlocks:</strong><br>
-      ⭐ Strategy tab — Phase 1 &amp; 2 planning<br>
-      ⭐ Tips &amp; what-if explorer<br>
-      ⭐ Side effects &amp; tolerability<br>
-      ⭐ GP discussion summary (copy &amp; export)<br>
-      ⭐ Session save &amp; restore
-    </div>
-    <a id="paywallStripeBtn" href="YOUR_STRIPE_PAYMENT_LINK" class="paywall-btn">Unlock full version — £9.99 one-off →</a>
-    <div style="font-size:11px;color:#64748b;margin-bottom:10px">One-off payment · No subscription · Works on any device after unlocking</div>
-    <button class="paywall-dismiss" onclick="closePaywall()">Maybe later</button>
-    <div class="paywall-restore">
-      Already paid? <button onclick="restoreAccess()" style="font-size:11px;color:#2d6a9f;cursor:pointer;text-decoration:underline;border:none;background:none;padding:0">Restore access on this device</button>
-    </div>
-  </div>
-</div>
 
-<!-- ── PAYWALL MODAL ─────────────────────────────────────────── -->
-<div id="paywallModal" role="dialog" aria-modal="true">
-  <div class="paywall-box">
-    <div style="display:flex;justify-content:center;margin-bottom:12px">
-      <svg width="64" height="64" viewBox="0 0 100 100" style="border-radius:12px">
-        <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
-        <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-        <circle cx="80" cy="34" r="4.5" fill="#3b82f6"/>
-        <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
-        <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
-      </svg>
-    </div>
-    <div class="paywall-title">Full version required</div>
-    <div class="paywall-sub">This feature is part of the full Fe+ Iron Balance Tool.</div>
-    <div class="paywall-feature" id="paywallFeature">Strategy &amp; GP discussion summary</div>
-    <div class="paywall-free-list">
-      <strong>Already free:</strong><br>
-      ✓ About iron &amp; ferritin (full)<br>
-      ✓ Balance model (full)<br>
-      ✓ Actual results &amp; chart (full)
-    </div>
-    <div class="paywall-free-list" style="background:#fefce8;border:1px solid #fde047">
-      <strong>Full version unlocks:</strong><br>
-      ⭐ Strategy tab — Phase 1 &amp; 2 planning<br>
-      ⭐ Tips &amp; what-if explorer<br>
-      ⭐ Side effects &amp; tolerability<br>
-      ⭐ GP discussion summary<br>
-      ⭐ Session save &amp; restore
-    </div>
-    <a href="https://buy.stripe.com/test_aFa28kf6R8IvbIv2Rcgfu00" class="paywall-btn">Unlock full version — £9.99 one-off →</a>
-    <div style="font-size:11px;color:#64748b;margin-bottom:12px">One-off payment · No subscription · Works on any device</div>
-    <button onclick="closePaywall()" style="font-size:12px;color:#94a3b8;cursor:pointer;text-decoration:underline;border:none;background:none;padding:4px">Maybe later</button>
-    <div style="margin-top:10px;font-size:11px;color:#94a3b8">
-      Already paid? <button onclick="restoreAccess()" style="font-size:11px;color:#2d6a9f;cursor:pointer;text-decoration:underline;border:none;background:none;padding:0">Restore access on this device</button>
-    </div>
+<style>
+#paywallModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:16px}
+#paywallModal.show{display:flex}
+.pw-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
+.pw-btn{display:block;background:#1e3a5f;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;margin:12px 0 8px}
+.pw-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin:8px 0;line-height:1.8}
+</style>
+
+<div id="paywallModal">
+  <div class="pw-box">
+    <svg width="56" height="56" viewBox="0 0 100 100" style="border-radius:10px;margin-bottom:10px">
+      <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
+      <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+      <circle cx="80" cy="34" r="4.5" fill="#3b82f6"/>
+      <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
+      <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
+    </svg>
+    <div style="font-size:19px;font-weight:700;color:#1e293b;margin-bottom:5px">Full version required</div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:8px">This feature is part of the full Fe+ Iron Balance Tool.</div>
+    <div style="font-size:13px;color:#2d6a9f;font-weight:600;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 14px;margin-bottom:10px" id="paywallFeature">Strategy &amp; GP discussion</div>
+    <div class="pw-list"><strong>Already free:</strong><br>✓ About iron &amp; ferritin<br>✓ Balance model<br>✓ Actual results &amp; chart</div>
+    <div class="pw-list" style="background:#fefce8;border:1px solid #fde047"><strong>Full version unlocks:</strong><br>⭐ Strategy tab<br>⭐ Tips &amp; what-if<br>⭐ Side effects &amp; tolerability<br>⭐ GP discussion summary<br>⭐ Session save &amp; restore</div>
+    <a href="https://buy.stripe.com/test_aFa28kf6R8IvbIv2Rcgfu00" class="pw-btn">Unlock full version — £9.99 →</a>
+    <div style="font-size:11px;color:#64748b;margin-bottom:10px">One-off payment · No subscription</div>
+    <button onclick="closePaywall()" style="font-size:12px;color:#94a3b8;border:none;background:none;cursor:pointer;text-decoration:underline">Maybe later</button><br>
+    <button onclick="restoreAccess()" style="font-size:11px;color:#2d6a9f;border:none;background:none;cursor:pointer;text-decoration:underline;margin-top:6px">Already paid? Restore access</button>
   </div>
 </div>
 
 <script>
-// ── PAYWALL ───────────────────────────────────────────────────────────────
 var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
 
-function isUnlocked(){
-  return localStorage.getItem('ironToolUnlocked')==='true';
-}
+function isUnlocked(){return localStorage.getItem('ironToolUnlocked')==='true';}
 
-function closePaywall(){
-  document.getElementById('paywallModal').classList.remove('show');
-}
+function closePaywall(){document.getElementById('paywallModal').classList.remove('show');}
 
 function restoreAccess(){
-  if(window.confirm('This will restore your paid access on this device. Only use this if you have already purchased the full version.')){
+  if(confirm('Restore paid access on this device? Only use this if you have already purchased.')){
     localStorage.setItem('ironToolUnlocked','true');
-    closePaywall();
-    location.reload();
+    closePaywall();location.reload();
   }
 }
 
 function checkBypassCode(){
-  var params=new URLSearchParams(window.location.search);
-  var code=params.get('code');
-  if(!code) return;
-  var encoder=new TextEncoder();
-  var data=encoder.encode(code.toLowerCase().trim());
-  crypto.subtle.digest('SHA-256',data).then(function(hashBuffer){
-    var hashHex=Array.from(new Uint8Array(hashBuffer)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-    if(hashHex===BYPASS_HASH){
+  var p=new URLSearchParams(window.location.search);
+  var c=p.get('code');
+  if(!c)return;
+  crypto.subtle.digest('SHA-256',new TextEncoder().encode(c.toLowerCase().trim())).then(function(buf){
+    var hex=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    if(hex===BYPASS_HASH){
       localStorage.setItem('ironToolUnlocked','true');
-      var url=new URL(window.location.href);
-      url.searchParams.delete('code');
-      window.history.replaceState({},'',url.toString());
+      var u=new URL(window.location.href);u.searchParams.delete('code');
+      window.history.replaceState({},'',u.toString());
     }
   });
 }
-
 checkBypassCode();
 
-document.getElementById('paywallModal').addEventListener('click',function(e){
-  if(e.target===this) closePaywall();
-});
+document.getElementById('paywallModal').addEventListener('click',function(e){if(e.target===this)closePaywall();});
 
-// Patch showTab to gate paid tabs
-(function(){
-  var paidTabs=['strategy','tips','tolerability','export'];
-  var tabNames={
-    strategy:'Strategy tab — Phase 1 &amp; 2 planning',
-    tips:'Tips &amp; what-if explorer',
-    tolerability:'Side effects &amp; tolerability',
-    export:'GP discussion summary'
-  };
-  var _orig=showTab;
-  showTab=function(t){
-    if(paidTabs.indexOf(t)>-1&&!isUnlocked()){
-      var el=document.getElementById('paywallFeature');
-      if(el) el.innerHTML=tabNames[t]||t;
-      document.getElementById('paywallModal').classList.add('show');
-      return;
-    }
-    _orig(t);
-  };
-  // Add lock badges to paid tab buttons
-  if(!isUnlocked()){
-    document.querySelectorAll('.tab').forEach(function(btn){
-      var oc=btn.getAttribute('onclick')||'';
-      var m=oc.match(/showTab\('(\w+)'\)/);
-      if(m&&paidTabs.indexOf(m[1])>-1){
-        var badge=document.createElement('span');
-        badge.textContent=' 🔒';
-        badge.style.fontSize='9px';
-        btn.appendChild(badge);
-      }
-    });
+// Gate paid tabs — patch showTab AFTER it's defined
+var _showTab=showTab;
+showTab=function(t){
+  var paid=['strategy','tips','tolerability','export'];
+  var names={strategy:'Strategy tab',tips:'Tips &amp; what-if',tolerability:'Side effects &amp; tolerability',export:'GP discussion summary'};
+  if(paid.indexOf(t)>-1&&!isUnlocked()){
+    var el=document.getElementById('paywallFeature');
+    if(el)el.innerHTML=names[t];
+    document.getElementById('paywallModal').classList.add('show');
+    return;
   }
-})();
+  _showTab(t);
+};
+
+// Lock badges on paid tabs
+if(!isUnlocked()){
+  document.querySelectorAll('.tab').forEach(function(btn){
+    var m=(btn.getAttribute('onclick')||'').match(/showTab\('(\w+)'\)/);
+    if(m&&['strategy','tips','tolerability','export'].indexOf(m[1])>-1){
+      btn.insertAdjacentText('beforeend',' 🔒');
+    }
+  });
+}
 </script>
 
 </body>
