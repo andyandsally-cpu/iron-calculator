@@ -85,61 +85,19 @@ button:hover{background:#f1f5f9}
 <h1 style="display:none">Fe+ Iron Balance Tool</h1>
 <p class="sub" style="display:none">Iron balance planning tool</p>
 
-<div class="section" id="sessionSection">
-<div class="card">
-  <div id="draftBanner" style="display:none;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#854d0e;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span>⚠️ <strong>Unsaved session found</strong> from your last visit — restore it?</span>
-    <button onclick="restoreDraft()" style="background:#fde047;border-color:#ca8a04;font-size:12px;padding:3px 10px">Restore</button>
-    <button onclick="discardDraft()" style="font-size:12px;padding:3px 10px">Discard</button>
+<div style="background:#1e3a5f;border-radius:10px;padding:10px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+  <svg width="36" height="36" viewBox="0 0 100 100" style="flex-shrink:0;border-radius:8px">
+    <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
+    <rect width="100" height="100" rx="18" fill="white" fill-opacity="0.08"/>
+    <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+    <circle cx="80" cy="34" r="4.5" fill="#3b82f6"/>
+    <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
+    <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
+  </svg>
+  <div>
+    <div style="font-size:15px;font-weight:700;color:#fff">Fe+ Iron Balance Tool</div>
+    <div style="font-size:11px;color:#94a3b8">Planning &amp; GP discussion support — not a substitute for clinical advice</div>
   </div>
-  <div class="sb">
-    <select id="sessionSelect" onchange="loadSession(this.value)"><option value="">— new patient —</option></select>
-    <input type="text" id="sessionName" placeholder="Patient name / ID" value="Patient 1">
-    <button onclick="saveSession()">Save</button>
-    <button onclick="deleteSession()">Delete</button>
-  </div>
-  <div class="pg">
-    <div class="pf"><label>Age</label><input type="number" id="patAge" min="12" max="85" value="28" onchange="applyDefaults();calc()"></div>
-    <div class="pf"><label>Menopausal status</label>
-      <select id="menopause" onchange="applyDefaults();calc()">
-        <option value="pre">Pre-menopausal</option>
-        <option value="peri">Peri-menopausal</option>
-        <option value="post">Post-menopausal</option>
-      </select>
-    </div>
-  </div>
-  <div class="pg" style="margin-top:8px">
-    <div class="pf"><label>Plan start date <span style="font-weight:400;color:#94a3b8">— month 0 on chart · only results from this date used for absorption calculations</span></label><input type="date" id="startDate" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b" onchange="calc()"></div>
-  </div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:6px">Known conditions — toggle to adjust relevant defaults:</div>
-  <div class="trow">
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-endo" onclick="toggleCond('endo')">Endometriosis</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle (vs 5)<br>• Flow intensity → Heavy<br>• Note added about gut inflammation potentially affecting absorption</div><div class="tt-s">Endometriosis causes significantly heavier, longer periods — the primary driver of iron loss. Gut endometriosis can also impair absorption. Source: NICE NG73.</div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-adeno" onclick="toggleCond('adeno')">Adenomyosis</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle<br>• Flow intensity → Heavy<br>Same effect as endometriosis on bleeding parameters</div><div class="tt-s">Adenomyosis causes the endometrium to grow into the uterine muscle, typically producing heavy, prolonged periods. Iron loss is similar to endometriosis. Source: NICE NG73.</div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-coeliac" onclick="toggleCond('coeliac')">Coeliac disease</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement absorption rate reduced by ~55% (villous atrophy impairs duodenal iron uptake)<br>• Diet iron absorption also reduced (malabsorption affects all nutrients)<br>• Warning shown about refractory deficiency</div><div class="tt-s">Untreated coeliac causes villous atrophy in the duodenum — the primary site of iron absorption. Iron deficiency is often the presenting symptom. A gluten-free diet gradually restores absorption. Source: BSH 2021; NICE CG86.</div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement dose set to zero<br>• Strategy tab shows infusion as Phase 1 option<br>• Phase 2 maintenance shows low-dose oral alternatives (bisglycinate, Spatone) and infusion-only option<br>• GP letter requests infusion referral instead of prescription</div><div class="tt-s">Oral iron intolerance means standard prescribed doses cannot be tolerated. This does not necessarily rule out all oral iron — bisglycinate and liquid iron are often much better tolerated. An IV infusion is the most effective solution for recovery. Source: BSH 2021.</div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Cycle length default → 35 days (irregular/longer cycles)<br>• Informational note added about insulin resistance and hepcidin<br>• No numeric absorption penalty applied — evidence for the specific effect size is not strong enough to quantify reliably</div><div class="tt-s">PCOS commonly causes irregular periods. Insulin resistance is associated with low-grade inflammation which may raise hepcidin — but the effect size is not reliably quantified in the literature. If ferritin is not recovering despite good adherence, raise this with your GP. Source: NICE CG156.</div></div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:3px">
-      <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Dietary iron quantity reduced by 25% (plant-based diets have lower overall iron density)<br>• Dietary absorption rate reduced (non-haem iron absorbs at 3–8% vs haem iron at 20–25%)<br>• Note about phytates and vitamin C optimisation</div><div class="tt-s">Plant-based diets contain only non-haem iron, which is significantly less bioavailable than haem iron from meat and fish. Vitamin C with meals substantially helps. Iron requirements are estimated to be 1.8× higher for vegetarians/vegans. Source: WHO/FAO 2004; Hallberg & Hultén 2000.</div></div></div>
-    </div>
-  </div>
-  <div class="note" id="condNote"></div>
-</div>
 </div>
 
 <div class="tabs">
@@ -425,6 +383,65 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div id="tab-model" style="display:none">
+<div class="section">
+<div class="st">Your profile</div>
+<div class="card">
+  <div id="draftBanner" style="display:none;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#854d0e;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span>⚠️ <strong>Unsaved session found</strong> from your last visit — restore it?</span>
+    <button onclick="restoreDraft()" style="background:#fde047;border-color:#ca8a04;font-size:12px;padding:3px 10px">Restore</button>
+    <button onclick="discardDraft()" style="font-size:12px;padding:3px 10px">Discard</button>
+  </div>
+  <div class="sb">
+    <select id="sessionSelect" onchange="loadSession(this.value)"><option value="">— new patient —</option></select>
+    <input type="text" id="sessionName" placeholder="Patient name / ID" value="Patient 1">
+    <button onclick="saveSession()">Save</button>
+    <button onclick="deleteSession()">Delete</button>
+  </div>
+  <div class="pg">
+    <div class="pf"><label>Age</label><input type="number" id="patAge" min="12" max="85" value="28" onchange="applyDefaults();calc()"></div>
+    <div class="pf"><label>Menopausal status</label>
+      <select id="menopause" onchange="applyDefaults();calc()">
+        <option value="pre">Pre-menopausal</option>
+        <option value="peri">Peri-menopausal</option>
+        <option value="post">Post-menopausal</option>
+      </select>
+    </div>
+  </div>
+  <div class="pg" style="margin-top:8px">
+    <div class="pf"><label>Plan start date <span style="font-weight:400;color:#94a3b8">— month 0 on chart · only results from this date used for absorption calculations</span></label><input type="date" id="startDate" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b" onchange="calc()"></div>
+  </div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:6px">Known conditions — toggle to adjust relevant defaults:</div>
+  <div class="trow">
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-endo" onclick="toggleCond('endo')">Endometriosis</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle (vs 5)<br>• Flow intensity → Heavy<br>• Note added about gut inflammation potentially affecting absorption</div><div class="tt-s">Endometriosis causes significantly heavier, longer periods — the primary driver of iron loss. Gut endometriosis can also impair absorption. Source: NICE NG73.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-adeno" onclick="toggleCond('adeno')">Adenomyosis</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle<br>• Flow intensity → Heavy<br>Same effect as endometriosis on bleeding parameters</div><div class="tt-s">Adenomyosis causes the endometrium to grow into the uterine muscle, typically producing heavy, prolonged periods. Iron loss is similar to endometriosis. Source: NICE NG73.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-coeliac" onclick="toggleCond('coeliac')">Coeliac disease</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement absorption rate reduced by ~55% (villous atrophy impairs duodenal iron uptake)<br>• Diet iron absorption also reduced (malabsorption affects all nutrients)<br>• Warning shown about refractory deficiency</div><div class="tt-s">Untreated coeliac causes villous atrophy in the duodenum — the primary site of iron absorption. Iron deficiency is often the presenting symptom. A gluten-free diet gradually restores absorption. Source: BSH 2021; NICE CG86.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement dose set to zero<br>• Strategy tab shows infusion as Phase 1 option<br>• Phase 2 maintenance shows low-dose oral alternatives (bisglycinate, Spatone) and infusion-only option<br>• GP letter requests infusion referral instead of prescription</div><div class="tt-s">Oral iron intolerance means standard prescribed doses cannot be tolerated. This does not necessarily rule out all oral iron — bisglycinate and liquid iron are often much better tolerated. An IV infusion is the most effective solution for recovery. Source: BSH 2021.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Cycle length default → 35 days (irregular/longer cycles)<br>• Informational note added about insulin resistance and hepcidin<br>• No numeric absorption penalty applied — evidence for the specific effect size is not strong enough to quantify reliably</div><div class="tt-s">PCOS commonly causes irregular periods. Insulin resistance is associated with low-grade inflammation which may raise hepcidin — but the effect size is not reliably quantified in the literature. If ferritin is not recovering despite good adherence, raise this with your GP. Source: NICE CG156.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Dietary iron quantity reduced by 25% (plant-based diets have lower overall iron density)<br>• Dietary absorption rate reduced (non-haem iron absorbs at 3–8% vs haem iron at 20–25%)<br>• Note about phytates and vitamin C optimisation</div><div class="tt-s">Plant-based diets contain only non-haem iron, which is significantly less bioavailable than haem iron from meat and fish. Vitamin C with meals substantially helps. Iron requirements are estimated to be 1.8× higher for vegetarians/vegans. Source: WHO/FAO 2004; Hallberg & Hultén 2000.</div></div></div>
+    </div>
+  </div>
+  <div class="note" id="condNote"></div>
+</div>
+</div>
+</div>
+
 <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:9px 14px;margin-bottom:.75rem;font-size:12px;color:#15803d;line-height:1.5">ℹ️ <strong>Planning &amp; discussion support only</strong> — outputs are estimates to support a GP conversation, not prescriptions or clinical recommendations.</div>
 <div class="rl">
   <span><span class="rsw" style="background:#16a34a"></span>Normal range</span>
@@ -1475,6 +1492,8 @@ function calc(){
   var cycleLen=rawCycleLen>364?365:rawCycleLen;
   var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
+  var dietQIdx=gv('dietQ')||3;
+  var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
   var dietQmg=[0,6,8,10,13,16];
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
@@ -3773,10 +3792,6 @@ function checkBypassCode(){
 }
 checkBypassCode();
 
-// Hide session section on About tab immediately on load
-var _ss=document.getElementById('sessionSection');
-if(_ss) _ss.style.display='none';
-
 document.getElementById('paywallModal').addEventListener('click',function(e){if(e.target===this)closePaywall();});
 
 // Gate paid tabs — patch showTab AFTER it's defined
@@ -3791,9 +3806,6 @@ showTab=function(t){
     return;
   }
   _showTab(t);
-  // Hide session/conditions section on About tab — it belongs with the model
-  var ss=document.getElementById('sessionSection');
-  if(ss) ss.style.display=t==='about'?'none':'';
 };
 
 // Lock badges on paid tabs
