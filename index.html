@@ -142,8 +142,8 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div class="tabs">
-  <button class="tab" onclick="showTab('about')">About iron &amp; ferritin</button>
-  <button class="tab active" onclick="showTab('model')">Balance model</button>
+  <button class="tab active" onclick="showTab('about')">About iron &amp; ferritin</button>
+  <button class="tab" onclick="showTab('model')">Balance model</button>
   <button class="tab" onclick="showTab('actual')">Actual results</button>
   <button class="tab" onclick="showTab('infusion')">Infusion planner</button>
   <button class="tab" onclick="showTab('strategy')">Strategy</button>
@@ -152,7 +152,7 @@ button:hover{background:#f1f5f9}
   <button class="tab" onclick="showTab('export')">GP letter</button>
 </div>
 
-<div id="tab-about" style="display:none">
+<div id="tab-about">
 <div class="section">
 
 <!-- HEADER -->
@@ -405,7 +405,7 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
-<div id="tab-model">
+<div id="tab-model" style="display:none">
 <div class="rl">
   <span><span class="rsw" style="background:#16a34a"></span>Normal range</span>
   <span><span class="rsw" style="background:#b45309"></span>Outside normal</span>
@@ -415,24 +415,70 @@ button:hover{background:#f1f5f9}
 <div class="section">
 <div class="st">Menstrual blood loss</div>
 <div class="card">
-  <div class="row">
-    <label>Cycle length</label>
-    <div class="sw"><div class="rb" id="rb-cycleLen"></div><input type="range" id="cycleLen" min="21" max="90" value="28" step="1" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:3px"><span id="cycleLenV" style="font-size:13px;font-weight:500">28d</span><span class="badge" id="bcy"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 28 days (UK average menstrual cycle)</div><div class="tt-n">Normal: 21–35 days</div><div class="tt-s">Source: NICE CG44. Extended cycling regimens (e.g. 63-day tricycling for endometriosis management) can be entered here. PCOS toggle extends default to 35 days.</div></div></div>
+
+  <!-- PERIOD MANAGEMENT DROPDOWN -->
+  <div style="margin-bottom:14px">
+    <label style="font-size:12px;font-weight:600;color:#1e293b;display:block;margin-bottom:5px">How do you manage your periods?</label>
+    <select id="periodMgmt" onchange="applyPeriodMgmt()" style="width:100%;font-size:13px;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b;margin-bottom:8px">
+      <option value="natural">Natural / unmanaged cycle</option>
+      <option value="pill21">Combined pill — standard 21/7 (21 active + 7 day break)</option>
+      <option value="pill63">Combined pill — extended / tricycling (63 days active + break)</option>
+      <option value="pillcont">Combined pill — continuous use until breakthrough bleeding</option>
+      <option value="mini">Mini pill / progestogen-only pill (POP)</option>
+      <option value="none">No periods (amenorrhoea — pill or other cause)</option>
+    </select>
+    <!-- Contextual info card — updates per selection -->
+    <div id="periodMgmtNote" style="font-size:12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;line-height:1.65;display:none"></div>
   </div>
+
+  <!-- CONTINUOUS PILL EXTRA INPUTS — shown only for pillcont -->
+  <div id="pillContInputs" style="display:none;margin-bottom:12px;background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:10px 14px">
+    <div style="font-size:12px;font-weight:600;color:#854d0e;margin-bottom:8px">Tell us about your continuous pill pattern:</div>
+    <div style="display:grid;gap:8px">
+      <div>
+        <label style="font-size:12px;color:#64748b;display:block;margin-bottom:3px">How long do you typically go before stopping for a bleed?</label>
+        <select id="pillContInterval" onchange="applyPeriodMgmt()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff">
+          <option value="60">About 2 months (roughly every 8 weeks)</option>
+          <option value="105" selected>About 3–4 months (roughly every 14 weeks)</option>
+          <option value="150">About 4–6 months (roughly every 20 weeks)</option>
+          <option value="210">6 months or longer</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:#64748b;display:block;margin-bottom:3px">How long does your withdrawal bleed typically last?</label>
+        <select id="pillContBleedDays" onchange="applyPeriodMgmt()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff">
+          <option value="3">3 days</option>
+          <option value="5">4–5 days</option>
+          <option value="7" selected>6–7 days</option>
+          <option value="10">8–10 days</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#92400e">↳ The sliders below will be set automatically from your answers above. You can still adjust flow intensity to match your experience.</div>
+  </div>
+
+  <!-- CYCLE LENGTH — greyed out for non-natural patterns -->
+  <div class="row" id="rowCycleLen">
+    <label id="lblCycleLen">Cycle length</label>
+    <div class="sw"><div class="rb" id="rb-cycleLen"></div><input type="range" id="cycleLen" min="21" max="365" value="28" step="1" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="cycleLenV" style="font-size:13px;font-weight:500">28d</span><span class="badge" id="bcy"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 28 days (UK average menstrual cycle)</div><div class="tt-n">Normal: 21–35 days. Extended cycling (e.g. 63-day tricycling) can be entered here.</div><div class="tt-s">Source: NICE CG44. For pill users, this is set automatically based on your pill pattern — it represents the average interval between bleeds. PCOS toggle extends to 35 days.</div></div></div>
+  </div>
+
   <div class="row">
-    <label>Bleeding days / cycle</label>
+    <label>Bleeding days <span id="bleedDaysContextLabel" style="font-size:11px;color:#94a3b8">per cycle</span></label>
     <div class="sw"><div class="rb" id="rb-bleedDays"></div><input type="range" id="bleedDays" min="0" max="40" value="5" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="bleedDaysV" style="font-size:13px;font-weight:500">5d</span><span class="badge" id="bbd"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 5 days (UK average). Endometriosis/adenomyosis toggle increases default to 9 days.</div><div class="tt-n">Normal: 3–7 days per cycle</div><div class="tt-s">Source: NICE CG44. Heavy menstrual bleeding (HMB) is defined as >7 days duration or >80ml per cycle. Prolonged bleeding is the primary driver of iron depletion in menstruating women.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How many days of actual bleeding per cycle / per bleed episode.</div><div class="tt-n">Normal: 3–7 days per cycle. For pill users this refers to the withdrawal bleed duration.</div><div class="tt-s">Source: NICE CG44. HMB is defined as >7 days duration or >80ml per cycle. Prolonged bleeding is the primary driver of iron depletion.</div></div></div>
   </div>
+
   <div class="row">
-    <label>Flow intensity<br><span style="font-size:11px;color:#94a3b8">if unsure, select next category up — blood loss is often underestimated</span></label>
+    <label>Flow intensity<br><span style="font-size:11px;color:#94a3b8" id="flowIntSubLabel">if unsure, select next category up — blood loss is often underestimated</span></label>
     <div class="sw"><div class="rb" id="rb-flowInt"></div><input type="range" id="flowInt" min="1" max="5" value="2" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="flowIntV" style="font-size:13px;font-weight:500">Light</span><span class="badge" id="bfi"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: Light-Medium. Endometriosis/adenomyosis toggle increases to Heavy.</div><div class="tt-n">If unsure, select the next category up — blood loss is commonly underestimated, particularly with heavy periods. Teenagers and those who have always had heavy periods often have no baseline for comparison.</div><div class="tt-s"><strong>Very light:</strong> Spotting only. 1–2 light pads/day max. No clots. Lasts 1–3 days.<br><strong>Light:</strong> Change a regular pad every 4–6 hours. No clots or very small ones.<br><strong>Moderate:</strong> Change every 2–4 hours at peak. Occasional small clots. Some cramping.<br><strong>Heavy:</strong> Change every 1–2 hours at peak. Clots larger than a 50p coin. Sometimes flood through. Affects daily activities. HMB clinical threshold: &gt;80ml/cycle.<br><strong>Very heavy:</strong> Change hourly or more. Large clots regularly. Frequently flood through to clothing or bedding. Significantly affects work and social life — you plan activities around your period.<br><br>Source: NICE NG88 (HMB); BSH menorrhagia guidelines.</div></div></div>
   </div>
+
   <div class="note" id="bleedNote"></div>
 </div>
 </div>
@@ -454,7 +500,7 @@ button:hover{background:#f1f5f9}
   <div class="row">
     <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">drag to set tablets per day — slider moves in 1-tablet steps</span></label>
     <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="390" value="0" step="65" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span id="suppDoseV" style="font-size:13px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:12px;color:#64748b"></span><span class="badge" id="bsd"></span></div>
+    <div style="display:flex;flex-direction:column;gap:1px"><span id="suppDoseV" style="font-size:13px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:11px;color:#64748b"></span><span class="badge" id="bsd" style="align-self:flex-start"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Set how many iron tablets you take per day. Each tablet is labelled by its total weight — not the iron dose. Select your formulation below to see the correct iron content per tablet.</div><div class="tt-n">Most prescribed courses are 1–3 tablets per day. Above 3 tablets, absorption does not meaningfully increase — hepcidin rises after each dose and blocks the iron transporter for ~24 hours.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set to 0 automatically when oral iron intolerance is toggled.</div></div></div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin:-2px 0 8px 0;flex-wrap:wrap">
@@ -575,7 +621,8 @@ button:hover{background:#f1f5f9}
 <div class="st">Actual ferritin results</div>
 <div class="card">
   <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter real ferritin blood test results. The model will derive your actual absorption rate from these — a more reliable signal than any estimate. Use real dates (dd/mm/yyyy or yyyy-mm-dd) for accurate time-based calculations.</p>
-  <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:110px">Date of test</span><span style="width:80px">Ferritin µg/L</span><span style="width:80px">Supp mg/day</span></div>
+  <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:110px">Date of test</span><span style="width:80px">Ferritin µg/L</span><span style="width:80px">Supplement<br><span style="font-weight:400;font-size:10px">elemental mg/day</span></span></div>
+  <div style="font-size:10px;color:#94a3b8;margin-bottom:6px">Supplement column = elemental iron mg/day · ferrous sulfate: 1 tablet = 65mg · fumarate: 1 tablet = 69mg · bisglycinate: 1 capsule = 20mg</div>
   <div id="actualList"></div>
   <button onclick="addActual()">+ Add result</button>
   <div class="note" id="derivedNote"></div>
@@ -755,25 +802,34 @@ button:hover{background:#f1f5f9}
 <div id="tab-tips" style="display:none">
 <div class="section">
 <div class="st">Tips &amp; what-if explorer</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:1rem;line-height:1.5">This tab explores what difference practical changes could make to your ferritin trajectory — completely separately from your main plan. Toggle options to see the estimated effect on the chart below. All projections are illustrative estimates based on your current balance model settings.</p>
+<p style="font-size:12px;color:#64748b;margin-bottom:.75rem;line-height:1.5">Toggle options below to see the estimated effect on your ferritin trajectory. The chart updates immediately as you click. All projections are illustrative estimates based on your current balance model settings — not guarantees.</p>
 
-<!-- SECTION 1: DIET & ABSORPTION TIPS -->
-<div class="card" style="margin-bottom:1.25rem">
-  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px">Section 1 — Diet &amp; absorption optimisation</div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:12px">Toggle changes to see their combined estimated effect on ferritin over 12 months. Effects are applied to dietary iron absorption — not to supplement dose.</div>
-  <div id="tipsDietToggles" style="display:grid;gap:8px"></div>
+<!-- CHART FIRST so it's always visible -->
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:1rem">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:6px">
+    <div style="font-size:13px;font-weight:600;color:#1e293b" id="tipsChartTitle">Estimated ferritin trajectory</div>
+    <div style="font-size:11px;color:#94a3b8;font-style:italic">Illustrative only — individual results vary</div>
+  </div>
+  <div id="tipsChartExplainer" style="font-size:12px;color:#475569;line-height:1.6;margin-bottom:8px"></div>
+  <div style="position:relative;width:100%;height:240px"><canvas id="tipsChart"></canvas></div>
+  <div style="display:flex;gap:14px;margin-top:6px;font-size:11px;color:#64748b;flex-wrap:wrap" id="tipsChartLegend"></div>
 </div>
 
-<!-- SECTION 2: WHAT IF THE UNDERLYING CAUSE WERE ADDRESSED -->
-<div class="card" style="margin-bottom:1.25rem">
-  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px">Section 2 — What if the underlying cause were addressed?</div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:12px">These scenarios show the estimated effect of addressing the root causes of iron loss or poor absorption — for GP discussion only. These are not treatment recommendations.</div>
+<!-- SECTION 1: DIET & ABSORPTION TIPS -->
+<div class="card" style="margin-bottom:1rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:3px">Section 1 — Diet &amp; absorption tips</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:10px">Each toggle shows the estimated additional ferritin gain at 12 months from that change alone. Effects stack when multiple are selected.</div>
+  <div id="tipsDietToggles" style="display:grid;gap:6px"></div>
+</div>
+
+<!-- SECTION 2: UNDERLYING CAUSE SCENARIOS -->
+<div class="card" style="margin-bottom:1rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:3px">Section 2 — What if the underlying cause were addressed?</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:10px">These scenarios show the potential impact of treating root causes. For GP discussion — not treatment recommendations.</div>
   
-  <!-- Hormone treatment -->
-  <div id="tipsHormoneSection" style="margin-bottom:14px">
-    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px">Menstrual loss reduction (hormone treatment)</div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.55">For heavy periods, hormone treatments can dramatically reduce monthly blood loss — which is often far more effective than increasing iron intake. Select a treatment to see the indicative effect on ferritin trajectory.</div>
-    <select id="tipsHormoneTx" onchange="calcTips()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;margin-bottom:8px">
+  <div id="tipsHormoneSection" style="margin-bottom:12px">
+    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:5px">Menstrual loss reduction (hormone treatment)</div>
+    <select id="tipsHormoneTx" onchange="calcTips()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;margin-bottom:6px">
       <option value="0">No hormone treatment — current loss unchanged</option>
       <option value="45">Combined oral contraceptive pill — reduces loss by ~45% (NICE NG88)</option>
       <option value="50">Tranexamic acid — reduces loss by ~50% (NICE NG88; non-hormonal)</option>
@@ -783,29 +839,19 @@ button:hover{background:#f1f5f9}
     <div id="tipsHormoneNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
   </div>
 
-  <!-- Inflammation -->
   <div>
-    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px">Gut inflammation / chronic stress resolution</div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.55">Chronic inflammation (gut, autoimmune, or stress-related) raises hepcidin, which blocks iron from entering the bloodstream even when absorption is occurring. Resolving inflammation can substantially improve effective absorption.</div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:5px">Gut inflammation / chronic stress resolution</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:6px;line-height:1.5">Chronic inflammation raises hepcidin, blocking iron from entering the bloodstream. Resolving it restores full absorption.</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
       <div class="tog" id="tog-tips-inflam" onclick="toggleTipInflam()" style="font-size:12px">Inflammation resolved</div>
-      <span style="font-size:12px;color:#64748b">— restores absorption to full tiered rate for current ferritin level</span>
+      <span id="tipsInflamBadge" style="font-size:11px;color:#64748b"></span>
     </div>
     <div id="tipsInflamNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
   </div>
 </div>
 
-<!-- TIPS CHART -->
-<div class="section" style="margin-top:0">
-  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px" id="tipsChartTitle">Effect on ferritin trajectory</div>
-  <div style="font-size:11px;color:#94a3b8;font-style:italic;margin-bottom:8px">Illustrative estimates only — individual results vary significantly. For discussion with your GP, not for self-prescribing.</div>
-  <div id="tipsChartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
-  <div style="position:relative;width:100%;height:260px"><canvas id="tipsChart"></canvas></div>
-  <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="tipsChartLegend"></div>
-</div>
-
 <!-- SECTION 3: WORTH KNOWING -->
-<div class="card" style="margin-top:1.25rem">
+<div class="card" style="margin-top:.5rem">
   <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:12px">Section 3 — Worth knowing</div>
   <div style="display:grid;gap:10px">
 
@@ -1137,21 +1183,136 @@ var sdefs={
   startFerr:{lo:50,hi:150,min:5,max:300}
 };
 
+// ── PERIOD MANAGEMENT ──────────────────────────────────────────────────────
+var PERIOD_MGMT_NOTES={
+  natural:'<strong>Natural / unmanaged cycle:</strong> All three sliders are active. Set your typical cycle length, number of bleeding days, and flow intensity. If you\'re unsure about flow, err on the side of selecting a higher category — blood loss is commonly underestimated.',
+
+  pill21:'<strong>Combined pill — standard 21/7:</strong> You take 21 active pills then have a 7-day break, during which you have a withdrawal bleed. This is not a true period — it\'s a hormone withdrawal bleed, which is typically lighter and shorter than a natural period. <strong>Cycle length is fixed at 28 days.</strong> The bleeding days and flow defaults have been set to typical withdrawal bleed values — adjust the flow slider if yours differs. The combined pill typically reduces monthly iron loss by 40–50% compared to a natural cycle. Source: NICE NG88.',
+
+  pill63:'<strong>Combined pill — extended / tricycling:</strong> You take 3 packs back-to-back (63 active days) then have a 4–7 day break. This results in only 4–6 bleeds per year instead of 13, dramatically reducing total annual iron loss. <strong>Cycle length is fixed at 63 days.</strong> This approach is commonly used for endometriosis management and is fully supported by NICE and FSRH guidance. Adjust the flow slider to match your withdrawal bleed.',
+
+  pillcont:'<strong>Combined pill — continuous / flexible extended use:</strong> You take the pill without a break until you get breakthrough spotting, then stop for a withdrawal bleed before restarting. <strong>This is completely medically safe</strong> — FSRH 2019 guidance on combined hormonal contraception explicitly endorses this approach. There is no increased health risk from taking the pill continuously in this way. <br><br>One thing worth knowing: withdrawal bleeds after 4–6 months of continuous use can be heavier and longer than a typical 21/7 withdrawal bleed, because more endometrial tissue has built up over the longer interval. Some people are caught off-guard by this — it does not mean anything is wrong. <br><br><strong>→ Set the flow intensity slider below to match your actual experience of these bleeds</strong>, not what a "normal" bleed might be. If your bleed after a long continuous stretch feels heavier than moderate, select Heavy or Very heavy — this gives the model the most accurate picture of your iron losses.',
+
+  mini:'<strong>Mini pill / progestogen-only pill (POP):</strong> The effect on periods varies a lot between individuals. Some people stop having periods altogether (amenorrhoea); some have frequent light spotting; some have relatively normal cycles. The defaults here assume light, irregular periods — but adjust the sliders to reflect your actual pattern. If you have stopped having periods on the mini pill, set bleeding days to 0. Cycle length is set to 28 days as an approximation but is less meaningful for irregular patterns.',
+
+  none:'<strong>No periods (amenorrhoea):</strong> If periods have stopped completely — whether from continuous pill use, another hormonal treatment, or other cause — bleeding days are set to zero. Monthly iron loss is calculated from basal (non-menstrual) losses only, approximately 30mg/month. This is similar to the post-menopausal model. Confirm by checking the net balance figure looks right.'
+};
+
+var PERIOD_MGMT_DEFAULTS={
+  // {cycleLen, bleedDays, flowInt, disableCycle, disableBleed, showCont}
+  natural:  {cycleLen:28, bleedDays:5,  flowInt:2, disableCycle:false, disableBleed:false, showCont:false},
+  pill21:   {cycleLen:28, bleedDays:4,  flowInt:1, disableCycle:true,  disableBleed:false, showCont:false,
+             cycleLabel:'Cycle length (fixed — 28 days on 21/7 pill)'},
+  pill63:   {cycleLen:63, bleedDays:5,  flowInt:1, disableCycle:true,  disableBleed:false, showCont:false,
+             cycleLabel:'Cycle length (fixed — 63 days extended cycling)'},
+  pillcont: {cycleLen:105,bleedDays:7,  flowInt:2, disableCycle:true,  disableBleed:true,  showCont:true,
+             cycleLabel:'Effective cycle length (set from your pattern above)'},
+  mini:     {cycleLen:28, bleedDays:3,  flowInt:1, disableCycle:true,  disableBleed:false, showCont:false,
+             cycleLabel:'Cycle length (approximate — mini pill cycles are irregular)'},
+  none:     {cycleLen:999,bleedDays:0,  flowInt:1, disableCycle:true,  disableBleed:true,  showCont:false,
+             cycleLabel:'No periods'}
+};
+
+function applyPeriodMgmt(){
+  var sel=document.getElementById('periodMgmt');
+  if(!sel)return;
+  var v=sel.value||'natural';
+  var d=PERIOD_MGMT_DEFAULTS[v];
+  var noteEl=document.getElementById('periodMgmtNote');
+  var contEl=document.getElementById('pillContInputs');
+  var cycleLenRow=document.getElementById('rowCycleLen');
+  var cycleLenLbl=document.getElementById('lblCycleLen');
+  var bleedLbl=document.getElementById('bleedDaysContextLabel');
+
+  // Show/hide continuous inputs
+  if(contEl) contEl.style.display=d.showCont?'':'none';
+
+  // For continuous, derive cycleLen from interval dropdown
+  if(v==='pillcont'){
+    var intEl=document.getElementById('pillContInterval');
+    var bdEl=document.getElementById('pillContBleedDays');
+    if(intEl) d.cycleLen=+(intEl.value)||105;
+    if(bdEl)  d.bleedDays=+(bdEl.value)||7;
+  }
+
+  // Set slider values
+  sv('cycleLen', d.cycleLen<365?d.cycleLen:365);
+  if(!d.disableBleed) sv('bleedDays', d.bleedDays);
+  else sv('bleedDays', d.bleedDays);
+
+  // Grey out / enable sliders
+  ['cycleLen'].forEach(function(id){
+    var el=document.getElementById(id);
+    var rb=document.getElementById('rb-'+id);
+    if(el){el.disabled=d.disableCycle;el.style.opacity=d.disableCycle?'0.35':'1';}
+    if(rb) rb.style.opacity=d.disableCycle?'0.35':'1';
+  });
+  ['bleedDays'].forEach(function(id){
+    var el=document.getElementById(id);
+    var rb=document.getElementById('rb-'+id);
+    if(el){el.disabled=(d.disableBleed&&v!=='pillcont');el.style.opacity=(d.disableBleed&&v!=='pillcont')?'0.35':'1';}
+    if(rb) rb.style.opacity=(d.disableBleed&&v!=='pillcont')?'0.35':'1';
+  });
+
+  // Update label for cycle row
+  if(cycleLenRow) cycleLenRow.style.display=v==='none'?'none':'';
+  if(cycleLenLbl) cycleLenLbl.textContent=d.cycleLabel||'Cycle length';
+
+  // Update bleed days context label
+  if(bleedLbl){
+    if(v==='pillcont') bleedLbl.textContent='withdrawal bleed duration — set above';
+    else if(v==='pill21'||v==='pill63') bleedLbl.textContent='withdrawal bleed days per cycle';
+    else if(v==='none') bleedLbl.textContent='no periods';
+    else bleedLbl.textContent='per cycle';
+  }
+
+  // Show/hide info note
+  if(noteEl){
+    noteEl.style.display='';
+    noteEl.innerHTML=PERIOD_MGMT_NOTES[v]||'';
+    // Colour coding
+    noteEl.style.background=v==='natural'?'#f8fafc':v==='none'?'#f0fdf4':'#f0f9ff';
+    noteEl.style.borderColor=v==='natural'?'#e2e8f0':v==='none'?'#86efac':'#bae6fd';
+  }
+
+  calc();
+}
+
 function applyDefaults(){
   var age=+document.getElementById('patAge').value||28;
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
-  ['bleedDays','flowInt','cycleLen'].forEach(function(id){document.getElementById(id).disabled=post;});
-  if(!post){
+  var pmgmt=document.getElementById('periodMgmt')?document.getElementById('periodMgmt').value:'natural';
+  var noPeriods=post||pmgmt==='none';
+
+  // For post-menopausal or no-periods, disable bleed sliders
+  ['bleedDays','flowInt','cycleLen'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.disabled=noPeriods;
+  });
+
+  if(!noPeriods&&pmgmt==='natural'){
+    // Only apply condition defaults for natural cycle
     sv('cycleLen',conds.pcos?35:meno==='peri'?35:28);
     sv('bleedDays',conds.endo||conds.adeno?9:meno==='peri'?6:5);
     sv('flowInt',conds.endo||conds.adeno?3:2);
+  } else if(!noPeriods){
+    // Let applyPeriodMgmt handle slider values — just apply condition flow overrides
+    if(conds.endo||conds.adeno) sv('flowInt',3);
   }
-  // dietQ: coeliac reduces by 1 step, vegan no change (already in calc)
+
   if(conds['oral-intol'])sv('suppDose',0);
   updateCondNote();
 }
-function sv(id,v){var el=document.getElementById(id);if(el&&!el.disabled)el.value=v;}
+
+// sv: only sets if not disabled by period management
+function sv(id,v){
+  var el=document.getElementById(id);
+  if(el){
+    // Don't override if greyed out by period management (except for applyPeriodMgmt itself)
+    el.value=v;
+  }
+}
 function gv(id){var el=document.getElementById(id);return el?+el.value||0:0;}
 
 function toggleCond(c){
@@ -1256,14 +1417,14 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   var isObserved=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined;
   var obsLabel=isObserved?'Observed (from results)':'Estimated (literature)';
   var absRateNote=isObserved?'':(lc&&lc.tieredAbsLabel?' · absorption rate: '+lc.tieredAbsLabel:'');
-  var suppTabNote=suppDose>0?' ('+Math.round(suppDose/65*10)/10+' ferrous sulfate 200mg tablets/day)':'';
-  var litSupp=suppDose>0?suppDose*0.04*30:0;
-  var suppTabLabel=suppDose>0?
-    (function(){
-      var nt=Math.round(suppDose/65);
-      return 'Supplement ('+nt+' tablet'+(nt===1?'':'s')+'/day · '+nt*200+'mg on packet · '+suppDose+'mg actual iron)';
-    })():
-    'Supplement (none)';
+  var fm2=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate'};
+  var suppTabLabel='Supplement (none)';
+  if(suppDose>0){
+    var nt=Math.max(1,Math.round(suppDose/fm2.elemPerTab));
+    var pkMg=nt*fm2.packetMg;
+    var uLabel=fm2.abbr==='bisglycinate'?'capsule':'tablet';
+    suppTabLabel='Supplement ('+nt+' '+uLabel+(nt===1?'':'s')+'/day · '+pkMg+'mg on packet · '+nt*fm2.elemPerTab+'mg elemental)';
+  }
   el.innerHTML=
     mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
     mc(suppTabLabel,rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo absorbed',suppDose>0?'ok':'neutral')+
@@ -1287,12 +1448,13 @@ function getFormulation(){
 function calc(){
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
-  var cycleLen=gv('cycleLen')||28;
-  var bleedDays=post?0:gv('bleedDays');
+  var pmgmt=document.getElementById('periodMgmt')?document.getElementById('periodMgmt').value:'natural';
+  var noPeriods=post||pmgmt==='none';
+  var rawCycleLen=gv('cycleLen')||28;
+  // Cap cycleLen at 365 for monthly loss calculation — 999 means no periods
+  var cycleLen=rawCycleLen>364?365:rawCycleLen;
+  var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  // Diet quality -> mg/day lookup
-  var dietQIdx=gv('dietQ')||3;
-  var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
   var dietQmg=[0,6,8,10,13,16];
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
@@ -1310,9 +1472,10 @@ function calc(){
   var tieredAbsRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
   var tieredAbsLabel=startFerr<15?'12% (critically depleted)':startFerr<30?'8% (depleted)':startFerr<50?'5% (below optimal)':'4% (replete)';
 
-  document.getElementById('cycleLenV').textContent=post?'N/A':cycleLen+'d';
-  document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
-  document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
+  var cycleLenDisplay=noPeriods?'N/A':pmgmt==='pill21'?'28d (fixed)':pmgmt==='pill63'?'63d (fixed)':pmgmt==='pillcont'?rawCycleLen+'d avg':pmgmt==='mini'?rawCycleLen+'d (approx)':cycleLen+'d';
+  document.getElementById('cycleLenV').textContent=cycleLenDisplay;
+  document.getElementById('bleedDaysV').textContent=noPeriods?'None':bleedDays+'d';
+  document.getElementById('flowIntV').textContent=noPeriods?'None':flowLabels[flowIdx];
   document.getElementById('dietQV').textContent=dietQLabels[dietQIdx];
   var fm=getFormulation();
   // Snap suppDose to nearest whole tablet for current formulation
@@ -1325,10 +1488,9 @@ function calc(){
   } else {
     var packetMg=numTabs*fm.packetMg;
     var unitLabel=fm.abbr==='bisglycinate'?'capsule':'tablet';
-    var primaryText=numTabs+' '+unitLabel+(numTabs===1?'':'s')+'/day ('+packetMg+'mg on packet — '+fm.name+')';
-    var secondaryText='= '+suppDoseActual+'mg actual iron/day'+(fm.otc?' · OTC, not NHS prescribed':'');
-    document.getElementById('suppDoseV').textContent=primaryText;
-    if(tabVEl) tabVEl.textContent=secondaryText;
+    // Primary: "3 tablets/day" — Secondary new line: "600mg on packet = 195mg elemental"
+    document.getElementById('suppDoseV').textContent=numTabs+' '+unitLabel+(numTabs===1?'':'s')+'/day';
+    if(tabVEl) tabVEl.textContent=packetMg+'mg on packet = '+suppDoseActual+'mg elemental'+(fm.otc?' · OTC':'');
   }
   // Use formulation-adjusted elemental for all calcs below
   var suppDoseElem=suppDose>0?numTabs*fm.elemPerTab:0;
@@ -1372,9 +1534,21 @@ function calc(){
   var mgAbsMonth=derivedAbsMonth!==null?derivedAbsMonth:mgAbsMonthEst;
   var netMonth=mgAbsMonth-totalLossMonth;
 
-  document.getElementById('bleedNote').textContent=post?
-    'Post-menopausal: no menstrual iron loss included in model.':
-    'Estimated blood loss: '+rnd(mlPerCycle)+' ml/cycle · '+rnd(mgLostCycle)+' mg iron/cycle · '+rnd(mgLostMonth)+' mg/month';
+  var bleedNoteText='';
+  if(noPeriods){
+    bleedNoteText=post?'Post-menopausal: no menstrual iron loss included in model.':'No periods: no menstrual iron loss included. Basal losses only (~30mg/month).';
+  } else if(pmgmt==='pill21'){
+    bleedNoteText='Combined pill 21/7: withdrawal bleed '+rnd(mlPerCycle)+' ml · '+rnd(mgLostCycle)+' mg iron per bleed · '+rnd(mgLostMonth)+' mg/month (typically 40–50% less than a natural period).';
+  } else if(pmgmt==='pill63'){
+    bleedNoteText='Extended cycling: withdrawal bleed '+rnd(mlPerCycle)+' ml · '+rnd(mgLostCycle)+' mg iron per bleed every 63 days · '+rnd(mgLostMonth)+' mg/month (only ~5–6 bleeds per year).';
+  } else if(pmgmt==='pillcont'){
+    bleedNoteText='Continuous pill: approx. '+rnd(mlPerCycle)+' ml per withdrawal bleed · '+rnd(mgLostCycle)+' mg iron · average '+rnd(mgLostMonth)+' mg/month based on your bleed interval. Heavier bleeds after longer continuous use are normal — adjust flow intensity to match your experience.';
+  } else if(pmgmt==='mini'){
+    bleedNoteText='Mini pill: estimated '+rnd(mlPerCycle)+' ml per bleed · '+rnd(mgLostCycle)+' mg iron · '+rnd(mgLostMonth)+' mg/month. Adjust sliders if your pattern differs significantly.';
+  } else {
+    bleedNoteText='Estimated blood loss: '+rnd(mlPerCycle)+' ml/cycle · '+rnd(mgLostCycle)+' mg iron/cycle · '+rnd(mgLostMonth)+' mg/month';
+  }
+  document.getElementById('bleedNote').textContent=bleedNoteText;
 
   var lossClass=mgLostMonth>40?'danger':mgLostMonth>20?'warning':'ok';
   var netClass=netMonth<-5?'danger':netMonth<5?'warning':'ok';
@@ -1899,15 +2073,34 @@ function buildDietToggles(){
   var el=document.getElementById('tipsDietToggles');
   if(!el)return;
   el.innerHTML='';
+  // Pre-compute individual tip impacts for badges
+  var baseFerrPM=lc&&lc.ferrChangePM?lc.ferrChangePM:0;
+  var dietNetMonth=lc&&lc.dietNetMonth?lc.dietNetMonth:0;
+  var totalLossMonth=lc&&lc.totalLossMonth?lc.totalLossMonth:30;
+
   DIET_TIPS.forEach(function(tip){
     var on=tipsDietState[tip.id]||false;
+
+    // Compute single-tip impact for badge
+    var newDietNet=Math.min(dietNetMonth*tip.dietMult,8.0);
+    var dietDiff=newDietNet-dietNetMonth;
+    var tipFerrPM=baseFerrPM+mg2f(dietDiff);
+    var gain12=rnd((tipFerrPM-baseFerrPM)*12);
+    var badge=gain12>0?'+'+gain12+' µg/L at 12mo':gain12===0?'minimal effect':gain12+' µg/L at 12mo';
+    var badgeColor=gain12>5?'#15803d':gain12>2?'#ca8a04':'#94a3b8';
+
     var row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;background:'+(on?'#f0fdf4':'#fff');
+    row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border:1px solid '+(on?'#86efac':'#e2e8f0')+';border-radius:8px;cursor:pointer;background:'+(on?'#f0fdf4':'#fff');
     row.innerHTML=
-      '<div style="flex-shrink:0;width:18px;height:18px;border-radius:4px;border:2px solid '+(on?'#16a34a':'#cbd5e1')+';background:'+(on?'#16a34a':'#fff')+';display:flex;align-items:center;justify-content:center;margin-top:1px">'+(on?'<svg width="10" height="8" viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1" style="fill:none;stroke:#fff;stroke-width:2"/></svg>':'')+'</div>'+
-      '<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:2px">'+tip.label+'</div>'+
-      '<div style="font-size:11px;color:#64748b;line-height:1.5">'+tip.desc+'</div>'+
-      '<div style="font-size:10px;color:#94a3b8;margin-top:3px">Source: '+tip.source+'</div></div>';
+      '<div style="flex-shrink:0;width:18px;height:18px;border-radius:4px;border:2px solid '+(on?'#16a34a':'#cbd5e1')+';background:'+(on?'#16a34a':'#fff')+';display:flex;align-items:center;justify-content:center;margin-top:2px">'+(on?'<svg width="10" height="8" viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1" style="fill:none;stroke:#fff;stroke-width:2"/></svg>':'')+'</div>'+
+      '<div style="flex:1">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:2px">'+
+          '<div style="font-size:12px;font-weight:600;color:#1e293b">'+tip.label+'</div>'+
+          '<div style="font-size:11px;font-weight:600;color:'+badgeColor+';white-space:nowrap;flex-shrink:0">'+badge+'</div>'+
+        '</div>'+
+        '<div style="font-size:11px;color:#64748b;line-height:1.5">'+tip.desc+'</div>'+
+        '<div style="font-size:10px;color:#94a3b8;margin-top:2px">Source: '+tip.source+'</div>'+
+      '</div>';
     row.onclick=function(){tipsDietState[tip.id]=!tipsDietState[tip.id];buildDietToggles();calcTips();};
     el.appendChild(row);
   });
@@ -2129,6 +2322,14 @@ function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,
       (combinedLine?li('#16a34a','Green — All selected combined'):'')+
       li('#16a34a','Green dashed — 50 µg/L target',true)+
       li('#dc2626','Red dashed — 30 µg/L threshold',true);
+  }
+
+  // Update inflammation badge
+  var inflamBadge=document.getElementById('tipsInflamBadge');
+  if(inflamBadge&&lc){
+    var iGain12=inflammLine?rnd((inflammLine[12]||0)-(baseLine[12]||0)):0;
+    inflamBadge.textContent=tipsInflamOn&&iGain12>0?'→ +'+iGain12+' µg/L at 12 months (teal line)':'— restores absorption to full tiered rate for current ferritin level';
+    inflamBadge.style.color=tipsInflamOn&&iGain12>0?'#0369a1':'#64748b';
   }
 }
 
@@ -2693,16 +2894,19 @@ function buildGPLetter(){
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
   var maintAbsRateL=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
   var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(maintAbsRateL*30)/5)*5:0;
-  var maintFsTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/65*30/4.3):0;
+  var fmL=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate',otc:false};
+  var maintTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/fmL.elemPerTab*30/4.3):0;
+  var maintFsTabsPerWeek=maintTabsPerWeek; // keep alias for existing references
 
   // Flow description
   var flowDesc=['very light','light','moderate','heavy','very heavy'][Math.min(c.flowIdx||2,4)];
 
-  // Tablet description for Phase 1
-  var fsTabsPerDay=suppDose>0?Math.round(suppDose/65*10)/10:0;
-  var p1TabDesc=fsTabsPerDay<=1.2?'one ferrous sulfate 200mg tablet a day':
-    fsTabsPerDay<=2.2?'two ferrous sulfate 200mg tablets a day':
-    Math.round(fsTabsPerDay)+' ferrous sulfate 200mg tablets a day';
+  // Tablet description for Phase 1 using formulation
+  var fsTabsPerDay=suppDose>0?Math.round(suppDose/fmL.elemPerTab*10)/10:0;
+  var uLabelL=fmL.abbr==='bisglycinate'?'capsule':'tablet';
+  var p1TabDesc=fsTabsPerDay<=1.2?'one '+fmL.name+' '+uLabelL+' a day':
+    fsTabsPerDay<=2.2?'two '+fmL.name+' '+uLabelL+'s a day':
+    Math.round(fsTabsPerDay)+' '+fmL.name+' '+uLabelL+'s a day';
 
   // Dates
   var t3=addMonths(today,3);
@@ -2782,7 +2986,7 @@ function buildGPLetter(){
       L.push('I would like to discuss whether a prescription for '+fmLabel+' would be appropriate — based on what I have read, taking '+tabClarify+' is often recommended to bring ferritin up to around '+planTarget+' µg/L, which I understand is the level at which symptoms typically improve. I appreciate you may have a different view and am happy to go with your recommendation.');
       if(maintDailyMg>0){
         L.push('');
-        L.push('Once my levels are where they need to be, I would like to discuss reducing to a lower ongoing dose — perhaps '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — just to keep things stable without over-supplementing.');
+        L.push('Once my levels are where they need to be, I would like to discuss reducing to a lower ongoing dose — perhaps '+maintFsTabsPerWeek+' '+fmL.name+' '+uLabelL+(maintFsTabsPerWeek===1?'':'s')+' a week — just to keep things stable without over-supplementing.');
       }
     } else {
       L.push('I would like to discuss whether starting iron supplementation would be appropriate. I have not been on a prescribed course before and would welcome your guidance on the right dose and approach.');
@@ -2868,12 +3072,21 @@ function buildSessionData(name){
   var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr','modVitC','modTiming','modTea','modCa','modAntacid','stratTarget','adherenceSlider'];
   var selects=['stratIVDose'];
   var formVal=document.querySelector('input[name="formulation"]:checked');
+  var pmEl=document.getElementById('periodMgmt');
+  var pillContIntEl=document.getElementById('pillContInterval');
+  var pillContBdEl=document.getElementById('pillContBleedDays');
   return {name:name||document.getElementById('sessionName').value||'',
     age:document.getElementById('patAge').value,
     meno:document.getElementById('menopause').value,
     startDate:document.getElementById('startDate').value,
     formulation:formVal?formVal.value:'sulfate',
+    periodMgmt:pmEl?pmEl.value:'natural',
+    pillContInterval:pillContIntEl?pillContIntEl.value:'105',
+    pillContBleedDays:pillContBdEl?pillContBdEl.value:'7',
     conds:Object.assign({},conds),
+    tipsDietState:Object.assign({},tipsDietState),
+    tolState:Object.assign({},tolState),
+    tipsInflamOn:tipsInflamOn,
     infusions:JSON.parse(JSON.stringify(infusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
     sliders:sliders.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{}),
@@ -2889,9 +3102,16 @@ function applySessionData(d){
   Object.keys(conds).forEach(function(k){document.getElementById('tog-'+k).classList.toggle('on',conds[k]);});
   infusions=d.infusions||[{month:0,dose:1000}];
   actuals=d.actuals||[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
+  if(d.tipsDietState) tipsDietState=Object.assign({},d.tipsDietState);
+  if(d.tolState) tolState=Object.assign({},d.tolState);
+  if(typeof d.tipsInflamOn!=='undefined'){tipsInflamOn=!!d.tipsInflamOn;var ti=document.getElementById('tog-tips-inflam');if(ti)ti.classList.toggle('on',tipsInflamOn);}
   if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
   if(d.selects){Object.keys(d.selects).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.selects[id];});}
   if(d.formulation){var fEl=document.querySelector('input[name="formulation"][value="'+d.formulation+'"]');if(fEl)fEl.checked=true;}
+  if(d.periodMgmt){var pmEl=document.getElementById('periodMgmt');if(pmEl)pmEl.value=d.periodMgmt;}
+  if(d.pillContInterval){var pciEl=document.getElementById('pillContInterval');if(pciEl)pciEl.value=d.pillContInterval;}
+  if(d.pillContBleedDays){var pcbEl=document.getElementById('pillContBleedDays');if(pcbEl)pcbEl.value=d.pillContBleedDays;}
+  applyPeriodMgmt();
   renderInfusions();renderActuals();updateCondNote();updateAdherenceLabel();calc();
 }
 
@@ -3299,16 +3519,19 @@ function calcStrategy(){
   }
 
   var mDailyTabs=Math.max(1,Math.round(mDailyR/fm2.elemPerTab));
+  var mDailyElem=mDailyTabs*fm2.elemPerTab;   // always consistent with tab count
   var mDailyPkMg=mDailyTabs*fm2.packetMg;
   var altDayTabs=Math.max(1,Math.ceil(mAltDayR/fm2.elemPerTab));
+  var altDayElem=altDayTabs*fm2.elemPerTab;   // always consistent with tab count
   var altDayPkMg=altDayTabs*fm2.packetMg;
+  var unitLabel2=fm2.abbr==='bisglycinate'?'capsule':'tablet';
   phase2Grid.innerHTML=
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
     mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
     (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral'):
-    mc('Maintenance dose',mDailyTabs+' '+(fm2.abbr==='bisglycinate'?'capsule':'tablet')+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg packet · '+mDailyR+'mg actual iron)','neutral')+
-    mc('Alt-day option',altDayTabs+' '+(fm2.abbr==='bisglycinate'?'capsule':'tablet')+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg packet · '+mAltDayR+'mg actual iron)','neutral'));
+    mc('Maintenance dose',mDailyTabs+' '+unitLabel2+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)','neutral')+
+    mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral'));
 
   phase2Text.innerHTML=
     (conds['oral-intol']?'<p style="margin-bottom:6px;color:#b91c1c"><strong>Oral iron intolerance flagged.</strong> Select an option above to model the maintenance approach.</p>':
@@ -3316,7 +3539,7 @@ function calcStrategy(){
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>'+
     spatoneNote+oralIntolNote;
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+altDayTabs+' ferrous sulfate tablet'+(altDayTabs===1?'':'s')+' every other day — '+altDayPkMg+'mg on the packet ('+mAltDayR+'mg actual iron)</strong> is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day — '+altDayPkMg+'mg on the packet ('+altDayElem+'mg elemental per dose)</strong> is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -3450,7 +3673,7 @@ function showTab(t){
   if(t==='tips')calcTips();
   if(t==='tolerability')calcTolerability();
 }
-refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();checkDraft();
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();
 </script>
 </body>
 </html>
