@@ -94,9 +94,10 @@ button:hover{background:#f1f5f9}
 </head>
 <body>
 <div class="app">
-<h1>Iron balance calculator</h1>
-<p class="sub">Evidence-based iron modelling · Multi-patient · Session storage · Clinical analysis</p>
+<h1 style="display:none">Fe+ Iron Balance Tool</h1>
+<p class="sub" style="display:none">Iron balance planning tool</p>
 
+<div id="topControls" style="display:none">
 <div class="section">
 <div class="st">Session</div>
 <div class="card">
@@ -154,6 +155,8 @@ button:hover{background:#f1f5f9}
   <div class="note" id="condNote"></div>
 </div>
 </div>
+
+</div><!-- /topControls -->
 
 <div class="tabs">
   <button class="tab active" onclick="showTab('about')">About iron &amp; ferritin</button>
@@ -3731,6 +3734,9 @@ function refreshList(sel){
 function showTab(t){
   ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
   document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
+  // Show top controls (session, conditions) on all tabs except About
+  var tc=document.getElementById('topControls');
+  if(tc) tc.style.display=t==='about'?'none':'';
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
