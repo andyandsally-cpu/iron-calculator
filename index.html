@@ -82,7 +82,17 @@ button:hover{background:#f1f5f9}
 .paywall-free-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.8}
 .paywall-dismiss{font-size:12px;color:#94a3b8;cursor:pointer;text-decoration:underline;border:none;background:none;padding:4px}
 .paywall-restore{font-size:11px;color:#94a3b8;margin-top:10px}
+/* ── PAYWALL ─────────────────────────────────────────────────────────── */
+#paywallModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:16px}
+#paywallModal.show{display:flex}
+.paywall-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
+.paywall-title{font-size:20px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.paywall-sub{font-size:13px;color:#64748b;line-height:1.55;margin-bottom:12px}
+.paywall-feature{font-size:13px;color:#2d6a9f;font-weight:600;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 14px;margin-bottom:14px}
+.paywall-btn{display:block;background:#1e3a5f;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;margin-bottom:10px}
+.paywall-free-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:10px;line-height:1.8}
 @media print{#paywallModal{display:none!important}}
+#paywallModal{display:none!important}}
 
   .tabs,.sb,.trow,.eg,.card button,#draftBanner,.ib,.pf,button{display:none!important}
   .ca{display:block!important;border:1px solid #ccc}
@@ -98,7 +108,6 @@ button:hover{background:#f1f5f9}
 <h1 style="display:none">Fe+ Iron Balance Tool</h1>
 <p class="sub" style="display:none">Iron balance planning tool</p>
 
-<div id="topControls" style="display:none">
 <div class="section">
 <div class="st">Session</div>
 <div class="card">
@@ -157,8 +166,6 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
-</div><!-- /topControls -->
-
 <div class="tabs">
   <button class="tab active" onclick="showTab('about')">About iron &amp; ferritin</button>
   <button class="tab" onclick="showTab('model')">Balance model</button>
@@ -184,11 +191,9 @@ button:hover{background:#f1f5f9}
   <svg width="88" height="88" viewBox="0 0 100 100" role="img" aria-label="Fe+ logo" style="flex-shrink:0;border-radius:14px">
     <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
     <rect width="100" height="100" rx="18" fill="white" fill-opacity="0.06"/>
-    <!-- arc -->
     <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
     <circle cx="46" cy="60" r="3.5" fill="#3b82f6" opacity="0.8"/>
     <circle cx="80" cy="34" r="4" fill="#3b82f6"/>
-    <!-- Fe+ text -->
     <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
     <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
   </svg>
@@ -653,22 +658,6 @@ button:hover{background:#f1f5f9}
 <div class="grid3" id="metricsGrid"></div>
 <div class="analysis-box" id="analysisBox"><div class="analysis-title" id="analysisTitle"></div><div id="analysisText"></div></div>
 </div>
-
-<div class="section" style="margin-top:.25rem">
-<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
-<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
-<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
-<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
-</div>
-
-<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
-<div class="st">Historic ferritin record</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
-<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
-</div>
-
 </div>
 
 <div id="tab-actual" style="display:none">
@@ -1198,11 +1187,35 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
+<div class="section" style="margin-top:.25rem">
+<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
+<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+</div>
+
+<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
+<div class="st">Historic ferritin record</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
+<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
+</div>
+
+<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0;text-align:center">
+  ⚠️ This tool provides estimates to support a conversation with your GP — not a substitute for clinical assessment.<br>
+  <a href="privacy.html" style="color:#94a3b8;text-decoration:underline">Privacy policy</a> · 
+  <a href="terms.html" style="color:#94a3b8;text-decoration:underline">Terms of use</a>
+</p>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 var infusions=[{month:0,dose:1000}];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
+var chartInst=null;
+var historicChartInst=null;
 var tipsChartInst=null;
 window.strategyScenario=null;
 window.revisedScenario=null; // stores revised projection from last actual result
@@ -1492,9 +1505,9 @@ function calc(){
   var cycleLen=rawCycleLen>364?365:rawCycleLen;
   var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var dietQmg=[0,6,8,10,13,16];
   var dietQIdx=gv('dietQ')||3;
   var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
+  var dietQmg=[0,6,8,10,13,16];
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
   // net = gross absorbed minus basal utilisation; calibrated to ~10-15mg/month for average diet)
@@ -3731,9 +3744,6 @@ function refreshList(sel){
 function showTab(t){
   ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
   document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
-  // Show top controls (session, conditions) on all tabs except About
-  var tc=document.getElementById('topControls');
-  if(tc) tc.style.display=t==='about'?'none':'';
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
@@ -3799,7 +3809,7 @@ function checkBypassCode(){
   });
 }
 
-refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();
 
 // Close modal on backdrop click
 document.getElementById('paywallModal').addEventListener('click',function(e){
@@ -3853,25 +3863,10 @@ document.getElementById('paywallModal').addEventListener('click',function(e){
 })();
 
 </script>
-<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0;text-align:center">
-  ⚠️ This tool provides estimates to support a conversation with your GP — not a substitute for clinical assessment.<br>
-  <a href="privacy.html" style="color:#94a3b8;text-decoration:underline">Privacy policy</a> · 
-  <a href="terms.html" style="color:#94a3b8;text-decoration:underline">Terms of use</a>
-</p>
-</div><!-- /app -->
-
 <!-- ── PAYWALL MODAL ──────────────────────────────────────────────────────── -->
 <div id="paywallModal" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
   <div class="paywall-box">
-    <div style="display:flex;justify-content:center;margin-bottom:12px">
-      <svg width="64" height="64" viewBox="0 0 100 100" role="img" aria-label="Fe+ logo" style="border-radius:12px">
-        <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
-        <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-        <circle cx="80" cy="34" r="4.5" fill="#3b82f6"/>
-        <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
-        <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
-      </svg>
-    </div>
+    <div class="paywall-icon">🔒</div>
     <div class="paywall-title" id="paywallTitle">Full version required</div>
     <div class="paywall-sub">This feature is part of the full Iron Balance Tool.</div>
     <div class="paywall-feature" id="paywallFeature">Strategy &amp; GP discussion summary</div>
@@ -3889,7 +3884,7 @@ document.getElementById('paywallModal').addEventListener('click',function(e){
       ⭐ GP discussion summary (copy &amp; export)<br>
       ⭐ Session save &amp; restore
     </div>
-    <a id="paywallStripeBtn" href="https://buy.stripe.com/test_aFa28kf6R8IvbIv2Rcgfu00" class="paywall-btn">Unlock full version — £9.99 one-off →</a>
+    <a id="paywallStripeBtn" href="YOUR_STRIPE_PAYMENT_LINK" class="paywall-btn">Unlock full version — £9.99 one-off →</a>
     <div style="font-size:11px;color:#64748b;margin-bottom:10px">One-off payment · No subscription · Works on any device after unlocking</div>
     <button class="paywall-dismiss" onclick="closePaywall()">Maybe later</button>
     <div class="paywall-restore">
@@ -3897,6 +3892,122 @@ document.getElementById('paywallModal').addEventListener('click',function(e){
     </div>
   </div>
 </div>
+
+<!-- ── PAYWALL MODAL ─────────────────────────────────────────── -->
+<div id="paywallModal" role="dialog" aria-modal="true">
+  <div class="paywall-box">
+    <div style="display:flex;justify-content:center;margin-bottom:12px">
+      <svg width="64" height="64" viewBox="0 0 100 100" style="border-radius:12px">
+        <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
+        <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+        <circle cx="80" cy="34" r="4.5" fill="#3b82f6"/>
+        <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
+        <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
+      </svg>
+    </div>
+    <div class="paywall-title">Full version required</div>
+    <div class="paywall-sub">This feature is part of the full Fe+ Iron Balance Tool.</div>
+    <div class="paywall-feature" id="paywallFeature">Strategy &amp; GP discussion summary</div>
+    <div class="paywall-free-list">
+      <strong>Already free:</strong><br>
+      ✓ About iron &amp; ferritin (full)<br>
+      ✓ Balance model (full)<br>
+      ✓ Actual results &amp; chart (full)
+    </div>
+    <div class="paywall-free-list" style="background:#fefce8;border:1px solid #fde047">
+      <strong>Full version unlocks:</strong><br>
+      ⭐ Strategy tab — Phase 1 &amp; 2 planning<br>
+      ⭐ Tips &amp; what-if explorer<br>
+      ⭐ Side effects &amp; tolerability<br>
+      ⭐ GP discussion summary<br>
+      ⭐ Session save &amp; restore
+    </div>
+    <a href="https://buy.stripe.com/test_aFa28kf6R8IvbIv2Rcgfu00" class="paywall-btn">Unlock full version — £9.99 one-off →</a>
+    <div style="font-size:11px;color:#64748b;margin-bottom:12px">One-off payment · No subscription · Works on any device</div>
+    <button onclick="closePaywall()" style="font-size:12px;color:#94a3b8;cursor:pointer;text-decoration:underline;border:none;background:none;padding:4px">Maybe later</button>
+    <div style="margin-top:10px;font-size:11px;color:#94a3b8">
+      Already paid? <button onclick="restoreAccess()" style="font-size:11px;color:#2d6a9f;cursor:pointer;text-decoration:underline;border:none;background:none;padding:0">Restore access on this device</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PAYWALL ───────────────────────────────────────────────────────────────
+var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
+
+function isUnlocked(){
+  return localStorage.getItem('ironToolUnlocked')==='true';
+}
+
+function closePaywall(){
+  document.getElementById('paywallModal').classList.remove('show');
+}
+
+function restoreAccess(){
+  if(window.confirm('This will restore your paid access on this device. Only use this if you have already purchased the full version.')){
+    localStorage.setItem('ironToolUnlocked','true');
+    closePaywall();
+    location.reload();
+  }
+}
+
+function checkBypassCode(){
+  var params=new URLSearchParams(window.location.search);
+  var code=params.get('code');
+  if(!code) return;
+  var encoder=new TextEncoder();
+  var data=encoder.encode(code.toLowerCase().trim());
+  crypto.subtle.digest('SHA-256',data).then(function(hashBuffer){
+    var hashHex=Array.from(new Uint8Array(hashBuffer)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    if(hashHex===BYPASS_HASH){
+      localStorage.setItem('ironToolUnlocked','true');
+      var url=new URL(window.location.href);
+      url.searchParams.delete('code');
+      window.history.replaceState({},'',url.toString());
+    }
+  });
+}
+
+checkBypassCode();
+
+document.getElementById('paywallModal').addEventListener('click',function(e){
+  if(e.target===this) closePaywall();
+});
+
+// Patch showTab to gate paid tabs
+(function(){
+  var paidTabs=['strategy','tips','tolerability','export'];
+  var tabNames={
+    strategy:'Strategy tab — Phase 1 &amp; 2 planning',
+    tips:'Tips &amp; what-if explorer',
+    tolerability:'Side effects &amp; tolerability',
+    export:'GP discussion summary'
+  };
+  var _orig=showTab;
+  showTab=function(t){
+    if(paidTabs.indexOf(t)>-1&&!isUnlocked()){
+      var el=document.getElementById('paywallFeature');
+      if(el) el.innerHTML=tabNames[t]||t;
+      document.getElementById('paywallModal').classList.add('show');
+      return;
+    }
+    _orig(t);
+  };
+  // Add lock badges to paid tab buttons
+  if(!isUnlocked()){
+    document.querySelectorAll('.tab').forEach(function(btn){
+      var oc=btn.getAttribute('onclick')||'';
+      var m=oc.match(/showTab\('(\w+)'\)/);
+      if(m&&paidTabs.indexOf(m[1])>-1){
+        var badge=document.createElement('span');
+        badge.textContent=' 🔒';
+        badge.style.fontSize='9px';
+        btn.appendChild(badge);
+      }
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
