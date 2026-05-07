@@ -301,6 +301,34 @@ button:hover{background:#f1f5f9}
 <div class="st">Performance against plan</div>
 <div class="card" id="planVsActualBox"></div>
 </div>
+
+<div class="section">
+<div class="st">Getting consistent blood test results</div>
+<div class="card">
+  <p style="font-size:13px;color:#475569;line-height:1.65;margin-bottom:10px">Iron test results can vary significantly depending on when and how you test. Following these guidelines each time gives the most comparable, reliable readings:</p>
+  <div style="display:grid;gap:7px">
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#16a34a;font-size:15px;flex-shrink:0">✓</span><span><strong>Test at the same point in your cycle</strong> — ferritin dips during and just after bleeding, then recovers. Mid-cycle (around day 10–18 depending on cycle length) gives the most stable reading. Testing at different cycle points makes results hard to compare.</span></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#16a34a;font-size:15px;flex-shrink:0">✓</span><span><strong>Avoid testing during illness or infection</strong> — ferritin is an acute phase reactant: it rises when your body is fighting inflammation, which can mask true iron stores and make levels appear higher than they are. Wait at least 2–3 weeks after illness.</span></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#16a34a;font-size:15px;flex-shrink:0">✓</span><span><strong>Morning tests preferred</strong> — slight diurnal variation means morning samples are marginally more consistent, especially if comparing to previous results taken at the same time.</span></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#94a3b8;font-size:15px;flex-shrink:0">ℹ</span><span><strong>Fasting is not required for ferritin</strong> — unlike serum iron or transferrin saturation, ferritin is not significantly affected by meals. No need to fast.</span></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#94a3b8;font-size:15px;flex-shrink:0">ℹ</span><span><strong>Supplement timing does not affect ferritin</strong> — ferritin reflects long-term iron stores, not recent dose timing. Taking your supplement the day before or day of the test makes no meaningful difference.</span></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px"><span style="color:#3b82f6;font-size:15px;flex-shrink:0">★</span><span><strong>Request CRP alongside ferritin if possible</strong> — C-reactive protein (CRP) is a marker of inflammation. If CRP is elevated at the same time as ferritin, the ferritin result may be falsely high and not reflect true iron stores. Knowing both together makes the ferritin result much easier to interpret.</span></div>
+  </div>
+</div>
+</div>
+
+<div class="section" id="cycleChartSection">
+<div class="st">How ferritin varies across your cycle</div>
+<div class="card">
+  <p style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.5">This shows the estimated within-cycle ferritin variation personalised to your cycle settings — <strong>not your actual ferritin level</strong>. The y-axis uses 50 µg/L as an example starting point to illustrate the scale of fluctuation. Shaded zones show the best and worst times to test for a consistent reading.</p>
+  <div style="position:relative;width:100%;height:200px"><canvas id="cycleChart"></canvas></div>
+  <div style="display:flex;gap:14px;margin-top:8px;font-size:11px;flex-wrap:wrap">
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(220,38,38,0.2)"></span>Avoid testing (during &amp; just after bleeding)</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(234,179,8,0.2)"></span>Suboptimal (early recovery)</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(22,163,74,0.15)"></span>Best window for testing</span>
+  </div>
+</div>
+</div>
 </div>
 
 <div id="tab-infusion" style="display:none">
@@ -684,17 +712,34 @@ function calc(){
 
   var hasStrategy=window.strategyScenario&&window.strategyScenario.ferrLine&&window.strategyScenario.ferrLine.length===months;
   var hasRevised=window.revisedScenario&&window.revisedScenario.ferrLine;
-  var va=actuals.filter(function(a){return a.ferritin>0;});
 
   var ds=[];
 
-  // BLUE = treatment plan (hero line) — prominent, filled
+  // BLUE = treatment plan (hero line)
   if(hasStrategy){
     ds.push({label:'Treatment plan (Phase 1 recovery → Phase 2 maintenance)',data:window.strategyScenario.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
   }
 
-  // GREY dashed = no-change trajectory (secondary context line)
-  ds.push({label:'If nothing changes (current dose only, no plan)',data:ferrLine,borderColor:'#94a3b8',borderDash:[4,3],borderWidth:1.5,pointRadius:0,fill:false,tension:.3});
+  // ORANGE dashed = what happens if supplementation stops after reaching target
+  var stopLine=null;
+  if(hasStrategy&&lc){
+    var sc2=window.strategyScenario;
+    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*0.04,4.0)*30)/8:0;
+    var postStopRate=(lc.ferrChangePM||0)-suppFerrPM2;
+    var ivBoost2=sc2.ivDose>0?mg2f(sc2.ivDose):0;
+    var stopArr=[startFerr];
+    var stReached=startFerr>=sc2.target;
+    for(var ss=1;ss<months;ss++){
+      var sPrev=stopArr[ss-1];
+      var sBoost=(ss===1&&!stReached)?ivBoost2:0;
+      var sNext;
+      if(!stReached){sNext=sPrev+sBoost+(lc.ferrChangePM||0);if(sNext>=sc2.target){stReached=true;sNext=sc2.target;}}
+      else{sNext=sPrev+postStopRate;}
+      stopArr.push(Math.max(0,+sNext.toFixed(1)));
+    }
+    stopLine=stopArr;
+    ds.push({label:'If supplementation stops after reaching target',data:stopLine,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
+  }
 
   // Reference lines
   ds.push({label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false});
@@ -705,7 +750,7 @@ function calc(){
     ds.push({label:'Revised projection from last blood test',data:window.revisedScenario.ferrLine,borderColor:'#7c3aed',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[5,3]});
   }
 
-  // Actual dots — post-plan-start results only, plotted at correct month position
+  // Actual dots — post-plan-start results only, at correct date position
   var split=splitActuals();
   var va=split.current;
   if(va.length){
@@ -713,20 +758,19 @@ function calc(){
     va.forEach(function(a){
       var aDate=parseDate(a.date);
       var monthIdx=0;
-      if(aDate&&baseDate){
-        monthIdx=Math.round((aDate-baseDate)/(1000*60*60*24*30.44));
-      }
-      if(monthIdx>=0&&monthIdx<months){
-        if(ad[monthIdx]===null||a.ferritin>0) ad[monthIdx]=a.ferritin;
-      }
+      if(aDate&&baseDate) monthIdx=Math.round((aDate-baseDate)/(1000*60*60*24*30.44));
+      if(monthIdx>=0&&monthIdx<months&&(ad[monthIdx]===null||a.ferritin>0)) ad[monthIdx]=a.ferritin;
     });
     ds.push({label:'Your actual blood test results',data:ad,borderColor:'#ea580c',borderWidth:0,pointRadius:7,showLine:false,fill:false});
   }
 
+  // Autoscale
   var allValues=ferrLine.concat(va.map(function(a){return a.ferritin||0;}));
   if(hasStrategy) allValues=allValues.concat(window.strategyScenario.ferrLine);
+  if(stopLine) allValues=allValues.concat(stopLine);
   if(hasRevised) allValues=allValues.concat(window.revisedScenario.ferrLine.filter(function(v){return v!==null;}));
-  var yMax=Math.min(250,Math.max(80,rnd(Math.max.apply(null,allValues)*1.25)));
+  var allPos=allValues.filter(function(v){return v>0;});
+  var yMax=allPos.length?Math.ceil(Math.max.apply(null,allPos)*1.2/10)*10:150;
 
   if(chartInst)chartInst.destroy();
   chartInst=new Chart(document.getElementById('ferrChart'),{
@@ -740,7 +784,7 @@ function calc(){
   // End-of-line labels
   var endLabelMap={
     'Treatment plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Treatment plan',color:'#3b82f6'},
-    'If nothing changes (current dose only, no plan)':{text:'No change',color:'#94a3b8'},
+    'If supplementation stops after reaching target':{text:'If you stop after target',color:'#f97316'},
     'Revised projection from last blood test':{text:'Revised projection',color:'#7c3aed'}
   };
   chartInst.options.animation={onComplete:function(){
@@ -756,77 +800,65 @@ function calc(){
       for(var pi=meta.data.length-1;pi>=0;pi--){if(meta.data[pi]&&chartInst.data.datasets[i].data[pi]!==null){lastPt=meta.data[pi];break;}}
       if(!lastPt)return;
       var x=lastPt.x+5;var y=lastPt.y;
-      if(x>chartInst.chartArea.right-65)x=chartInst.chartArea.right-65;
-      ctx.fillStyle=lm.color;
-      ctx.fillText(lm.text,x,y+4);
+      if(x>chartInst.chartArea.right-80)x=chartInst.chartArea.right-80;
+      ctx.fillStyle=lm.color;ctx.fillText(lm.text,x,y+4);
     });
     ctx.restore();
   }};
   chartInst.update();
 
-  // Update title
   var titleEl=document.getElementById('chartTitle');
-  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · treatment plan vs no-change':'');
+  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · treatment plan vs stopping after target':'');
 
-  // ── EXPLAINER PARAGRAPH ──
   var explainer=document.getElementById('chartExplainer');
   if(explainer){
     var parts=[];
-
-    // Blue = plan (hero)
     if(hasStrategy){
       var sc=window.strategyScenario;
       var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an immediate boost.':'';
-      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' The rising section (Phase 1) shows recovery to the '+sc.target+' µg/L target using your current dose. The line then bends and flattens (Phase 2) — at this point the dose would drop to the lower maintenance level needed just to hold steady. You would not need to keep taking the full recovery dose indefinitely.');
+      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
+      if(stopLine){
+        var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
+        var stopConclusion=postStopRate<0?' Diet alone cannot replace losses — stores would deplete again without ongoing maintenance supplementation. This is why Phase 2 matters.':' In your case, diet appears to cover losses — stopping supplements after the target may be sustainable, though monitoring is still advisable.';
+        parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+'.'+stopConclusion);
+      }
     }
-
-    // Grey = no change
-    var greyDir=ferrChangePM>0.5?'continuing to rise at '+rnd(ferrChangePM*10)/10+' µg/L per month':ferrChangePM<-0.5?'continuing to fall at '+rnd(Math.abs(ferrChangePM)*10)/10+' µg/L per month':'holding roughly steady';
-    parts.push('<strong style="color:#64748b">- - Grey dashed — If nothing changes:</strong> Where ferritin would go if you kept taking the same dose indefinitely with no planned reduction. '+( ferrChangePM>0.5?'It keeps climbing past the target — there is no clinical benefit to maintaining a high recovery dose once ferritin is stable.':'Ferritin is not recovering at the current rate — the treatment plan above addresses this.'));
-
-    // Purple = revised
     if(hasRevised){
       var rv=window.revisedScenario;
-      var rSrc=rv.usedDerived?'your actual observed absorption rate from blood tests — more reliable than a modelled estimate':'the modelled rate (not enough data yet to derive an observed rate)';
+      var rSrc=rv.usedDerived?'your actual observed absorption rate from blood tests':'the modelled rate';
       var gapNote='';
       if(hasStrategy){
         var revEnd=null;for(var ri=rv.ferrLine.length-1;ri>=0;ri--){if(rv.ferrLine[ri]!==null){revEnd=rv.ferrLine[ri];break;}}
-        var stratEnd=sc.ferrLine[sc.ferrLine.length-1];
+        var stratEnd=window.strategyScenario.ferrLine[window.strategyScenario.ferrLine.length-1];
         if(revEnd!==null&&stratEnd!==null){
-          var gap=rnd(stratEnd-revEnd);
-          if(gap>5) gapNote=' The '+gap+' µg/L gap between blue and purple at 12 months shows how far behind the treatment plan current results are tracking — if adherence has been good, this may be worth discussing with a clinician.';
-          else if(gap<-5) gapNote=' The purple line is ahead of the treatment plan — results are tracking better than projected.';
-          else gapNote=' The purple line is closely tracking the treatment plan — results are on target.';
+          var gap2=rnd(stratEnd-revEnd);
+          if(gap2>5) gapNote=' The '+gap2+' µg/L gap vs plan at 12 months — if adherence is good, an absorption issue may be worth discussing with a clinician.';
+          else if(gap2<-5) gapNote=' Results are tracking ahead of plan.';
+          else gapNote=' Results are closely tracking the plan.';
         }
       }
-      parts.push('<strong style="color:#7c3aed">- - Purple dashed — Revised projection:</strong> Starts from your last blood test (ferritin '+rv.lastFerritin+' µg/L), using '+rSrc+'. Shows where ferritin is heading from that point — with the same Phase 2 flattening once the target is reached.'+gapNote);
+      parts.push('<strong style="color:#7c3aed">- - Purple dashed — Revised projection:</strong> Starts from your last blood test ('+rv.lastFerritin+' µg/L), using '+rSrc+'.'+gapNote);
     }
-
-    // Actual dots
-    if(va.length){
-      parts.push('<strong style="color:#ea580c">&#9679; Orange dots — Actual blood test results:</strong> Your real ferritin readings. Compare these against the blue treatment plan line to see how closely results are tracking.');
-    }
-
-    parts.push('<span style="color:#94a3b8">Green dashed: recommended minimum (50 µg/L). Red dashed: depleted stores threshold (30 µg/L) — symptoms of iron deficiency are likely below this level.</span>');
+    if(va.length) parts.push('<strong style="color:#ea580c">&#9679; Orange dots — Actual blood test results:</strong> Results dated on or after the plan start date, plotted at their test date.');
+    parts.push('<span style="color:#94a3b8">Green dashed: recommended minimum (50 µg/L). Red dashed: depleted stores threshold (30 µg/L). 💡 For consistent results, test at the same point in your cycle each time — ideally mid-cycle, away from bleeding.</span>');
     explainer.innerHTML=parts.map(function(p,i){return '<p style="margin:0'+(i<parts.length-1?';margin-bottom:5px':'')+'">'+p+'</p>';}).join('');
   }
 
-  // Legend
   document.getElementById('chartLegend').innerHTML=
-    (hasStrategy?li('#3b82f6','Blue — Treatment plan (Phase 1: recovery · Phase 2: maintenance at lower dose)'):'')+
-    li('#94a3b8','Grey dashed — If nothing changes (current dose, no plan)',true)+
+    (hasStrategy?li('#3b82f6','Blue — Treatment plan (Phase 1: recovery · Phase 2: maintenance)'):'')+
+    (stopLine?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
     (hasRevised?li('#7c3aed','Purple dashed — Revised projection from last blood test',true):'')+
     li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
     li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true)+
     (va.length?li('#ea580c','Orange dots — Actual blood test results'):'');
   if(!window._inCalcDerived) calcDerived();
-  // Refresh strategy tab if it's visible, or recompute scenario line if already computed
   if(!window._inCalcStrategy){
     if(document.getElementById('tab-strategy').style.display!=='none') calcStrategy();
     else if(window.strategyScenario) calcStrategy();
   }
-  // Auto-save draft after every calculation
   autoSave();
+  // Render cycle chart on actuals tab if visible
+  if(document.getElementById('tab-actual').style.display!=='none') renderCycleChart();
 }
 
 function updateAnalysis(){
@@ -1002,6 +1034,120 @@ function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivD
       if(l.startsWith('•')) return '<p style="margin:2px 0 2px 12px;font-size:13px">'+l+'</p>';
       return '<p style="margin-bottom:6px;font-size:13px">'+l+'</p>';
     }).join('');
+}
+
+var cycleChartInst=null;
+
+function renderCycleChart(){
+  var canvas=document.getElementById('cycleChart');
+  if(!canvas)return;
+  // Only show for pre/peri-menopausal
+  var meno=document.getElementById('menopause').value;
+  var section=document.getElementById('cycleChartSection');
+  if(meno==='post'){if(section)section.style.display='none';return;}
+  if(section)section.style.display='';
+
+  var cycleLen=gv('cycleLen')||28;
+  var bleedDays=gv('bleedDays')||5;
+  var flowIdx=gv('flowInt')||2; // 0-4
+  // Flow amplitude: light=2, medium=5, heavy=9, very heavy=13 µg/L drop
+  var flowAmplitudes=[1.5,3,5,9,13];
+  var amp=flowAmplitudes[Math.min(flowIdx,4)];
+  var baseline=50; // example ferritin
+
+  // Build day-by-day curve for one cycle
+  var labels=[];
+  var data=[];
+  var bgColors=[];
+
+  for(var d=1;d<=cycleLen;d++){
+    labels.push('Day '+d);
+    var val;
+    if(d<=bleedDays){
+      // Drop during bleeding — roughly linear fall, steepest on day 2-3
+      var progress=d/bleedDays;
+      val=baseline-(amp*Math.sin(progress*Math.PI));
+    } else if(d<=bleedDays+4){
+      // Early recovery — rising from trough
+      var recov=(d-bleedDays)/4;
+      val=(baseline-amp)+((amp*0.7)*recov);
+    } else if(d<=Math.floor(cycleLen*0.5)){
+      // Mid-cycle approach — small dip at ovulation (~day 14)
+      var midProgress=(d-(bleedDays+4))/(Math.floor(cycleLen*0.5)-(bleedDays+4));
+      val=baseline-(amp*0.3*Math.sin(midProgress*Math.PI));
+    } else {
+      // Luteal phase — gradual return to baseline
+      val=baseline-(amp*0.1*Math.cos(((d-cycleLen*0.5)/(cycleLen*0.5))*Math.PI));
+    }
+    data.push(+val.toFixed(1));
+
+    // Zone colours
+    if(d<=bleedDays) bgColors.push('rgba(220,38,38,0.12)');
+    else if(d<=bleedDays+4) bgColors.push('rgba(234,179,8,0.12)');
+    else if(d>bleedDays+4&&d<=Math.floor(cycleLen*0.7)) bgColors.push('rgba(22,163,74,0.08)');
+    else bgColors.push('rgba(148,163,184,0.06)');
+  }
+
+  // Best window annotation — days bleedDays+5 to ~0.7*cycleLen
+  var bestStart=bleedDays+5;
+  var bestEnd=Math.floor(cycleLen*0.7);
+
+  if(cycleChartInst) cycleChartInst.destroy();
+  cycleChartInst=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:'Estimated ferritin variation (example: baseline 50 µg/L)',data:data,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:.4,pointRadius:0,borderWidth:2},
+        {label:'Example baseline (50 µg/L)',data:new Array(cycleLen).fill(baseline),borderColor:'#94a3b8',borderDash:[4,3],borderWidth:1,pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(c){return 'Estimated: ~'+c.raw+' µg/L';}}},
+        annotation:undefined
+      },
+      scales:{
+        y:{
+          min:Math.floor(baseline-amp-2),
+          max:Math.ceil(baseline+3),
+          title:{display:true,text:'Ferritin µg/L (example)',font:{size:10}},
+          ticks:{font:{size:10}}
+        },
+        x:{ticks:{font:{size:9},autoSkip:true,maxTicksLimit:Math.min(cycleLen,15),maxRotation:0}}
+      }
+    },
+    plugins:[{
+      id:'zoneShading',
+      beforeDraw:function(chart){
+        var ctx=chart.ctx;
+        var xAxis=chart.scales.x;
+        var yAxis=chart.scales.y;
+        var top=yAxis.top;var bottom=yAxis.bottom;
+        var zones=[
+          {from:0,to:bleedDays-1,color:'rgba(220,38,38,0.12)',label:'Avoid'},
+          {from:bleedDays,to:bleedDays+3,color:'rgba(234,179,8,0.10)',label:'Suboptimal'},
+          {from:bestStart-1,to:bestEnd-1,color:'rgba(22,163,74,0.10)',label:'Best'}
+        ];
+        zones.forEach(function(z){
+          if(z.from>=xAxis.ticks.length||z.to<0)return;
+          var x0=xAxis.getPixelForTick(Math.max(0,z.from));
+          var x1=xAxis.getPixelForTick(Math.min(xAxis.ticks.length-1,z.to));
+          ctx.fillStyle=z.color;
+          ctx.fillRect(x0,top,x1-x0,bottom-top);
+          // Zone label
+          ctx.save();
+          ctx.font='bold 9px -apple-system,sans-serif';
+          ctx.fillStyle=z.color.replace('0.1','0.8').replace('0.12','0.8').replace('0.10','0.8');
+          ctx.textAlign='center';
+          ctx.fillText(z.label,(x0+x1)/2,top+10);
+          ctx.restore();
+        });
+      }
+    }]
+  });
 }
 
 function getPlanStartDate(){
@@ -1779,6 +1925,7 @@ function showTab(t){
   document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['model','actual','infusion','strategy','export'][i]===t);});
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
+  if(t==='actual')renderCycleChart();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();checkDraft();
 </script>
