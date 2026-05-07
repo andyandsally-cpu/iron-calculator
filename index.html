@@ -112,12 +112,30 @@ button:hover{background:#f1f5f9}
   </div>
   <div style="font-size:12px;color:#64748b;margin-bottom:6px">Known conditions — toggle to adjust relevant defaults:</div>
   <div class="trow">
-    <div class="tog" id="tog-endo" onclick="toggleCond('endo')">Endometriosis</div>
-    <div class="tog" id="tog-adeno" onclick="toggleCond('adeno')">Adenomyosis</div>
-    <div class="tog" id="tog-coeliac" onclick="toggleCond('coeliac')">Coeliac disease</div>
-    <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
-    <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
-    <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-endo" onclick="toggleCond('endo')">Endometriosis</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle (vs 5)<br>• Flow intensity → Heavy<br>• Note added about gut inflammation potentially affecting absorption</div><div class="tt-s">Endometriosis causes significantly heavier, longer periods — the primary driver of iron loss. Gut endometriosis can also impair absorption. Source: NICE NG73.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-adeno" onclick="toggleCond('adeno')">Adenomyosis</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Bleeding days default → 9 days/cycle<br>• Flow intensity → Heavy<br>Same effect as endometriosis on bleeding parameters</div><div class="tt-s">Adenomyosis causes the endometrium to grow into the uterine muscle, typically producing heavy, prolonged periods. Iron loss is similar to endometriosis. Source: NICE NG73.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-coeliac" onclick="toggleCond('coeliac')">Coeliac disease</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement absorption rate reduced by ~55% (villous atrophy impairs duodenal iron uptake)<br>• Diet iron absorption also reduced (malabsorption affects all nutrients)<br>• Warning shown about refractory deficiency</div><div class="tt-s">Untreated coeliac causes villous atrophy in the duodenum — the primary site of iron absorption. Iron deficiency is often the presenting symptom. A gluten-free diet gradually restores absorption. Source: BSH 2021; NICE CG86.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-oral-intol" onclick="toggleCond('oral-intol')">Oral iron intolerance</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Supplement dose set to zero<br>• Strategy tab shows infusion as Phase 1 option<br>• Phase 2 maintenance shows low-dose oral alternatives (bisglycinate, Spatone) and infusion-only option<br>• GP letter requests infusion referral instead of prescription</div><div class="tt-s">Oral iron intolerance means standard prescribed doses cannot be tolerated. This does not necessarily rule out all oral iron — bisglycinate and liquid iron are often much better tolerated. An IV infusion is the most effective solution for recovery. Source: BSH 2021.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Cycle length default → 35 days (irregular/longer cycles)<br>• Note about insulin resistance and low-grade inflammation potentially raising hepcidin and reducing iron absorption</div><div class="tt-s">PCOS commonly causes irregular, often infrequent periods (oligomenorrhoea). Longer cycles mean fewer bleeds per year — potentially less iron loss than regular cycles, but periods when they occur can be heavy. Insulin resistance in PCOS is associated with low-grade inflammation which may raise hepcidin. Source: NICE CG156.</div></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px">
+      <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Dietary iron quantity reduced by 25% (plant-based diets have lower overall iron density)<br>• Dietary absorption rate reduced (non-haem iron absorbs at 3–8% vs haem iron at 20–25%)<br>• Note about phytates and vitamin C optimisation</div><div class="tt-s">Plant-based diets contain only non-haem iron, which is significantly less bioavailable than haem iron from meat and fish. Vitamin C with meals substantially helps. Iron requirements are estimated to be 1.8× higher for vegetarians/vegans. Source: WHO/FAO 2004; Hallberg & Hultén 2000.</div></div></div>
+    </div>
   </div>
   <div class="note" id="condNote"></div>
 </div>
@@ -130,6 +148,7 @@ button:hover{background:#f1f5f9}
   <button class="tab" onclick="showTab('infusion')">Infusion planner</button>
   <button class="tab" onclick="showTab('strategy')">Strategy</button>
   <button class="tab" onclick="showTab('tips')">Tips &amp; what-if</button>
+  <button class="tab" onclick="showTab('tolerability')">Side effects &amp; tolerability</button>
   <button class="tab" onclick="showTab('export')">GP letter</button>
 </div>
 
@@ -436,7 +455,23 @@ button:hover{background:#f1f5f9}
     <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">drag to set tablets per day — slider moves in 1-tablet steps</span></label>
     <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="390" value="0" step="65" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span id="suppDoseV" style="font-size:13px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:12px;color:#64748b"></span><span class="badge" id="bsd"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Set how many ferrous sulfate 200mg tablets you take per day. Each tablet is labelled 200mg — that is the tablet weight, not the iron dose. Each 200mg tablet contains 65mg of actual (elemental) iron that your body can absorb.</div><div class="tt-n">Most prescribed courses are 1–3 tablets per day (65–195mg elemental). Above 3 tablets (195mg elemental), absorption does not meaningfully increase — hepcidin rises after each dose and blocks the iron transporter for ~24 hours. Taking more tablets just increases side effects.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set to 0 automatically when oral iron intolerance is toggled.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Set how many iron tablets you take per day. Each tablet is labelled by its total weight — not the iron dose. Select your formulation below to see the correct iron content per tablet.</div><div class="tt-n">Most prescribed courses are 1–3 tablets per day. Above 3 tablets, absorption does not meaningfully increase — hepcidin rises after each dose and blocks the iron transporter for ~24 hours.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set to 0 automatically when oral iron intolerance is toggled.</div></div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;margin:-2px 0 8px 0;flex-wrap:wrap">
+    <span style="font-size:11px;color:#64748b;font-weight:500">Formulation:</span>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+      <input type="radio" name="formulation" id="form-sulfate" value="sulfate" checked onchange="calc()" style="cursor:pointer">
+      <span>Ferrous sulfate 200mg <span style="color:#94a3b8">(65mg actual iron)</span></span>
+    </label>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+      <input type="radio" name="formulation" id="form-fumarate" value="fumarate" onchange="calc()" style="cursor:pointer">
+      <span>Ferrous fumarate 210mg <span style="color:#94a3b8">(69mg actual iron)</span></span>
+    </label>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+      <input type="radio" name="formulation" id="form-bisglycinate" value="bisglycinate" onchange="calc()" style="cursor:pointer">
+      <span>Ferrous bisglycinate 20mg <span style="color:#94a3b8">(20mg actual iron · OTC · best tolerated)</span></span>
+    </label>
+    <div class="ib" tabindex="0" style="margin-left:2px">?<div class="tt"><div class="tt-d">Both are prescribed iron supplements available on the NHS. The difference is the tablet weight and how much actual iron each contains.</div><div class="tt-n"><strong>Ferrous sulfate 200mg</strong> — 65mg actual iron per tablet. Most commonly prescribed. Can cause nausea, constipation or dark stools in some people, especially on an empty stomach.<br><br><strong>Ferrous fumarate 210mg</strong> — 69mg actual iron per tablet. Marginally more iron per tablet. Generally considered slightly better tolerated than sulfate, though evidence is mixed. A useful alternative if sulfate causes GI side effects.<br><br><strong>Ferrous bisglycinate 20mg</strong> — 20mg actual iron per capsule. OTC only (not NHS prescribed). Chelated to glycine so does not release free iron in the gut — dramatically fewer side effects. Absorption may be 1.5–2× more efficient per mg than sulfate. Best for sensitive stomachs, maintenance, or those who cannot tolerate prescribed iron. Sold as Gentle Iron, OptiFer, and similar brands.</div><div class="tt-s">Ferrous (Fe²⁺) forms absorb significantly better than ferric (Fe³⁺) supplements. Enteric-coated or slow-release tablets are NOT recommended — they bypass the stomach where most absorption occurs. Liquid iron sachets (Spatone etc.) contain only 5mg actual iron and are only suitable if maintenance needs are very low — check the Tolerability tab.</div></div></div>
   </div>
   <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
     ⚠️ <strong>Above 3 tablets (195mg actual iron) per day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — extra tablets pass through unabsorbed and increase the risk of side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better results. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
@@ -676,6 +711,29 @@ button:hover{background:#f1f5f9}
   <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px">Phase 2 — Maintenance</div>
   <div style="font-size:12px;color:#64748b;margin-bottom:12px">The minimum ongoing supplementation needed to stay level — covering losses exactly, neither recovering nor depleting.</div>
 
+  <!-- Oral intolerance option selector — shown only when oral-intol is toggled -->
+  <div id="stratOralIntolSelector" style="display:none;margin-bottom:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px 14px">
+    <div style="font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:8px">Oral iron intolerance is flagged — choose a maintenance strategy to model:</div>
+    <div style="display:grid;gap:8px">
+      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
+        <input type="radio" name="ointolMaint" value="infusion" checked onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
+        <span><strong>Option A — Infusion only</strong> — repeat infusions as ferritin approaches 30 µg/L. No ongoing oral iron. See Infusion Planner tab for estimated interval.</span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
+        <input type="radio" name="ointolMaint" value="spatone" onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
+        <span><strong>Option B — Liquid iron (Spatone):</strong> 1–2 sachets per day (5mg actual iron each). Very well tolerated — worth trying if losses are small. May not fully cover higher loss needs.</span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
+        <input type="radio" name="ointolMaint" value="bisglycinate" onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
+        <span>
+          <strong>Option C — Cautious bisglycinate trial:</strong> 1 capsule (20mg actual iron) every other day, building from every 3 days.
+          <span class="ib" tabindex="0" style="vertical-align:middle;margin-left:3px">?<div class="tt"><div class="tt-d">What counts as "low dose" for oral iron intolerance trial:</div><div class="tt-n">• Ferrous bisglycinate 1 capsule (20mg actual iron) every 3 days = ~10mg/day average — the gentlest meaningful oral iron dose available<br>• For comparison: standard prescribed ferrous sulfate = 65mg/day — 6× higher<br>• Bisglycinate does not release free iron in the gut (chelated form) — this is why it is tolerated when sulfate is not<br>• Start every 3 days, increase to every other day if tolerated after 2–3 weeks<br>• Most people who cannot tolerate sulfate or fumarate can take bisglycinate without problems</div><div class="tt-s">If bisglycinate at this low dose is well tolerated, consider removing the oral intolerance flag and remodelling with bisglycinate selected as your formulation at a higher dose for better effect.</div></div></span>
+          Under supervision — report to GP if any symptoms.
+        </span>
+      </label>
+    </div>
+  </div>
+
   <div class="grid3" id="stratPhase2Grid" style="margin-bottom:10px"></div>
   <div id="stratPhase2Text" style="font-size:13px;color:#475569;line-height:1.65;background:#f8fafc;border-radius:8px;padding:10px 14px"></div>
 
@@ -787,6 +845,221 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
+<div id="tab-tolerability" style="display:none">
+<div class="section">
+
+<!-- HEADER -->
+<div style="background:linear-gradient(135deg,#7c2d12 0%,#c2410c 100%);border-radius:12px;padding:18px 22px;margin-bottom:1.25rem;color:#fef3c7">
+  <div style="font-size:18px;font-weight:700;margin-bottom:5px">Side effects &amp; tolerability</div>
+  <div style="font-size:12px;color:#fed7aa;line-height:1.6">GI side effects are the most common reason people stop taking iron — and stopping is the worst outcome. This page explains why they happen, what you can actually do about them, and how much each compromise costs in terms of absorption.</div>
+</div>
+
+<!-- SECTION 1: WHY -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px">Why does iron upset the stomach?</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px;text-align:center">
+      <div style="font-size:18px;margin-bottom:5px">🦠</div>
+      <div style="font-size:11px;font-weight:700;color:#b91c1c;margin-bottom:3px">Unabsorbed iron</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">Iron that isn't absorbed stays in the gut and reacts with gut bacteria — producing inflammation, gas and cramping</div>
+    </div>
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px;text-align:center">
+      <div style="font-size:18px;margin-bottom:5px">🏔️</div>
+      <div style="font-size:11px;font-weight:700;color:#b91c1c;margin-bottom:3px">Dose too high</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">The higher the dose, the more unabsorbed iron reaches the lower gut. Most side effects are a dose problem, not an iron problem</div>
+    </div>
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px;text-align:center">
+      <div style="font-size:18px;margin-bottom:5px">⏰</div>
+      <div style="font-size:11px;font-weight:700;color:#b91c1c;margin-bottom:3px">Timing matters</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">Iron taken at night sits in the gut for 8 hours when motility is slowest — concentrating irritation. Morning is significantly better</div>
+    </div>
+  </div>
+  <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:12px;color:#15803d;line-height:1.6">
+    <strong>The good news:</strong> Side effects are not inevitable. They are strongly dose-dependent and formulation-dependent — and can usually be managed without stopping treatment. The strategies below are evidence-based and practical.
+  </div>
+</div>
+
+<!-- SECTION 2: COMPROMISE CALCULATOR -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px">What does each compromise actually cost?</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.55">Toggle the adjustments you need to make for tolerability — the chart shows how much it affects your ferritin trajectory compared to the ideal approach. The gap is usually smaller than people expect.</div>
+
+  <div id="tolToggles" style="display:grid;gap:8px;margin-bottom:14px"></div>
+
+  <div id="tolChartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+  <div style="position:relative;width:100%;height:240px"><canvas id="tolChart"></canvas></div>
+  <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="tolChartLegend"></div>
+  <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:12px;color:#1d4ed8;line-height:1.6" id="tolConclusionBox"></div>
+</div>
+
+<!-- SECTION 3: FORMULATION COMPARISON -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:12px">Formulation comparison — what is actually available and how do they compare?</div>
+
+  <!-- Table -->
+  <div style="overflow-x:auto">
+  <table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead>
+      <tr style="background:#1e3a5f;color:#f1f5f9">
+        <th style="padding:8px 10px;text-align:left;border-radius:6px 0 0 0">Formulation</th>
+        <th style="padding:8px 10px;text-align:center">Packet dose</th>
+        <th style="padding:8px 10px;text-align:center">Actual iron/dose</th>
+        <th style="padding:8px 10px;text-align:center">Absorption</th>
+        <th style="padding:8px 10px;text-align:center">Side effects</th>
+        <th style="padding:8px 10px;text-align:center">NHS prescribed?</th>
+        <th style="padding:8px 10px;text-align:left;border-radius:0 6px 0 0">Best for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#f8fafc">
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Ferrous sulfate</td>
+        <td style="padding:8px 10px;text-align:center">200mg tablet</td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#15803d">65mg</td>
+        <td style="padding:8px 10px;text-align:center">★★★★☆</td>
+        <td style="padding:8px 10px;text-align:center;color:#b91c1c">Moderate–high</td>
+        <td style="padding:8px 10px;text-align:center">✓ Yes</td>
+        <td style="padding:8px 10px;color:#475569">First-line treatment. Good absorption, cheapest, most prescribed.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Ferrous fumarate</td>
+        <td style="padding:8px 10px;text-align:center">210mg tablet</td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#15803d">69mg</td>
+        <td style="padding:8px 10px;text-align:center">★★★★☆</td>
+        <td style="padding:8px 10px;text-align:center;color:#ca8a04">Moderate</td>
+        <td style="padding:8px 10px;text-align:center">✓ Yes</td>
+        <td style="padding:8px 10px;color:#475569">Slightly better tolerated than sulfate. Good if sulfate causes problems. Marginally more iron per tablet.</td>
+      </tr>
+      <tr style="background:#f8fafc">
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Ferrous bisglycinate<br><span style="font-weight:400;font-size:10px;color:#94a3b8">(e.g. Gentle Iron, OptiFer)</span></td>
+        <td style="padding:8px 10px;text-align:center">Various<br><span style="font-size:10px;color:#94a3b8">usually 20–25mg</span></td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#15803d">20–25mg</td>
+        <td style="padding:8px 10px;text-align:center">★★★★★<br><span style="font-size:10px;color:#64748b">may be 2–4× better</span></td>
+        <td style="padding:8px 10px;text-align:center;color:#15803d">Low</td>
+        <td style="padding:8px 10px;text-align:center;color:#94a3b8">✗ OTC only</td>
+        <td style="padding:8px 10px;color:#475569">Best tolerability. Good absorption despite lower dose. Ideal for sensitive stomachs, maintenance, or those who can't tolerate prescribed iron.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Liquid iron sachets<br><span style="font-weight:400;font-size:10px;color:#94a3b8">(e.g. Spatone, Floradix)</span></td>
+        <td style="padding:8px 10px;text-align:center">1 sachet</td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#ca8a04">5–14mg<br><span style="font-size:10px;color:#94a3b8">typically 5mg (Spatone)</span></td>
+        <td style="padding:8px 10px;text-align:center">★★★☆☆<br><span style="font-size:10px;color:#64748b">~20–30% absorbed</span></td>
+        <td style="padding:8px 10px;text-align:center;color:#15803d">Very low</td>
+        <td style="padding:8px 10px;text-align:center;color:#94a3b8">✗ OTC only</td>
+        <td style="padding:8px 10px;color:#475569">Excellent tolerability. Very low actual iron — not suitable for recovery. May be useful for maintenance if monthly deficit is small. See note below.</td>
+      </tr>
+      <tr style="background:#f8fafc">
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Ferric (Fe³⁺) supplements<br><span style="font-weight:400;font-size:10px;color:#94a3b8">(ferric sulfate, some OTC)</span></td>
+        <td style="padding:8px 10px;text-align:center">Various</td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#b91c1c">Varies</td>
+        <td style="padding:8px 10px;text-align:center">★★☆☆☆<br><span style="font-size:10px;color:#64748b">significantly lower</span></td>
+        <td style="padding:8px 10px;text-align:center;color:#15803d">Low</td>
+        <td style="padding:8px 10px;text-align:center;color:#94a3b8">✗ OTC only</td>
+        <td style="padding:8px 10px;color:#475569">Generally not recommended for iron deficiency — must be converted to Fe²⁺ before absorption. Gentler only because less is absorbed.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;font-weight:700;color:#1e293b">Enteric-coated tablets<br><span style="font-weight:400;font-size:10px;color:#94a3b8">(various brands)</span></td>
+        <td style="padding:8px 10px;text-align:center">Various</td>
+        <td style="padding:8px 10px;text-align:center;font-weight:700;color:#b91c1c">Varies</td>
+        <td style="padding:8px 10px;text-align:center">★★☆☆☆<br><span style="font-size:10px;color:#64748b">bypasses stomach</span></td>
+        <td style="padding:8px 10px;text-align:center;color:#15803d">Low</td>
+        <td style="padding:8px 10px;text-align:center;color:#94a3b8">✗ OTC only</td>
+        <td style="padding:8px 10px;color:#475569">Not recommended — coating bypasses the stomach where most iron is absorbed. Gentler only because it's poorly absorbed.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- Liquid iron note (personalised) -->
+  <div id="liquidIronNote" style="margin-top:12px;background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:11px 14px;font-size:12px;color:#854d0e;line-height:1.6">
+    <strong>💡 Is liquid iron (e.g. Spatone) enough for you?</strong> <span id="liquidIronText">Set up the Balance Model to see a personalised answer.</span>
+  </div>
+</div>
+
+<!-- SECTION 4: MITIGATION STRATEGIES -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:12px">Practical strategies — ranked by effectiveness</div>
+  <div style="display:grid;gap:9px">
+
+    <div style="border-left:4px solid #15803d;padding:10px 14px;background:#f0fdf4;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#15803d;color:#fff;padding:2px 7px;border-radius:10px">BIGGEST IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Switch to alternate-day dosing</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Taking iron every other day instead of daily dramatically reduces gut exposure — you're absorbing a similar amount but exposing the gut to iron half as often. Most people find this resolves or greatly reduces side effects. The absorption benefit (hepcidin reset) means you may actually absorb <em>more</em> iron per dose. See the compromise chart above — this often has a positive or neutral effect on trajectory.</div>
+    </div>
+
+    <div style="border-left:4px solid #15803d;padding:10px 14px;background:#f0fdf4;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#15803d;color:#fff;padding:2px 7px;border-radius:10px">BIGGEST IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Switch to ferrous bisglycinate (Gentle Iron)</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Bisglycinate is chelated to glycine, which means it doesn't release free iron in the gut — the mechanism that causes most irritation. Multiple studies show significantly fewer GI side effects vs sulfate, with comparable or better absorption per mg. Available OTC (Holland &amp; Barrett, Amazon etc.) — not prescribed on NHS but not expensive. Typical dose: 20–25mg actual iron per capsule. Not suitable for high-dose recovery without many capsules, but excellent for maintenance or sensitive stomachs.</div>
+    </div>
+
+    <div style="border-left:4px solid #ca8a04;padding:10px 14px;background:#fefce8;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#ca8a04;color:#fff;padding:2px 7px;border-radius:10px">MODERATE IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Take in the morning, not evening</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Iron taken at night sits in the gut for 6–8 hours when gut motility is at its lowest. This concentrates the irritation. Taking iron in the morning — ideally before food or at breakfast — allows normal gut activity to move it through more quickly. Morning also has a slight absorption advantage as hepcidin levels are lowest in the morning. <strong>No absorption cost</strong> — this is simply better practice.</div>
+    </div>
+
+    <div style="border-left:4px solid #ca8a04;padding:10px 14px;background:#fefce8;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#ca8a04;color:#fff;padding:2px 7px;border-radius:10px">MODERATE IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Take with a small amount of food (if needed)</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Taking iron with food significantly reduces nausea for most people. The absorption cost is real — food reduces absorption by approximately 30–40%. However as the compromise chart shows, even with this reduction ferritin will still recover — just more slowly. If the choice is between iron-with-food-consistently vs iron-empty-stomach-occasionally, the former usually results in better outcomes because adherence is maintained. A small amount of food (e.g. a piece of toast) is better than a full meal — the inhibition scales with meal size. <strong>Vitamin C alongside partially counteracts the food effect.</strong></div>
+    </div>
+
+    <div style="border-left:4px solid #ca8a04;padding:10px 14px;background:#fefce8;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#ca8a04;color:#fff;padding:2px 7px;border-radius:10px">MODERATE IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Start low and build up</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Starting at 1 tablet every other day for the first 2–3 weeks gives the gut microbiome time to adapt to the change in iron exposure. The gut bacteria population shifts in response to increased iron — and this transition is often the most symptomatic period. Once adapted, many people tolerate full dosing. Building up gradually extends the recovery timeline by a few weeks but dramatically improves tolerability and adherence.</div>
+    </div>
+
+    <div style="border-left:4px solid #ca8a04;padding:10px 14px;background:#fefce8;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#ca8a04;color:#fff;padding:2px 7px;border-radius:10px">MODERATE IMPACT</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Take with a full glass of water</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Water dilutes the iron concentration in the stomach and speeds transit through the upper GI tract. A full glass (250ml+) significantly reduces local concentration and irritation. This is low-cost, no absorption penalty, and easy to implement. Also helps with constipation — a common complaint.</div>
+    </div>
+
+    <div style="border-left:4px solid #3b82f6;padding:10px 14px;background:#f0f9ff;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#3b82f6;color:#fff;padding:2px 7px;border-radius:10px">SMALL BUT HELPFUL</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Add vitamin C to the tablet</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Ascorbic acid (vitamin C) not only improves absorption — it also helps keep iron in the soluble ferrous (Fe²⁺) state that is less reactive in the gut. Reactive ferric (Fe³⁺) iron is responsible for much of the gut irritation. Taking 200mg vitamin C alongside the iron tablet reduces irritation slightly while improving absorption. A win-win. Orange juice works too.</div>
+    </div>
+
+    <div style="border-left:4px solid #94a3b8;padding:10px 14px;background:#f8fafc;border-radius:0 8px 8px 0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;background:#94a3b8;color:#fff;padding:2px 7px;border-radius:10px">AVOID</span>
+        <span style="font-size:12px;font-weight:700;color:#1e293b">Enteric-coated tablets or slow-release iron</span>
+      </div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">These are often marketed as "gentler on the stomach" and they are — because the coating bypasses the stomach (where most iron absorption occurs) and releases the iron in the intestine where absorption is much poorer. You get fewer side effects because you're absorbing less iron. This defeats the purpose. If tolerability is the issue, alternate-day dosing or bisglycinate are better solutions.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 5: MINIMUM EFFECTIVE APPROACH -->
+<div class="card">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:8px">The minimum effective approach — if everything else has failed</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.55">If full-dose daily iron is genuinely not tolerable, this is the most effective reduced-impact approach that still achieves meaningful results — based on your current balance model settings.</div>
+  <div id="tolMinEffective" style="font-size:13px;color:#1e293b;line-height:1.8;background:#f8fafc;border-radius:8px;padding:12px 16px"></div>
+  <div style="margin-top:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:12px;color:#b91c1c;line-height:1.6">
+    <strong>Important:</strong> If oral iron in any form is not tolerated, this should be documented and discussed with your GP. IV iron infusion is clinically indicated for oral iron intolerance and is highly effective — it delivers iron directly into the bloodstream, completely bypassing the gut. See the GP letter tab to help make this case.
+  </div>
+</div>
+
+</div>
+</div>
+
 <div id="tab-export" style="display:none">
 <div class="section">
 <div class="st">GP letter — pre-authorisation request</div>
@@ -888,12 +1161,12 @@ function toggleCond(c){
 }
 function updateCondNote(){
   var n=[];
-  if(conds.endo)n.push('Endometriosis: bleeding defaults increased');
-  if(conds.adeno)n.push('Adenomyosis: bleeding defaults increased');
-  if(conds.coeliac)n.push('Coeliac: dietary iron contribution reduced (malabsorption)');
-  if(conds['oral-intol'])n.push('Oral iron intolerance: supplement set to 0');
-  if(conds.pcos)n.push('PCOS: cycle length extended');
-  if(conds.vegan)n.push('Vegetarian/vegan: dietary iron and absorption adjusted');
+  if(conds.endo)n.push('Endometriosis: bleeding days → 9, flow → Heavy');
+  if(conds.adeno)n.push('Adenomyosis: bleeding days → 9, flow → Heavy');
+  if(conds.coeliac)n.push('Coeliac disease: supplement absorption reduced ~55% (villous atrophy); dietary absorption also reduced. A gluten-free diet gradually restores absorption — model will improve as adherence increases.');
+  if(conds['oral-intol'])n.push('Oral iron intolerance: supplement set to 0. Strategy tab shows infusion and low-dose oral alternatives.');
+  if(conds.pcos)n.push('PCOS: cycle length → 35 days. Note: insulin resistance may raise hepcidin slightly, reducing absorption — modelled as ~10% reduction.');
+  if(conds.vegan)n.push('Vegetarian/vegan: dietary iron quantity reduced 25%; absorption efficiency reduced ~40% (non-haem only). Vitamin C with every meal is particularly important.');
   document.getElementById('condNote').textContent=n.join(' · ');
 }
 
@@ -945,10 +1218,8 @@ function mg2f(m){return m/8;}
 function rnd(n){return Math.round(n);}
 function sign(n){return n>=0?'+':'';}
 
-function calcModifiers(suppDose){
-  // Returns a habit-adjusted multiplier on the literature supplement estimate
-  // Applied to the suppLitDefault figure in calc()
-  if(suppDose===0) return 1;
+function calcModifiers(suppDoseParam){
+  if(!suppDoseParam||suppDoseParam===0) return 1;
   var vitC    = gv('modVitC')   / 100;
   var timing  = gv('modTiming') / 100;
   var tea     = gv('modTea')    / 100;
@@ -956,20 +1227,16 @@ function calcModifiers(suppDose){
   var antac   = gv('modAntacid')/ 100;
 
   var enhancer = 1 + (vitC * 0.50) + (timing * 0.25);
-  // Inhibitors do not stack perfectly multiplicatively — floor at 0.10 (10% of nominal)
-  // prevents unrealistic near-zero absorption when multiple inhibitors are active
   var inhibitor = Math.max(1 - (tea*0.35) - (ca*0.25) - (antac*0.40), 0.10);
-  var multiplier = Math.max(enhancer * inhibitor, 0.10); // hard floor: never below 10%
+  var multiplier = Math.max(enhancer * inhibitor, 0.10);
 
-  // Update display spans
   document.getElementById('modVitCV').textContent    = gv('modVitC')    + '%';
   document.getElementById('modTimingV').textContent  = gv('modTiming')  + '%';
   document.getElementById('modTeaV').textContent     = gv('modTea')     + '%';
   document.getElementById('modCaV').textContent      = gv('modCa')      + '%';
   document.getElementById('modAntacidV').textContent = gv('modAntacid') + '%';
 
-  // Update effective display
-  var base = Math.min(suppDose * 0.04, 4.0) * 30; // base lit estimate mg/month
+  var base = Math.min(suppDoseParam * 0.04, 4.0) * 30;
   var adj  = base * multiplier;
   var effEl = document.getElementById('effAbsDisplay');
   var badgeEl = document.getElementById('effAbsBadge');
@@ -1008,6 +1275,15 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   }
 }
 
+function getFormulation(){
+  var f=document.querySelector('input[name="formulation"]:checked');
+  var v=f?f.value:'sulfate';
+  if(v==='fumarate') return {name:'Ferrous fumarate 210mg', packetMg:210, elemPerTab:69, absMultiplier:1.0, abbr:'fumarate', otc:false};
+  if(v==='bisglycinate') return {name:'Ferrous bisglycinate 20mg capsule', packetMg:20, elemPerTab:20, absMultiplier:1.6, abbr:'bisglycinate', otc:true,
+    note:'OTC only — not NHS prescribed. Chelated form: fewer side effects, higher absorption efficiency per mg.'};
+  return {name:'Ferrous sulfate 200mg', packetMg:200, elemPerTab:65, absMultiplier:1.0, abbr:'sulfate', otc:false};
+}
+
 function calc(){
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
@@ -1038,21 +1314,27 @@ function calc(){
   document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
   document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
   document.getElementById('dietQV').textContent=dietQLabels[dietQIdx];
+  var fm=getFormulation();
+  // Snap suppDose to nearest whole tablet for current formulation
+  var numTabs=suppDose>0?Math.max(1,Math.round(suppDose/fm.elemPerTab)):0;
+  var suppDoseActual=numTabs*fm.elemPerTab;
   var tabVEl=document.getElementById('suppDoseTabV');
   if(suppDose===0){
     document.getElementById('suppDoseV').textContent='None';
     if(tabVEl) tabVEl.textContent='';
   } else {
-    // suppDose is elemental mg internally (65 per tablet)
-    var numTabs=Math.round(suppDose/65);
-    var packetMg=numTabs*200; // what the box says
-    var primaryText=numTabs+' tablet'+(numTabs===1?'':'s')+'/day ('+packetMg+'mg on packet)';
-    var secondaryText='= '+suppDose+'mg actual iron/day';
+    var packetMg=numTabs*fm.packetMg;
+    var unitLabel=fm.abbr==='bisglycinate'?'capsule':'tablet';
+    var primaryText=numTabs+' '+unitLabel+(numTabs===1?'':'s')+'/day ('+packetMg+'mg on packet — '+fm.name+')';
+    var secondaryText='= '+suppDoseActual+'mg actual iron/day'+(fm.otc?' · OTC, not NHS prescribed':'');
     document.getElementById('suppDoseV').textContent=primaryText;
     if(tabVEl) tabVEl.textContent=secondaryText;
   }
+  // Use formulation-adjusted elemental for all calcs below
+  var suppDoseElem=suppDose>0?numTabs*fm.elemPerTab:0;
   var warnEl=document.getElementById('suppHighDoseWarn');
-  if(warnEl) warnEl.style.display=suppDose>195?'block':'none';
+  // Warn above 3 tablets (195mg sulfate / 207mg fumarate)
+  if(warnEl) warnEl.style.display=suppDoseElem>fm.elemPerTab*3?'block':'none';
   document.getElementById('startFerrV').textContent=startFerr+(startFerr<15?' ⚠':'');
   var critEl=document.getElementById('startFerrCritNote');
   if(critEl) critEl.style.display=startFerr<15?'block':'none';
@@ -1061,7 +1343,7 @@ function calc(){
   updateBadge('bbd',bleedDays,3,7);
   updateBadge('bfi',gv('flowInt'),1,3);
   updateBadge('bdq',dietQIdx,3,5);
-  updateBadge('bsd',suppDose,0,200);
+  updateBadge('bsd',suppDoseElem,0,fm.elemPerTab*3); // green up to 3 tablets
   updateBadge('bsf',startFerr,50,150);
   updateBands();
 
@@ -1071,17 +1353,21 @@ function calc(){
   var mgLostMonth=mgLostCycle*cyclesPerMonth;
   var totalLossMonth=mgLostMonth+basalLossMonth;
 
+  // === CONDITION-BASED ABSORPTION MODIFIERS ===
+  var coeliacMult=conds.coeliac?0.45:1.0; // villous atrophy ~55% absorption reduction
+  var veganAbsMult=conds.vegan?0.60:1.0;  // non-haem only: ~60% of haem+non-haem bioavailability
+  var pcosMult=conds.pcos?0.90:1.0;       // low-grade inflammation raises hepcidin slightly
+
   // === DERIVED ABSORPTION ===
-  // Use observed data if available (>=2 real results), otherwise use literature defaults
-  var derivedAbsMonth=null; // will be set by calcDerived if real data present
-  var habitMult=calcModifiers(suppDose); // adjust for tea/vit C/timing habits
-  var suppLitDefault=suppDose>0?Math.min(suppDose*tieredAbsRate,4.0)*30*habitMult:0; // tiered rate adjusted for habits
-  var mgAbsMonthEst=dietNetMonth+suppLitDefault; // estimate when no real data
+  var derivedAbsMonth=null;
+  var habitMult=calcModifiers(suppDoseElem);
+  var suppLitDefault=suppDoseElem>0?Math.min(suppDoseElem*tieredAbsRate*fm.absMultiplier*coeliacMult*pcosMult,4.0)*30*habitMult:0;
+  var dietNetMonthAdj=dietNetMonth*coeliacMult*veganAbsMult*pcosMult;
+  var mgAbsMonthEst=dietNetMonthAdj+suppLitDefault;
   var ferrChangePM=mg2f(mgAbsMonthEst-totalLossMonth);
-  // Override with derived if calcDerived has computed it
   if(window.derivedFerrPM!==undefined&&window.derivedFerrPM!==null){
     ferrChangePM=window.derivedFerrPM;
-    derivedAbsMonth=totalLossMonth+f2mg(ferrChangePM); // back-solve for abs
+    derivedAbsMonth=totalLossMonth+f2mg(ferrChangePM);
   }
   var mgAbsMonth=derivedAbsMonth!==null?derivedAbsMonth:mgAbsMonthEst;
   var netMonth=mgAbsMonth-totalLossMonth;
@@ -1098,8 +1384,7 @@ function calc(){
     mc('Iron lost/month',rnd(totalLossMonth),'mg',lossClass)+
     mc(absLabel,rnd(mgAbsMonth),'mg',absBadge)+
     mc('Net balance/month',sign(netMonth)+rnd(netMonth),'mg',netClass);
-  // Update absorption panel in intake section
-  updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth);
+  updateAbsPanel(mgAbsMonth,dietNetMonth,suppDoseElem,totalLossMonth,netMonth);
 
   var months=13;var ferrLine=[startFerr];
   for(var m=1;m<months;m++){
@@ -1111,9 +1396,11 @@ function calc(){
   var baseDate2=startDateVal2?new Date(startDateVal2):new Date();
   var monthNames2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtMonth(offset){var d=new Date(baseDate2.getFullYear(),baseDate2.getMonth()+offset,1);return monthNames2[d.getMonth()]+' '+d.getFullYear();}
-  lc={cycleLen,bleedDays,flowIdx,dietQ:dietQIdx,dietIronMgDay:rnd(dietIronMgDay*10)/10,dietNetMonth:rnd(dietNetMonth),suppDose,basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
-    startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),totalLossMonth:rnd(totalLossMonth),
-    tieredAbsRate,tieredAbsLabel,
+  lc={cycleLen,bleedDays,flowIdx,dietQ:dietQIdx,dietIronMgDay:rnd(dietIronMgDay*10)/10,dietNetMonth:rnd(dietNetMonthAdj),suppDose:suppDoseElem,
+    suppNumTabs:numTabs,suppFormulation:fm,
+    basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
+    startFerr,mgLostMonth:rnd(mgLostMonth),netMonth:rnd(netMonth),totalLossMonth:rnd(totalLossMonth),
+    tieredAbsRate,tieredAbsLabel,coeliacMult,veganAbsMult,pcosMult,
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
 
@@ -1845,6 +2132,214 @@ function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,
   }
 }
 
+var tolChartInst=null;
+var tolState={};
+
+var TOL_OPTIONS=[
+  {id:'food',     label:'Taking with food (to reduce nausea)',        absMultiplier:0.62, note:'~38% absorption reduction. Iron absorbed with food vs empty stomach.'},
+  {id:'altday',   label:'Alternate-day dosing (every other day)',      absMultiplier:1.10, note:'Actually improves net absorption ~10% via hepcidin reset. Dramatically reduces side effects.', positive:true},
+  {id:'buildup',  label:'Starting low — 1 tablet every other day for first 3 weeks', absMultiplier:0.70, note:'Slower start reduces gut adaptation period. Roughly 30% less absorbed in first month, then full dose.'},
+  {id:'bisglycinate', label:'Switch to ferrous bisglycinate (20mg actual iron/capsule)', absMultiplier:0.85, note:'Lower dose per capsule but comparable or better absorption efficiency. 3 capsules/day = 60mg actual iron.', fixedElemPerDay:60},
+];
+
+function buildTolToggles(){
+  var el=document.getElementById('tolToggles');
+  if(!el)return;
+  el.innerHTML='';
+  TOL_OPTIONS.forEach(function(opt){
+    var on=tolState[opt.id]||false;
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid '+(opt.positive?'#86efac':'#e2e8f0')+';border-radius:8px;cursor:pointer;background:'+(on?(opt.positive?'#f0fdf4':'#fefce8'):'#fff');
+    row.innerHTML=
+      '<div style="flex-shrink:0;width:18px;height:18px;border-radius:4px;border:2px solid '+(on?(opt.positive?'#16a34a':'#ca8a04'):'#cbd5e1')+';background:'+(on?(opt.positive?'#16a34a':'#ca8a04'):'#fff')+';display:flex;align-items:center;justify-content:center;margin-top:1px">'+(on?'<svg width="10" height="8" viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1" style="fill:none;stroke:#fff;stroke-width:2"/></svg>':'')+'</div>'+
+      '<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:2px">'+(opt.positive?'✓ ':'⚠ ')+opt.label+'</div>'+
+      '<div style="font-size:11px;color:#64748b;line-height:1.5">'+opt.note+'</div></div>';
+    row.onclick=function(){tolState[opt.id]=!tolState[opt.id];buildTolToggles();renderTolChart();};
+    el.appendChild(row);
+  });
+}
+
+function calcTolerability(){
+  if(!lc||!lc.startFerr){
+    var ex=document.getElementById('tolChartExplainer');
+    if(ex) ex.textContent='Set up the Balance Model tab first to see personalised projections.';
+    return;
+  }
+  buildTolToggles();
+  renderTolChart();
+
+  // Liquid iron note
+  var liEl=document.getElementById('liquidIronText');
+  if(liEl&&lc){
+    var deficitAfterDiet=Math.max(0,lc.totalLossMonth-(lc.dietNetMonth||0));
+    var spatoneActualIron=5; // mg actual iron per sachet (Spatone)
+    var spatoneAbsRate=0.25; // ~25% absorbed (natural water source, good bioavailability)
+    var spatoneAbsPerDay=spatoneActualIron*spatoneAbsRate; // ~1.25mg absorbed per sachet
+    var spatoneAbsPerMonth=spatoneAbsPerDay*30; // ~37.5mg/month
+    var dietAbsPerMonth=lc.dietNetMonth||0;
+    var totalWithSpatone=spatoneAbsPerMonth+dietAbsPerMonth;
+    if(deficitAfterDiet<=0){
+      liEl.innerHTML='Based on your settings, diet alone covers your losses — liquid iron sachets would be more than sufficient for maintenance. <strong>1 sachet of Spatone per day</strong> (5mg actual iron, ~1.25mg absorbed) would provide useful additional iron on top of diet.';
+    } else if(totalWithSpatone>=lc.totalLossMonth){
+      liEl.innerHTML='<strong>Yes — liquid iron may be sufficient for your maintenance needs.</strong> One Spatone sachet/day provides approximately '+rnd(spatoneAbsPerMonth)+' mg absorbed iron per month from supplementation. Combined with diet ('+rnd(dietAbsPerMonth)+' mg/month), this should cover your total losses of '+rnd(lc.totalLossMonth)+' mg/month. Liquid iron is not suitable for recovery (Phase 1) — but for Phase 2 maintenance it is a viable, very well-tolerated option.';
+    } else if(totalWithSpatone>=lc.totalLossMonth*0.7){
+      liEl.innerHTML='Liquid iron would cover about '+rnd(totalWithSpatone/lc.totalLossMonth*100)+'% of your losses. <strong>2 sachets of Spatone per day</strong> (10mg actual iron) would get closer — approximately '+rnd(spatoneAbsPerMonth*2+dietAbsPerMonth)+' mg/month absorbed vs '+rnd(lc.totalLossMonth)+' mg/month losses. This may be sufficient for maintenance with a small ongoing deficit. Not suitable for Phase 1 recovery — tablet-based iron or infusion is needed to rebuild stores.';
+    } else {
+      liEl.innerHTML='Liquid iron sachets (typically 5mg actual iron, ~1.25mg absorbed) are <strong>not sufficient for your level of iron loss</strong> ('+rnd(lc.totalLossMonth)+' mg/month). Even multiple sachets per day would not cover the deficit. Liquid iron is best suited to very light maintenance needs or as a top-up — in your case, tablet iron or infusion is needed for both recovery and maintenance.';
+    }
+  }
+
+  // Minimum effective approach
+  var meEl=document.getElementById('tolMinEffective');
+  if(meEl&&lc){
+    var fm2=lc.suppFormulation||{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65};
+    var suppElem=lc.suppDose||65;
+    var numTabs=lc.suppNumTabs||1;
+    // Alt-day + with food + start low
+    var minAbsMultiplier=1.10*0.62; // alt-day benefit × food reduction
+    var minElemPerMonth=suppElem*minAbsMultiplier*15; // 15 doses/month on alt-day
+    var minFerrPM=mg2f(minElemPerMonth+(lc.dietNetMonth||0)-lc.totalLossMonth);
+    var minMonthsToTarget=minFerrPM>0?Math.ceil(((lc.suppFormulation&&lc.suppFormulation.target)||50-lc.startFerr)/minFerrPM):null;
+    var stratTarget=document.getElementById('stratTarget');
+    var target=stratTarget?+(stratTarget.value)||50:50;
+    var monthsStd=lc.ferrChangePM>0?Math.ceil((target-lc.startFerr)/lc.ferrChangePM):null;
+
+    var lines=[];
+    lines.push('<strong>Minimum effective approach for sensitive stomachs:</strong>');
+    lines.push('1. <strong>Start with 1 '+fm2.name+' tablet every other day</strong> for the first 3 weeks. Take in the morning with a small piece of food and a full glass of water. Add 200mg vitamin C alongside.');
+    lines.push('2. <strong>After 3 weeks</strong> if tolerated, increase to 1 tablet daily. Continue every other day if still having side effects.');
+    lines.push('3. <strong>Long term:</strong> '+numTabs+' tablet'+(numTabs===1?'':'s')+' every other day is a sustainable approach that avoids daily gut exposure while maintaining meaningful iron absorption.');
+    if(minFerrPM>0&&minMonthsToTarget){
+      lines.push('4. <strong>Timeline:</strong> At this reduced pace, estimated '+minMonthsToTarget+' months to reach the '+target+' µg/L target'+(monthsStd?' vs '+monthsStd+' months at full daily dose — a difference of '+(minMonthsToTarget-monthsStd)+' months':'')+'. Longer, but consistent adherence beats stopping and starting at the full dose.');
+    } else {
+      lines.push('4. <strong>Note:</strong> At a reduced dose, reaching the '+target+' µg/L target may take significantly longer or may not be achievable without addressing underlying losses. An IV infusion (bypasses the gut entirely) may be the most practical option — discuss with your GP.');
+    }
+    lines.push('5. <strong>Consider ferrous bisglycinate</strong> (Gentle Iron, 20–25mg actual iron per capsule) as an alternative — most people who cannot tolerate sulfate can take bisglycinate without problems.');
+    meEl.innerHTML=lines.map(function(l){return '<p style="margin:0 0 6px 0">'+l+'</p>';}).join('');
+  }
+}
+
+function renderTolChart(){
+  var canvas=document.getElementById('tolChart');
+  var explainer=document.getElementById('tolChartExplainer');
+  var legendEl=document.getElementById('tolChartLegend');
+  var conclusionEl=document.getElementById('tolConclusionBox');
+  if(!canvas||!lc)return;
+
+  var c=lc;
+  var startFerr=c.startFerr||25;
+  var months=13;
+  var baseFerrPM=c.ferrChangePM||0;
+  var suppElem=c.suppDose||0;
+  var tieredRate=c.tieredAbsRate||0.04;
+
+  // Base line
+  var baseLine=[startFerr];
+  for(var i=1;i<months;i++) baseLine.push(Math.max(0,+(baseLine[i-1]+baseFerrPM).toFixed(1)));
+
+  // Compromise line — apply selected tolerability adjustments
+  var compMult=1.0;
+  var fixedElemPerDay=null;
+  var activeOptions=[];
+  TOL_OPTIONS.forEach(function(opt){
+    if(tolState[opt.id]){
+      if(opt.fixedElemPerDay!==undefined) fixedElemPerDay=opt.fixedElemPerDay;
+      else compMult*=opt.absMultiplier;
+      activeOptions.push(opt);
+    }
+  });
+
+  var compSuppElem=fixedElemPerDay!==null?fixedElemPerDay:suppElem;
+  var compSuppAbs=compSuppElem>0?Math.min(compSuppElem*tieredRate,4.0)*30*compMult:0;
+  // For alt-day: only 15 doses/month
+  var isAltDay=tolState['altday'];
+  if(isAltDay&&compSuppElem>0) compSuppAbs=Math.min(compSuppElem*tieredRate*1.15,4.8)*15;
+
+  var compNetMonth=(c.dietNetMonth||0)+compSuppAbs-c.totalLossMonth;
+  var compFerrPM=mg2f(compNetMonth);
+
+  var compLine=[startFerr];
+  for(var i=1;i<months;i++) compLine.push(Math.max(0,+(compLine[i-1]+compFerrPM).toFixed(1)));
+
+  var labels=[];
+  var baseDate=new Date();
+  var sdv=document.getElementById('startDate').value;
+  if(sdv) baseDate=new Date(sdv);
+  for(var i=0;i<months;i++){
+    var d=new Date(baseDate);d.setMonth(d.getMonth()+i);
+    labels.push(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getFullYear().toString().slice(2));
+  }
+
+  var stratTarget=document.getElementById('stratTarget');
+  var target=stratTarget?+(stratTarget.value)||50:50;
+
+  var allVals=baseLine.concat(compLine);
+  var yMax=Math.ceil(Math.max.apply(null,allVals.filter(function(v){return v>0;}))*1.2/10)*10||150;
+
+  var anyActive=activeOptions.length>0;
+
+  var ds=[
+    {label:'Ideal approach (empty stomach, daily)',data:baseLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5},
+    {label:'With tolerability adjustments',data:anyActive?compLine:new Array(months).fill(null),borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:anyActive?[]:[1,0]},
+    {label:'Target ('+target+' µg/L)',data:new Array(months).fill(target),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Depleted threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false},
+  ];
+
+  if(tolChartInst) tolChartInst.destroy();
+  tolChartInst=new Chart(canvas,{
+    type:'line',data:{labels:labels,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
+      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}
+  });
+
+  // Explainer
+  if(explainer){
+    var parts=[];
+    var baseDir=baseFerrPM>0.5?'rising at '+rnd(baseFerrPM*10)/10+' µg/L/month':baseFerrPM<-0.5?'falling at '+rnd(Math.abs(baseFerrPM)*10)/10+' µg/L/month':'holding roughly steady';
+    parts.push('<strong style="color:#3b82f6">Blue — Ideal approach:</strong> Taking iron on an empty stomach, daily, at full dose. Ferritin is '+baseDir+'. Projected at 12 months: '+rnd(baseLine[12])+' µg/L.');
+    if(anyActive){
+      var compDir=compFerrPM>0.5?'rising at '+rnd(compFerrPM*10)/10+' µg/L/month':compFerrPM<-0.5?'falling at '+rnd(Math.abs(compFerrPM)*10)/10+' µg/L/month':'holding roughly steady';
+      var gap12=rnd(baseLine[12]-compLine[12]);
+      parts.push('<strong style="color:#f97316">Orange — With adjustments ('+activeOptions.length+' selected):</strong> Ferritin is '+compDir+'. Projected at 12 months: '+rnd(compLine[12])+' µg/L. '+(gap12>0?'Cost of these adjustments: approximately '+gap12+' µg/L less at 12 months vs ideal approach.':'These adjustments have a neutral or positive effect — no cost to absorption.'));
+    } else {
+      parts.push('Select one or more tolerability adjustments above to see the effect on your trajectory.');
+    }
+    explainer.innerHTML=parts.map(function(p,i){return '<p style="margin:0'+(i<parts.length-1?';margin-bottom:5px':'')+'">'+p+'</p>';}).join('');
+  }
+
+  // Conclusion
+  if(conclusionEl&&anyActive){
+    var gap=rnd(baseLine[12]-compLine[12]);
+    var compReachesTarget=compLine.some(function(v){return v>=target;});
+    var baseReachesTarget=baseLine.some(function(v){return v>=target;});
+    var msg='';
+    if(gap<=0){
+      msg='<strong>Good news — your selected adjustments have no meaningful absorption cost.</strong> '+( tolState['altday']?'Alternate-day dosing is actually slightly better than daily for net absorption. ':'')+'You can make these changes for tolerability without compromising your recovery timeline.';
+    } else if(gap<=8&&compReachesTarget){
+      msg='<strong>The absorption cost of these adjustments is small ('+gap+' µg/L at 12 months) and ferritin still reaches the '+target+' µg/L target.</strong> Making these changes for tolerability is a sensible compromise — consistent adherence with adjustments will outperform inconsistent adherence at full dose.';
+    } else if(compReachesTarget){
+      msg='These adjustments cost approximately '+gap+' µg/L at 12 months, but ferritin still reaches the '+target+' µg/L target — just more slowly. If these adjustments allow you to keep taking iron consistently, they are worth making.';
+    } else if(!baseReachesTarget){
+      msg='Neither approach reaches the '+target+' µg/L target in 12 months at the current dose. Consider increasing the dose in the Balance Model tab, or discussing an infusion with your GP.';
+    } else {
+      msg='<strong>These adjustments are significant — ferritin does not reach the '+target+' µg/L target within 12 months at this adjusted rate.</strong> Consider trying alternate-day dosing (which has minimal absorption cost) or switching to ferrous bisglycinate, which may be tolerated at a higher dose. If oral iron is genuinely not tolerable, IV infusion completely bypasses the gut — discuss with your GP.';
+    }
+    conclusionEl.innerHTML=msg;
+  } else if(conclusionEl){
+    conclusionEl.innerHTML='Select adjustments above to see whether they affect your recovery timeline.';
+  }
+
+  if(legendEl){
+    legendEl.innerHTML=
+      li('#3b82f6','Blue — Ideal approach (empty stomach, daily dose)')+
+      (anyActive?li('#f97316','Orange — With tolerability adjustments selected',false):'')+
+      li('#16a34a','Green dashed — '+target+' µg/L target',true)+
+      li('#dc2626','Red dashed — Depleted threshold (30 µg/L)',true);
+  }
+}
+
 function getPlanStartDate(){
   var v=document.getElementById('startDate').value;
   if(!v) return null;
@@ -2258,29 +2753,43 @@ function buildGPLetter(){
   // What I am asking for — treatment
   L.push('What I am asking for');
   L.push('');
+
+  var fm=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate',otc:false};
+  var isBisglycinate=fm.abbr==='bisglycinate';
+
   if(oralIntol){
     L.push('I have tried oral iron tablets in the past and unfortunately cannot tolerate them — the side effects are quite significant for me. I would like to discuss whether an IV iron infusion might be an appropriate option in my case. I have done some reading and understand this is something that can be considered for people who struggle with oral iron (BSH guideline on iron deficiency, 2021), though I appreciate that is entirely your decision to make.');
-    if(maintDailyMg>0) L.push('Once my levels are back up, I am also happy to discuss whether a low-dose oral option — such as iron bisglycinate, which is often better tolerated — might be worth trying for maintenance, if you think that makes sense.');
+    if(maintDailyMg>0) L.push('Once my levels are back up, I am also happy to discuss whether a very low-dose trial of iron bisglycinate — an over-the-counter formulation that is generally much better tolerated than prescribed iron — might be worth trying for maintenance. I would not start this without your knowledge and would of course report back on how it goes.');
+  } else if(isBisglycinate){
+    // Bisglycinate: OTC, not prescribed — different framing
+    var ntabsL=lc&&lc.suppNumTabs?lc.suppNumTabs:Math.round(suppDose/20);
+    L.push('I want to be transparent that I am currently self-trialling ferrous bisglycinate (sometimes called Gentle Iron) — an over-the-counter iron supplement that is not available on NHS prescription. I have found it much better tolerated than prescribed iron tablets. Each capsule contains 20mg of actual iron, and I am taking '+ntabsL+' capsule'+(ntabsL===1?'':'s')+' per day ('+ntabsL*20+'mg actual iron total). I am not asking for a prescription for this — I am purchasing it myself — but I wanted you to be aware of what I am taking.');
+    L.push('');
+    L.push('What I am asking for is your support with blood test monitoring to confirm whether this approach is working. I would like to discuss an appropriate ferritin testing schedule so I can track progress and adjust if needed.');
+    if(plannedIV>0){
+      L.push('');
+      L.push('I would also like to discuss whether an IV iron infusion might make sense as an initial boost to bring my levels up more quickly, before transitioning to bisglycinate for maintenance. I understand this is a clinical decision — I am just raising it as something I have read about and would welcome your view.');
+    }
   } else {
     if(suppDose>0){
-      var ntabsL=Math.round(fsTabsPerDay);
-      var pkMgL=ntabsL*200;
-      var tabClarify=ntabsL===1?
-        'one ferrous sulfate tablet a day — the tablet is labelled 200mg but that is the tablet weight; it contains 65mg of actual iron':
-        ntabsL===2?
-        'two ferrous sulfate tablets a day ('+pkMgL+'mg on the packet in total, which is '+suppDose+'mg of actual iron — each tablet contains 65mg)':
-        ntabsL+' ferrous sulfate tablets a day ('+pkMgL+'mg on the packet in total · '+suppDose+'mg actual iron — each tablet is labelled 200mg but contains 65mg of actual iron)';
-      L.push('I would like to discuss whether a prescription for ferrous sulfate 200mg would be appropriate — based on what I have read, taking '+tabClarify+' is often recommended to bring ferritin up to around '+planTarget+' µg/L, which I understand is the level at which symptoms typically improve. I appreciate you may have a different view on the best approach and am happy to go with your recommendation.');
+      var ntabsL2=Math.round(fsTabsPerDay);
+      var pkMgL2=ntabsL2*fm.packetMg;
+      var elemL2=ntabsL2*fm.elemPerTab;
+      var fmLabel=fm.abbr==='fumarate'?'ferrous fumarate 210mg':'ferrous sulfate 200mg';
+      var tabClarify=ntabsL2===1?
+        'one '+fmLabel+' tablet a day — the tablet is labelled '+fm.packetMg+'mg but that is the tablet weight; it contains '+fm.elemPerTab+'mg of actual iron':
+        ntabsL2+' '+fmLabel+' tablets a day ('+pkMgL2+'mg on the packet · '+elemL2+'mg actual iron total — each tablet contains '+fm.elemPerTab+'mg of actual iron)';
+      L.push('I would like to discuss whether a prescription for '+fmLabel+' would be appropriate — based on what I have read, taking '+tabClarify+' is often recommended to bring ferritin up to around '+planTarget+' µg/L, which I understand is the level at which symptoms typically improve. I appreciate you may have a different view and am happy to go with your recommendation.');
       if(maintDailyMg>0){
         L.push('');
-        L.push('Once my levels are where they need to be, I would like to discuss reducing to a lower ongoing dose — perhaps '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — just to keep things stable without over-supplementing. I understand a smaller maintenance dose may be all that is needed once ferritin is restored, but would welcome your guidance on whether that is the right approach for me.');
+        L.push('Once my levels are where they need to be, I would like to discuss reducing to a lower ongoing dose — perhaps '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — just to keep things stable without over-supplementing.');
       }
     } else {
-      L.push('I would like to discuss whether starting iron supplementation would be appropriate. I have not been on a prescribed course before and would welcome your guidance on the right dose and approach for my situation.');
+      L.push('I would like to discuss whether starting iron supplementation would be appropriate. I have not been on a prescribed course before and would welcome your guidance on the right dose and approach.');
     }
     if(plannedIV>0){
       L.push('');
-      L.push('I have also read that an IV iron infusion can sometimes be used to give levels an initial boost — I would be interested in your view on whether that might be worth considering, particularly given my ongoing losses. I understand this is a clinical decision and am not asking for it to be prescribed, just to have the conversation.');
+      L.push('I have also read that an IV iron infusion can sometimes be used to give levels an initial boost — I would be interested in your view on whether that might be worth considering. I understand this is a clinical decision, not something I am asking to be prescribed automatically.');
     }
   }
   L.push('');
@@ -2358,10 +2867,12 @@ function doCopy(txt){
 function buildSessionData(name){
   var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr','modVitC','modTiming','modTea','modCa','modAntacid','stratTarget','adherenceSlider'];
   var selects=['stratIVDose'];
+  var formVal=document.querySelector('input[name="formulation"]:checked');
   return {name:name||document.getElementById('sessionName').value||'',
     age:document.getElementById('patAge').value,
     meno:document.getElementById('menopause').value,
     startDate:document.getElementById('startDate').value,
+    formulation:formVal?formVal.value:'sulfate',
     conds:Object.assign({},conds),
     infusions:JSON.parse(JSON.stringify(infusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
@@ -2380,6 +2891,7 @@ function applySessionData(d){
   actuals=d.actuals||[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
   if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
   if(d.selects){Object.keys(d.selects).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.selects[id];});}
+  if(d.formulation){var fEl=document.querySelector('input[name="formulation"][value="'+d.formulation+'"]');if(fEl)fEl.checked=true;}
   renderInfusions();renderActuals();updateCondNote();updateAdherenceLabel();calc();
 }
 
@@ -2666,6 +3178,16 @@ function calcStrategy(){
   phase1Text.innerHTML=p1html;
 
   // ── PHASE 2: MAINTENANCE ──
+  // Show/hide oral intolerance selector
+  var ointolSel=document.getElementById('stratOralIntolSelector');
+  var ointolOption='infusion';
+  if(ointolSel){
+    ointolSel.style.display=conds['oral-intol']?'':'none';
+    if(conds['oral-intol']){
+      var ointolChecked=document.querySelector('input[name="ointolMaint"]:checked');
+      ointolOption=ointolChecked?ointolChecked.value:'infusion';
+    }
+  }
   // How much elemental iron from supplements is needed monthly to exactly cover the remaining deficit after diet
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNetMonth);
 
@@ -2701,49 +3223,99 @@ function calcStrategy(){
   // Ferrous sulfate 200mg tablet = 65mg elemental
   // Ferrous fumarate 210mg tablet = 69mg elemental
   // Ferrous bisglycinate ~20mg elemental per capsule (OTC)
-  function tabletAdvice(dailyMg){
-    // Monthly elemental needed from supplement
-    var monthlyNeeded=deficitAfterDiet; // mg/month net absorbed needed
-    // At 4% absorption: elemental per month = monthlyNeeded/0.04
-    var elemPerMonth=monthlyNeeded/0.04;
-    // Ferrous sulfate 200mg tab = 65mg elemental
-    var fsTabsPerMonth=elemPerMonth/65;
-    var fsPerWeek=fsTabsPerMonth/4.3;
+  var fm2=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate'};
 
-    var advice='';
-    if(fsPerWeek<0.8){
-      advice='less than one ferrous sulfate tablet per week would be sufficient — a low-dose bisglycinate supplement (e.g. 20mg elemental per capsule, OTC) taken a few times a week may be more practical.';
-    } else if(fsPerWeek<1.5){
-      advice='approximately <strong>1 ferrous sulfate tablet (200mg) per week</strong>. Take on an empty stomach if tolerated, ideally not two days in a row.';
-    } else if(fsPerWeek<2.5){
-      advice='approximately <strong>2 ferrous sulfate tablets (200mg each) per week</strong>, spread a few days apart — for example Monday and Thursday. Ferrous fumarate 210mg is an equivalent alternative.';
-    } else if(fsPerWeek<3.5){
-      advice='approximately <strong>3 ferrous sulfate tablets (200mg each) per week</strong>, spread evenly — for example Monday, Wednesday, Friday.';
+  function tabletAdvice(dailyMg){
+    // Use maintAbsRate (already defined above) not hardcoded 0.04
+    var elemPerMonthNeeded=deficitAfterDiet/maintAbsRate;
+    var tabsPerMonth=elemPerMonthNeeded/fm2.elemPerTab;
+    var tabsPerWeek=tabsPerMonth/4.3;
+
+    var tpw=Math.max(1,Math.round(tabsPerWeek)); // never show 0
+    var pkMgPerTab=fm2.packetMg;
+    var fmName=fm2.name;
+
+    if(tpw<=1){
+      return '<strong>1 '+fmName+' tablet per week</strong> ('+pkMgPerTab+'mg on packet). Take on an empty stomach if tolerated, not two days in a row — spacing allows absorption to reset.';
+    } else if(tpw<=2){
+      return '<strong>2 '+fmName+' tablets per week</strong> ('+(pkMgPerTab*2)+'mg on packet in total), spread a few days apart — for example Monday and Thursday.';
+    } else if(tpw<=3){
+      return '<strong>3 '+fmName+' tablets per week</strong> ('+(pkMgPerTab*3)+'mg on packet in total), spread evenly — for example Monday, Wednesday, Friday.';
+    } else if(tpw<=4){
+      return '<strong>4 '+fmName+' tablets per week</strong> ('+(pkMgPerTab*4)+'mg on packet), on alternate days or spread across the week — for example Mon, Tue, Thu, Sat.';
+    } else if(tpw<=5){
+      return '<strong>5 '+fmName+' tablets per week</strong> ('+(pkMgPerTab*5)+'mg on packet), most days — for example Mon, Tue, Thu, Fri, Sat. Consider alternate-day dosing for better absorption and fewer side effects.';
     } else {
-      // High need — daily or close to it
-      var tabsPerDay=Math.round(dailyMg/65*10)/10;
-      advice='approximately <strong>'+Math.round(tabsPerDay)+' ferrous sulfate tablet'+(Math.round(tabsPerDay)>1?'s':'')+' per day</strong> ('+rnd(dailyMg)+' mg elemental). At this level, note that absorption is limited by hepcidin — alternate-day dosing at a higher per-dose amount may be more effective than splitting into daily doses.';
+      var tabsPerDay=Math.max(1,Math.round(dailyMg/fm2.elemPerTab));
+      return '<strong>'+tabsPerDay+' '+fmName+' tablet'+(tabsPerDay===1?'':'s')+' every day</strong> ('+(pkMgPerTab*tabsPerDay)+'mg on packet). At this level, note that hepcidin limits next-day absorption — alternate-day dosing at a slightly higher per-dose amount may be more effective and better tolerated.';
     }
-    return advice;
   }
 
   var tabAdvice=tabletAdvice(mDailyR);
 
-  var mDailyTabs=Math.max(1,Math.round(mDailyR/65));
-  var mDailyPkMg=mDailyTabs*200;
+  // Spatone suggestion: Spatone = 5mg actual iron, ~25% absorbed = 1.25mg/dose
+  // If maintenance need ≤ ~1.5mg/day absorbed, 1 sachet/day covers it
+  // If ≤ ~2.5mg/day, 2 sachets/day covers it
+  var spatoneAbsPerSachet=5*0.25; // 1.25mg absorbed
+  var spatoneNote='';
+  if(deficitAfterDiet>0&&deficitAfterDiet<=2.5){
+    var sachetsNeeded=Math.ceil(deficitAfterDiet/spatoneAbsPerSachet);
+    spatoneNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Alternative for maintenance — liquid iron sachets (e.g. Spatone):</strong> Your maintenance need is small enough that '+sachetsNeeded+' Spatone sachet'+(sachetsNeeded===1?'':'s')+' per day ('+sachetsNeeded*5+'mg actual iron, ~'+rnd(sachetsNeeded*spatoneAbsPerSachet)+'mg absorbed) may be sufficient to stay level. This is an easy, very well-tolerated long-term option — much easier to sustain than remembering tablets. Available OTC. See the <strong>Side effects &amp; tolerability</strong> tab for a full comparison.</div>';
+  }
+
+  var oralIntolNote='';
+  if(conds['oral-intol']&&deficitAfterDiet>0){
+    var spatoneAbsPerSachet2=5*0.25;
+    var sachetsNeeded2=Math.max(1,Math.ceil(deficitAfterDiet/spatoneAbsPerSachet2));
+    var spatoneCoversIt=deficitAfterDiet<=3.75;
+    var bisglycAbsRate2=Math.max((lc&&lc.tieredAbsRate||0.04)*1.6,0.08);
+    var bisglycAbsPerDose2=20*bisglycAbsRate2;
+    var bisglycAbsPerMonth2=bisglycAbsPerDose2*15;
+    var bisglycCoversIt=bisglycAbsPerMonth2>=(deficitAfterDiet*0.8);
+    var postStopRateStr=lc&&lc.ferrChangePM!==undefined?rnd(Math.abs(((lc.dietNetMonth||0)-lc.totalLossMonth)/8)*10)/10:'?';
+
+    if(ointolOption==='infusion'){
+      oralIntolNote='<div style="margin-top:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:7px;padding:10px 14px;font-size:12px;color:#0369a1;line-height:1.6">'+
+        '<strong>Option A selected — Infusion only:</strong> No ongoing oral iron. Without maintenance, ferritin will decline at approximately '+postStopRateStr+' µg/L/month. See the <strong>Infusion Planner</strong> tab to estimate how frequently infusions would be needed to keep ferritin above 30 µg/L. This is clinically valid but typically requires a repeat infusion every 3–12 months depending on losses.'+
+        '</div>';
+    } else if(ointolOption==='spatone'){
+      oralIntolNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:10px 14px;font-size:12px;color:#854d0e;line-height:1.6">'+
+        '<strong>Option B selected — Spatone liquid iron:</strong> '+
+        (spatoneCoversIt?
+          'Your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month) is small enough that <strong>'+sachetsNeeded2+' Spatone sachet'+(sachetsNeeded2===1?'':'s')+' per day</strong> ('+sachetsNeeded2*5+'mg actual iron · ~'+rnd(sachetsNeeded2*spatoneAbsPerSachet2)+'mg absorbed/month) should cover it. Take mixed in orange juice. Available OTC — no prescription needed.':
+          'Your deficit ('+rnd(deficitAfterDiet)+' mg/month) is higher than Spatone covers reliably. <strong>2–3 sachets/day</strong> will slow ferritin decline after an infusion but may not fully maintain levels. Best used alongside infusion-based maintenance.')+
+        ' Each sachet is labelled 250ml natural iron-rich water — actual iron content is 5mg per sachet.'+
+        '</div>';
+    } else if(ointolOption==='bisglycinate'){
+      oralIntolNote='<div style="margin-top:8px;background:#f0fdf4;border:1px solid #86efac;border-radius:7px;padding:10px 14px;font-size:12px;color:#15803d;line-height:1.6">'+
+        '<strong>Option C selected — Bisglycinate every other day:</strong> 1 capsule (20mg actual iron) every other day = approximately <strong>'+rnd(bisglycAbsPerMonth2)+' mg absorbed per month</strong>. '+
+        (bisglycCoversIt?
+          'This should cover your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month needed). Combined with an initial infusion, this may eliminate the need for repeat infusions.':
+          'This covers ~'+rnd(bisglycAbsPerMonth2/deficitAfterDiet*100)+'% of your deficit — ferritin may still slowly decline but much more slowly, significantly extending time between infusions.')+
+        '<br><br><strong>Start protocol:</strong> 1 capsule every 3 days for 2 weeks → increase to every other day if no symptoms. Morning, with vitamin C or orange juice. Report to GP if any GI symptoms.'+
+        '<br><span style="font-size:11px;color:#475569">If well tolerated, consider removing the oral intolerance flag and remodelling with bisglycinate formulation at a higher dose.</span>'+
+        '</div>';
+    }
+  }
+
+  var mDailyTabs=Math.max(1,Math.round(mDailyR/fm2.elemPerTab));
+  var mDailyPkMg=mDailyTabs*fm2.packetMg;
+  var altDayTabs=Math.max(1,Math.ceil(mAltDayR/fm2.elemPerTab));
+  var altDayPkMg=altDayTabs*fm2.packetMg;
   phase2Grid.innerHTML=
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
-    mc('Diet covers',rnd(Math.min(dietNetMonth,totalLossMonth)),'mg/mo',dietNetMonth>=totalLossMonth?'ok':'warning')+
+    mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
-    mc('Maintenance dose',mDailyTabs+' tablet'+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg packet · '+mDailyR+'mg actual iron)','neutral')+
-    mc('Alt-day option',altDayTabs+' tablet'+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg packet · '+mAltDayR+'mg actual iron)','neutral');
+    (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral'):
+    mc('Maintenance dose',mDailyTabs+' '+(fm2.abbr==='bisglycinate'?'capsule':'tablet')+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg packet · '+mDailyR+'mg actual iron)','neutral')+
+    mc('Alt-day option',altDayTabs+' '+(fm2.abbr==='bisglycinate'?'capsule':'tablet')+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg packet · '+mAltDayR+'mg actual iron)','neutral'));
 
   phase2Text.innerHTML=
-    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month (diet covers '+rnd(dietNetMonth)+' mg/month of this), a practical supplement schedule would be '+tabAdvice+'</p>'+
-    '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
+    (conds['oral-intol']?'<p style="margin-bottom:6px;color:#b91c1c"><strong>Oral iron intolerance flagged.</strong> Select an option above to model the maintenance approach.</p>':
+    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month, a practical supplement schedule would be '+tabAdvice+'</p>')+
+    '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>'+
+    spatoneNote+oralIntolNote;
 
-  var altDayTabs=Math.ceil(mAltDayR/65);
-  var altDayPkMg=altDayTabs*200;
   altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+altDayTabs+' ferrous sulfate tablet'+(altDayTabs===1?'':'s')+' every other day — '+altDayPkMg+'mg on the packet ('+mAltDayR+'mg actual iron)</strong> is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
@@ -2811,17 +3383,35 @@ function calcStrategy(){
   //          plus any infusion boost at month 1
   // Phase 2: once target reached, drop to maintenance dose — net change = 0 (flat by definition)
   //          This is the bend: recovery rate → maintenance rate (lower)
+  // Pre-calculate oral intolerance absorption values for scenario line
+  var spatoneAbsPerSachet2=5*0.25; // 1.25mg absorbed per sachet
+  var bisglycAbsRate2=Math.max((lc.tieredAbsRate||0.04)*1.6,0.08);
+  var bisglycAbsPerDose2=20*bisglycAbsRate2;
+
   var scenMonths=13;
   var scenLine=[startFerr];
   var scenIVBoost=ivDose>0?mg2f(ivDose):0;
-
-  // Phase 1 rate = current ferrChangePM (what the balance model says you're gaining per month)
   var recoveryRate=lc.ferrChangePM||0;
 
-  // Phase 2 rate: maintenance absorption exactly covers losses → net = 0 → ferritin flat
-  // If diet alone covers losses (deficitAfterDiet<=0), maintenance still effectively = 0 net change
-  // (diet covers losses, no supplement needed, ferritin holds steady)
-  var maintenanceRate=0;
+  // Phase 2 rate depends on oral intolerance option selected
+  var maintenanceRate=0; // default: flat (plan maintenance exactly covers losses)
+  if(conds['oral-intol']&&deficitAfterDiet>0){
+    var basalLoss=lc.totalLossMonth||30;
+    var dietNet2=lc.dietNetMonth||0;
+    if(ointolOption==='infusion'){
+      // No oral iron — ferritin declines at diet-only rate
+      maintenanceRate=mg2f(dietNet2-basalLoss);
+    } else if(ointolOption==='spatone'){
+      // Spatone: 1–2 sachets absorbed per month
+      var sachetsPerDay2=Math.max(1,Math.ceil(deficitAfterDiet/spatoneAbsPerSachet2));
+      var spatoneMonthlyAbs=sachetsPerDay2*spatoneAbsPerSachet2*30;
+      maintenanceRate=mg2f(dietNet2+spatoneMonthlyAbs-basalLoss);
+    } else if(ointolOption==='bisglycinate'){
+      // Bisglycinate every other day
+      var bisgAbsMonthly=bisglycAbsPerDose2*15;
+      maintenanceRate=mg2f(dietNet2+bisgAbsMonthly-basalLoss);
+    }
+  }
 
   var reachedTarget=startFerr>=target;
   for(var sm=1;sm<scenMonths;sm++){
@@ -2830,12 +3420,9 @@ function calcStrategy(){
     var next;
     if(!reachedTarget){
       next=prev+boost+recoveryRate;
-      if(next>=target){
-        reachedTarget=true;
-        next=target; // snap to target at the bend point, don't overshoot
-      }
+      if(next>=target){reachedTarget=true;next=target;}
     } else {
-      next=prev+maintenanceRate; // flat — maintenance holds ferritin steady
+      next=prev+maintenanceRate;
     }
     scenLine.push(Math.max(0,+next.toFixed(1)));
   }
@@ -2854,13 +3441,14 @@ function refreshList(sel){
   }catch(e){}
 }
 function showTab(t){
-  ['about','model','actual','infusion','strategy','tips','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','export'][i]===t);});
+  ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
   if(t==='export')updateLetterPreview();
   if(t==='tips')calcTips();
+  if(t==='tolerability')calcTolerability();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();checkDraft();
 </script>
