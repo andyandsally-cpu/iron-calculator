@@ -178,9 +178,9 @@ button:hover{background:#f1f5f9}
   </div>
 
   <div class="row">
-    <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">elemental iron mg/day</span></label>
+    <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">ferrous sulfate 200mg tablets/day · each tablet = 65mg elemental iron</span></label>
     <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="400" value="0" step="5" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:3px"><span id="suppDoseV" style="font-size:13px;font-weight:500">0mg</span><span class="badge" id="bsd"></span></div>
+    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span id="suppDoseV" style="font-size:13px;font-weight:500">0</span><span id="suppDoseTabV" style="font-size:12px;color:#64748b"></span><span class="badge" id="bsd"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Elemental iron per day — not tablet weight. Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Ferrous bisglycinate varies — check label. Set 0 if not supplementing.</div><div class="tt-n">Typical prescribed elemental dose: 65–200 mg/day. Above ~200mg/day, absorption does not increase further — hepcidin rises after each dose and closes the intestinal iron transporter for ~24 hours, so excess iron passes unabsorbed and simply increases GI side effects.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set 0 automatically when oral iron intolerance is toggled.</div></div></div>
   </div>
   <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
@@ -634,10 +634,14 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   if(!el)return;
   var isObserved=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined;
   var obsLabel=isObserved?'Observed (from results)':'Estimated (literature)';
+  var suppTabNote=suppDose>0?' ('+Math.round(suppDose/65*10)/10+' ferrous sulfate 200mg tablets/day)':'';
   var litSupp=suppDose>0?suppDose*0.04*30:0;
+  var suppTabLabel=suppDose>0?
+    (function(){var t=Math.round(suppDose/65*10)/10;var ts=t<=1.2?'1 tablet/day':t<=2.2?'2 tablets/day':Math.round(t)+' tablets/day';return 'Supplement ('+ts+' = '+suppDose+'mg elemental)';})():
+    'Supplement (none)';
   el.innerHTML=
     mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
-    mc('Supplement contribution',rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo',suppDose>0?'ok':'neutral')+
+    mc(suppTabLabel,rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo absorbed',suppDose>0?'ok':'neutral')+
     mc('Total absorbed — '+obsLabel,rnd(mgAbsMonth),'mg/mo',isObserved?(mgAbsMonth>totalLossMonth?'ok':'danger'):'warning')+
     mc('Total losses (menstrual+basal)',rnd(totalLossMonth),'mg/mo',totalLossMonth>50?'danger':totalLossMonth>30?'warning':'ok');
   if(!isObserved){
@@ -669,7 +673,22 @@ function calc(){
   document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
   document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
   document.getElementById('dietQV').textContent=dietQLabels[dietQIdx];
-  document.getElementById('suppDoseV').textContent=suppDose+'mg';
+  var tabVEl=document.getElementById('suppDoseTabV');
+  if(suppDose===0){
+    document.getElementById('suppDoseV').textContent='None';
+    if(tabVEl) tabVEl.textContent='';
+  } else {
+    var tabs=suppDose/65;
+    var tabPrimary=tabs<=0.4?'< ½ tablet/day':
+      tabs<=0.6?'½ tablet/day':
+      tabs<=1.2?'1 tablet/day':
+      tabs<=1.6?'1½ tablets/day':
+      tabs<=2.2?'2 tablets/day':
+      tabs<=2.7?'2½ tablets/day':
+      Math.round(tabs)+' tablets/day';
+    document.getElementById('suppDoseV').textContent=tabPrimary;
+    if(tabVEl) tabVEl.textContent='('+suppDose+'mg elemental)';
+  }
   var warnEl=document.getElementById('suppHighDoseWarn');
   if(warnEl) warnEl.style.display=suppDose>200?'block':'none';
   document.getElementById('startFerrV').textContent=startFerr;
@@ -1360,7 +1379,7 @@ function calcDerived(){
   if(!ivDominates&&suppDose>0&&litTotalEst>0&&impliedAbsPM!==null){
     var ratio=impliedAbsPM/litTotalEst;
     if(ratio<0.5){
-      diagLines.push('Observed absorption (~'+rnd(impliedAbsPM)+' mg/month) is significantly below the expected range for '+suppDose+'mg elemental iron/day (expected ~'+rnd(litTotalEst)+' mg/month). Possible causes: poor supplement timing or habits, coeliac disease, H. pylori, PPI/antacid use, or formulation issues. Worth investigating.');
+      diagLines.push('Observed absorption (~'+rnd(impliedAbsPM)+' mg/month) is significantly below the expected range for '+Math.round(suppDose/65*10)/10+' ferrous sulfate 200mg tablets/day ('+suppDose+'mg elemental; expected ~'+rnd(litTotalEst)+' mg/month absorbed). Possible causes: poor supplement timing, coeliac disease, H. pylori, PPI/antacid use, or formulation issues. Worth investigating.');
       if(diagSeverity!=='danger')diagSeverity='warn';
     } else if(ratio<0.75){
       diagLines.push('Absorption is somewhat below expectation for this supplement dose ('+rnd(ratio*100)+'% of expected). Check timing — 2hr from food, tea, and coffee — and consider whether alternate-day dosing might improve response.');
@@ -1501,27 +1520,34 @@ function buildGPLetter(){
   var fmt=function(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});};
   var addMonths=function(d,m){var r=new Date(d);r.setMonth(r.getMonth()+m);return r;};
 
-  var patName=document.getElementById('letterPatientName').value.trim()||'[Patient name]';
+  var patName=document.getElementById('letterPatientName').value.trim()||'[Your name]';
   var gpName=document.getElementById('letterGPName').value.trim();
   var practice=document.getElementById('letterPractice').value.trim()||'Castle Medical Centre';
   var email=document.getElementById('letterEmail').value.trim()||'Reception@castlemc.nhs.uk';
   var salutation=gpName?'Dear Dr '+(gpName.replace(/^dr\.?\s*/i,'')):'Dear Doctor';
 
-  // Subject line
-  var initials=patName.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase()||'[Initials]';
-  var subject='Iron deficiency management — pre-authorisation request — '+initials+' — '+fmt(today);
+  var initials=patName.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase()||'Pt';
+  var subject='Iron deficiency — monitoring plan request — '+patName;
 
-  // Baseline check — most recent actual result
+  // Baseline check
   var allActuals=actuals.filter(function(a){return a.ferritin>0&&a.date;});
   allActuals.sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return db-da;});
   var mostRecent=allActuals[0]||null;
   var mostRecentDate=mostRecent?parseDate(mostRecent.date):null;
   var baselineAge=mostRecentDate?Math.round((today-mostRecentDate)/(1000*60*60*24)):999;
-  var needsBaseline=baselineAge>42; // >6 weeks = needs fresh baseline
+  var needsBaseline=baselineAge>42;
   var baselineFerr=mostRecent?mostRecent.ferritin:c.startFerr;
-  var baselineDateStr=mostRecentDate?fmt(mostRecentDate):'not on record';
+  var baselineDateStr=mostRecentDate?fmt(mostRecentDate):'not recently tested';
 
-  // Treatment recommendation
+  // Historic range
+  var histAll=actuals.filter(function(a){return a.ferritin>0;}).sort(function(a,b){
+    var da=parseDate(a.date),db=parseDate(b.date);return da-db;
+  });
+  var histMin=histAll.length?Math.min.apply(null,histAll.map(function(a){return a.ferritin;})):baselineFerr;
+  var histMax=histAll.length?Math.max.apply(null,histAll.map(function(a){return a.ferritin;})):baselineFerr;
+  var histYears=histAll.length>=2?Math.round((parseDate(histAll[histAll.length-1].date)-parseDate(histAll[0].date))/(1000*60*60*24*365)):0;
+
+  // Treatment
   var oralIntol=conds['oral-intol'];
   var suppDose=c.suppDose||0;
   var stratEl=document.getElementById('stratTarget');
@@ -1529,139 +1555,125 @@ function buildGPLetter(){
   var planTarget=stratEl?+(stratEl.value)||50:50;
   var plannedIV=stratIVEl?+(stratIVEl.value)||0:0;
 
-  // Maintenance dose from strategy
+  // Maintenance
   var totalLossMonth=(c.basalLossMonth||30)+(c.mgLostMonth||0);
   var dietNet=c.dietNetMonth||0;
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
   var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(0.04*30)/5)*5:0;
   var maintFsTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/65*30/4.3):0;
 
-  // Blood test schedule dates
-  var t0=needsBaseline?today:null;
+  // Flow description
+  var flowDesc=['very light','light','moderate','heavy','very heavy'][Math.min(c.flowIdx||2,4)];
+
+  // Tablet description for Phase 1
+  var fsTabsPerDay=suppDose>0?Math.round(suppDose/65*10)/10:0;
+  var p1TabDesc=fsTabsPerDay<=1.2?'one ferrous sulfate 200mg tablet a day':
+    fsTabsPerDay<=2.2?'two ferrous sulfate 200mg tablets a day':
+    Math.round(fsTabsPerDay)+' ferrous sulfate 200mg tablets a day';
+
+  // Dates
   var t3=addMonths(today,3);
   var t5=addMonths(today,5);
   var t9=addMonths(today,9);
 
-  // Conditions
-  var condList=Object.keys(conds).filter(function(k){return conds[k];});
-  var condStr=condList.length?condList.map(function(k){
-    return {endo:'endometriosis',adeno:'adenomyosis',coeliac:'coeliac disease','oral-intol':'oral iron intolerance',pcos:'PCOS',vegan:'vegetarian/vegan diet'}[k]||k;
-  }).join(', '):'none on record';
+  // Conditions (readable)
+  var condReadable={endo:'endometriosis',adeno:'adenomyosis',coeliac:'coeliac disease','oral-intol':'oral iron intolerance',pcos:'PCOS',vegan:'vegetarian diet'};
+  var condList=Object.keys(conds).filter(function(k){return conds[k]&&k!=='oral-intol';}).map(function(k){return condReadable[k]||k;});
 
-  // Historic ferritin pattern
-  var histAll=actuals.filter(function(a){return a.ferritin>0;}).sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return da-db;});
-  var histSummary='';
-  if(histAll.length>=2){
-    var earliest=histAll[0];var latest=histAll[histAll.length-1];
-    var yearsSpan=Math.round((parseDate(latest.date)-parseDate(earliest.date))/(1000*60*60*24*365));
-    histSummary='Ferritin has been documented across '+histAll.length+' measurements over approximately '+yearsSpan+' year'+(yearsSpan===1?'':'s')+', ranging from '+Math.min.apply(null,histAll.map(function(a){return a.ferritin;}))+' to '+Math.max.apply(null,histAll.map(function(a){return a.ferritin;}))+' µg/L. The pattern indicates a chronic, recurrent deficiency rather than an isolated episode.';
-  }
-
-  // Net balance summary
-  var netDir=c.netMonth>0?'positive':'negative';
-  var absSource=window.derivedFerrPM!=null?'derived from observed blood test results':'estimated from population-average absorption data';
-
-  // Build letter
   var L=[];
+
+  // Header
   L.push(fmt(today));
   L.push('');
-  L.push('To: '+practice);
-  L.push('Email: '+email);
+  L.push(practice);
+  L.push(email);
   L.push('');
   L.push('Subject: '+subject);
   L.push('');
   L.push(salutation+',');
   L.push('');
-  L.push('Re: Iron deficiency — pre-authorisation request for treatment and monitoring blood tests');
-  L.push('Patient: '+patName);
-  L.push('');
-  L.push('I am writing on behalf of the above patient to formally request pre-authorisation for a structured iron deficiency monitoring programme, and to request consideration of the proposed treatment outlined below. The aim is to allow the patient to book the agreed blood tests directly with the phlebotomy clinic at the intervals specified, without requiring a separate GP appointment or triage on each occasion — as confirmed to be possible in principle by your practice on 10 December 2025.');
+
+  // Opening — personal, direct
+  L.push('I am writing to ask for your help with my iron deficiency, which has been an ongoing problem for me for some time. I would like to request a prescription for iron supplementation and, if possible, pre-approval for a small number of follow-up blood tests so I can monitor my progress without needing to go through the triage system each time.');
   L.push('');
 
-  // Clinical background
-  L.push('─────────────────────────────────');
-  L.push('CLINICAL BACKGROUND');
-  L.push('─────────────────────────────────');
+  // Background — personal history, no raw numbers dump
+  L.push('My background');
   L.push('');
-  L.push('The patient has a documented history of chronic iron deficiency. '+histSummary);
-  L.push('');
-  L.push('Most recent ferritin result: '+baselineFerr+' µg/L ('+baselineDateStr+').'+(baselineFerr<30?' This is below the BSH-defined depleted stores threshold of 30 µg/L, at which symptoms of iron deficiency are expected.':baselineFerr<50?' This is below the recommended minimum of 50 µg/L, which is the level at which clinical symptoms typically resolve.':' This is within the lower acceptable range.'));
-  L.push('');
-  if(c.meno!=='post'){
-    L.push('Estimated menstrual iron loss: '+c.mgLostCycle+' mg per cycle ('+c.mlPerCycle+' ml blood loss, cycle length '+c.cycleLen+' days, '+c.bleedDays+' bleeding days at '+flowLabels[c.flowIdx||2]+' flow) = approximately '+c.mgLostMonth+' mg/month from menstrual losses alone.');
-    L.push('Basal (non-menstrual) losses: approximately '+c.basalLossMonth+' mg/month.');
-    L.push('Total losses: approximately '+rnd(totalLossMonth)+' mg/month.');
-    L.push('Estimated dietary absorption: approximately '+c.dietNetMonth+' mg/month reaching stores.');
-    L.push('Current supplement contribution: '+(suppDose>0?suppDose+' mg elemental iron/day (approximately '+rnd(suppDose*0.04*30)+' mg/month absorbed)':'none currently prescribed')+' — absorption rate '+absSource+'.');
-    L.push('Net monthly iron balance: '+(c.netMonth>=0?'+':'')+c.netMonth+' mg/month ('+netDir+'). '+(c.netMonth<0?'Current intake is insufficient to maintain stores against ongoing losses.':'Current intake is positive but recovery will be slow without optimised dosing.'));
+  if(histAll.length>=2&&histYears>=1){
+    L.push('I have had my ferritin tested a number of times over the past '+histYears+' year'+(histYears===1?'':'s')+' and it has consistently come back low, ranging from '+histMin+' to '+histMax+' µg/L. My most recent result was '+baselineFerr+' µg/L'+(mostRecentDate?' on '+baselineDateStr:'')+'.'+(baselineFerr<30?' I understand that anything below 30 µg/L is considered depleted stores, and I have been experiencing symptoms consistent with this.':baselineFerr<50?' I understand the recommended minimum is around 50 µg/L and that symptoms often persist below this level.':''));
+    L.push('');
+    L.push('This has not been a one-off result — it is a pattern, and I think it needs a more structured approach than I have managed so far.');
   } else {
-    L.push('Post-menopausal status: menstrual losses are not a contributing factor. Deficiency appears related to '+(conds['coeliac']?'documented coeliac disease affecting absorption':'dietary insufficiency or reduced absorption')+'.');
+    L.push('My most recent ferritin result was '+baselineFerr+' µg/L'+(mostRecentDate?' ('+baselineDateStr+')':'')+'.'+(baselineFerr<30?' This is below the depleted stores threshold of 30 µg/L and I am experiencing symptoms I believe are related.':baselineFerr<50?' This is below the recommended minimum of 50 µg/L.':''));
   }
-  if(condList.length) L.push('Relevant conditions: '+condStr+'.');
   L.push('');
 
-  // Treatment request
-  L.push('─────────────────────────────────');
-  L.push('PROPOSED TREATMENT');
-  L.push('─────────────────────────────────');
+  // Why iron is a problem for them personally
+  if(c.meno!=='post'){
+    L.push('I have '+flowDesc+' periods'+(c.bleedDays?' lasting around '+c.bleedDays+' days':'')+', which I know is a significant cause of iron loss each month. Even with a reasonable diet, I find it very difficult to stay on top of my iron levels — my body is losing more than I can replace through food alone. '+(condList.length?'I also have '+condList.join(' and ')+', which I understand can make this worse. ':''));
+  } else {
+    L.push(condList.length?'I have '+condList.join(' and ')+', which I understand may be affecting my iron absorption. ':'I am post-menopausal, and while I do not have menstrual losses, my iron levels have remained persistently low.');
+  }
+  L.push('');
+
+  // What I am asking for — treatment
+  L.push('What I am asking for');
   L.push('');
   if(oralIntol){
-    L.push('The patient has documented oral iron intolerance. Oral supplementation has been trialled and is not tolerated. We therefore respectfully request:');
-    L.push('');
-    L.push('  1. Referral for intravenous iron infusion ('+(plannedIV>0?plannedIV+' mg':'dose at clinician discretion, typically 500–1000 mg')+') in accordance with NICE CG189 / BSH guidance for refractory iron deficiency anaemia.');
-    L.push('  2. Following infusion: maintenance monitoring as set out below, with consideration of low-dose oral bisglycinate supplementation if tolerated (20 mg elemental, alternate-day dosing) to sustain stores longer-term.');
+    L.push('I have tried oral iron tablets in the past and unfortunately cannot tolerate them — the side effects are quite significant for me. I would like to discuss whether an IV iron infusion would be appropriate in my case. I have read that this is an option under NICE guidance for people who cannot tolerate oral iron, and I think it could make a real difference.');
+    if(maintDailyMg>0) L.push('Once my levels are back up, I am happy to try a low-dose oral option (such as iron bisglycinate, which is often better tolerated) to maintain them, if you think that is worth trying.');
   } else {
-    L.push('We respectfully request a prescription for oral iron supplementation to support recovery and ongoing maintenance:');
-    L.push('');
-    L.push('  Phase 1 — Recovery (until ferritin reaches '+planTarget+' µg/L):');
-    L.push('  Ferrous sulfate 200 mg, '+(suppDose>=130?'two tablets daily':'one tablet daily')+' ('+(suppDose>=130?'130':'65')+' mg elemental iron/day). Alternate-day dosing may be considered as an evidence-based alternative to improve net absorption and tolerability (Moretti et al, Lancet Haematology 2015).');
-    L.push('');
-    if(maintDailyMg>0){
-      L.push('  Phase 2 — Maintenance (once ferritin reaches '+planTarget+' µg/L):');
-      L.push('  Reduce to approximately '+maintDailyMg+' mg elemental iron/day — equivalent to '+maintFsTabsPerWeek+' ferrous sulfate tablet'+(maintFsTabsPerWeek===1?'':'s')+' per week, spread across the week. This covers the estimated net deficit of '+rnd(deficitAfterDiet)+' mg/month after dietary contribution (total losses '+rnd(totalLossMonth)+' mg/month minus dietary absorption '+rnd(dietNet)+' mg/month). Without ongoing maintenance, stores are projected to deplete at approximately '+rnd(Math.abs((c.ferrChangePM||0)-(suppDose>0?(Math.min(suppDose*0.04,4.0)*30)/8:0)))+' µg/L per month based on the current balance.');
+    if(suppDose>0){
+      var tabClarify=fsTabsPerDay<=1.2?
+        'one ferrous sulfate 200mg tablet a day (each tablet contains 65mg of actual iron — the 200mg refers to the total tablet weight, not the iron content)':
+        fsTabsPerDay<=2.2?
+        'two ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron, so two tablets gives 130mg of elemental iron per day — the 200mg is the tablet weight, not the iron dose)':
+        Math.round(fsTabsPerDay)+' ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron — the 200mg is the tablet weight, not the iron content — so '+Math.round(fsTabsPerDay)+' tablets gives '+suppDose+'mg of elemental iron per day)';
+      L.push('I would like to request a prescription for ferrous sulfate 200mg so I can take '+tabClarify+', to bring my ferritin up to around '+planTarget+' µg/L. I have done some reading and understand that this is the level at which most people\'s symptoms improve.');
+      if(maintDailyMg>0){
+        L.push('');
+        L.push('Once I reach that level, I plan to reduce to a lower maintenance dose — around '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — to keep my levels stable without over-supplementing. I understand that once ferritin is where it needs to be, a much smaller ongoing dose is all that\'s needed to stay there.');
+      }
+    } else {
+      L.push('I would like to discuss starting iron supplementation. I have not been on a prescribed course before and would welcome your guidance on the right dose to start with.');
     }
     if(plannedIV>0){
       L.push('');
-      L.push('  Note: an IV infusion of '+plannedIV+' mg has been modelled as part of the recovery plan should oral therapy alone prove insufficient or slow. This is documented for the GP\'s awareness and can be reconsidered at the 3-month review if recovery is inadequate.');
+      L.push('I would also like to ask whether an IV iron infusion might be worth considering to give my levels an initial boost, particularly if oral supplementation alone is likely to be slow given my ongoing losses. I am happy to discuss this at an appointment if needed.');
     }
   }
   L.push('');
 
-  // Blood test schedule
-  L.push('─────────────────────────────────');
-  L.push('REQUESTED BLOOD TEST SCHEDULE');
-  L.push('─────────────────────────────────');
-  L.push('');
-  L.push('We respectfully request pre-authorisation for the following ferritin panel schedule, to allow the patient to book directly with the phlebotomy clinic at each interval without requiring an additional GP appointment or triage on each occasion:');
+  // Blood test pre-authorisation
+  L.push('Blood test monitoring');
   L.push('');
   if(needsBaseline){
-    L.push('  Test 0 — Baseline: as soon as possible (most recent result, '+baselineDateStr+', is over 6 weeks old and may not reflect current stores given the treatment now proposed).');
+    L.push('My most recent ferritin test was '+baselineDateStr+(mostRecentDate?', which is now over 6 weeks ago':'')+'. I would like to request a fresh baseline test as soon as possible before starting treatment, so we have a clear starting point.');
+    L.push('');
   } else {
-    L.push('  Baseline: '+baselineDateStr+' result (ferritin '+baselineFerr+' µg/L) is recent enough to serve as the baseline for this monitoring programme. No immediate test required.');
+    L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+baselineFerr+' µg/L), which is recent enough to use as my starting point.');
+    L.push('');
   }
-  L.push('  Test 1 — Recovery check: approximately '+fmt(t3)+' (3 months). To confirm ferritin is rising as expected on the prescribed dose. Expected rise: '+(c.ferrChangePM>0?'approximately '+rnd(c.ferrChangePM*3*10)/10+' µg/L based on current balance':'to be assessed — balance is currently negative and treatment is intended to address this')+'.');
-  L.push('  Test 2 — Stability check: approximately '+fmt(t5)+' (5 months). To confirm stores are holding and not declining after the initial recovery phase, and to assess whether the transition to maintenance dosing is appropriate.');
-  L.push('  Test 3 — Long-term follow-up: approximately '+fmt(t9)+' (9 months). To confirm sustained recovery and adequacy of maintenance dosing. To inform whether ongoing supplementation is required and at what dose.');
+  L.push('I would like to ask whether it would be possible to pre-authorise a short series of follow-up ferritin tests, so I can book them directly with the phlebotomy clinic without needing to go through triage each time. I understand from a previous conversation with your reception team that this kind of arrangement is possible in principle for ongoing conditions, and that once a doctor has agreed the plan, the bookings can be made directly.');
   L.push('');
-  L.push('Justification for pre-authorisation: the patient has a documented chronic pattern of iron deficiency spanning multiple years. This monitoring schedule follows standard BSH guidance for iron deficiency follow-up and is proportionate to the clinical need. Pre-authorisation would avoid repeated 8am triage calls for straightforward blood test bookings and allow timely monitoring of treatment response.');
+  L.push('The schedule I am proposing is:');
+  L.push('');
+  L.push('  1.  Around '+fmt(t3)+' — to check my ferritin is rising as expected after 3 months of treatment.');
+  L.push('  2.  Around '+fmt(t5)+' — a stability check to see whether my levels are holding once I reduce to the maintenance dose.');
+  L.push('  3.  Around '+fmt(t9)+' — a longer-term follow-up to confirm things are stable and that the maintenance approach is working.');
+  L.push('');
+  L.push('I think this is a proportionate plan given my history, and it would save us both time by not needing a GP appointment every time I need a routine blood test.');
   L.push('');
 
   // Close
-  L.push('─────────────────────────────────');
+  L.push('I realise this is quite a detailed request and I am happy to come in and discuss it if that would be easier. However, if you are happy to approve this by email, that would be wonderful and would let me get started quickly.');
   L.push('');
-  L.push('A ferritin trajectory chart and supporting data from the iron balance model used to generate these recommendations is attached (or available on request).');
-  L.push('');
-  L.push('We would be grateful if you could confirm approval by email to allow the patient to proceed with booking. If you would prefer to discuss the plan in an appointment first, the patient is of course happy to arrange this.');
-  L.push('');
-  L.push('Thank you very much for your time and consideration.');
+  L.push('Thank you so much for reading this — I really appreciate it.');
   L.push('');
   L.push('Yours sincerely,');
   L.push('');
   L.push(patName);
-  L.push('');
-  L.push('─────────────────────────────────');
-  L.push('Generated: '+fmt(today)+' | Iron Balance Planning Tool');
-  L.push('Note: This letter incorporates data from a validated iron balance model using patient-reported inputs and blood test results. All figures are estimates based on population-average absorption data and should be interpreted alongside clinical assessment. This letter does not constitute a clinical diagnosis. All treatment decisions remain at the discretion of the treating clinician.');
 
   return {subject:subject,body:L.join('\n')};
 }
@@ -1951,20 +1963,19 @@ function calcStrategy(){
     var suppDose=c.suppDose||0;
     var oralIntol=conds['oral-intol'];
     if(oralIntol){
-      doseNote.innerHTML='<strong>Oral iron intolerance is flagged.</strong> Phase 1 recovery is modelled without oral supplementation — recovery depends on '+( ivDose>0?'the infusion selected below.':'an infusion (none currently selected — choose one above to model the effect).');
+      doseNote.innerHTML='<strong>Oral iron intolerance is flagged.</strong> Phase 1 recovery is modelled without oral supplementation — recovery depends on '+(ivDose>0?'the infusion selected below.':'an infusion (none currently selected — choose one above to model the effect).');
       doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
     } else if(suppDose===0){
-      doseNote.innerHTML='⚠️ <strong>No supplement is set in the Balance Model tab.</strong> Phase 1 recovery rate is based on diet alone — ferritin will not recover without supplementation or an infusion. Go to the Balance Model tab and set a supplement dose to model oral recovery.';
+      doseNote.innerHTML='⚠️ <strong>No supplement is set in the Balance Model tab.</strong> Go to the Balance Model tab and set a supplement dose to model oral recovery.';
       doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
     } else {
-      // Translate elemental dose to practical tablets
-      var fsTabsPerDay=suppDose/65;
-      var tabDesc='';
-      if(fsTabsPerDay<=0.5) tabDesc='a low dose — less than one ferrous sulfate tablet per day. Consider using ferrous bisglycinate (typically 20–25mg elemental per capsule) as a lower-dose option.';
-      else if(fsTabsPerDay<=1.2) tabDesc='equivalent to approximately <strong>1 ferrous sulfate tablet (200mg) per day</strong>, providing 65mg elemental iron.';
-      else if(fsTabsPerDay<=2.2) tabDesc='equivalent to approximately <strong>2 ferrous sulfate tablets (200mg each) per day</strong>, providing 130mg elemental iron.';
-      else tabDesc='equivalent to approximately <strong>'+Math.round(fsTabsPerDay)+' ferrous sulfate tablets (200mg each) per day</strong>, providing '+suppDose+'mg elemental iron. Note: above 200mg elemental/day absorption is unlikely to increase — see the supplement slider tooltip.';
-      doseNote.innerHTML='<strong>Phase 1 uses the supplement dose set in the Balance Model tab: '+suppDose+' mg elemental iron per day</strong> — '+tabDesc+' To change the recovery dose, adjust the supplement slider on the Balance Model tab.';
+      var fsT=suppDose/65;
+      var tabPrimary2=fsT<=0.5?'less than 1 ferrous sulfate 200mg tablet per day':
+        fsT<=1.2?'<strong>1 ferrous sulfate 200mg tablet per day</strong>':
+        fsT<=2.2?'<strong>2 ferrous sulfate 200mg tablets per day</strong>':
+        '<strong>'+Math.round(fsT)+' ferrous sulfate 200mg tablets per day</strong>';
+      var elemNote2='('+suppDose+'mg elemental iron — each 200mg tablet contains 65mg elemental iron; the 200mg is the tablet weight, not the iron dose)';
+      doseNote.innerHTML='<strong>Phase 1 dose (from Balance Model tab):</strong> '+tabPrimary2+' '+elemNote2+'. To change this, adjust the supplement slider on the Balance Model tab.';
       doseNote.style.background='#fefce8';doseNote.style.borderColor='#fde047';doseNote.style.color='#854d0e';
     }
   }
@@ -2080,14 +2091,14 @@ function calcStrategy(){
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
     mc('Diet covers',rnd(Math.min(dietNetMonth,totalLossMonth)),'mg/mo',dietNetMonth>=totalLossMonth?'ok':'warning')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
-    mc('Daily elemental needed',mDailyR,'mg/day','neutral')+
-    mc('Alternate-day dose',mAltDayR,'mg/dose','neutral');
+    mc('Maintenance dose',Math.round(mDailyR/65*10)/10<=1.2?'1 tablet/day':Math.round(mDailyR/65*10)/10<=2.2?'2 tablets/day':Math.round(mDailyR/65)+' tablets/day','('+mDailyR+'mg el.)','neutral')+
+    mc('Alternate-day dose',Math.ceil(mAltDayR/65),'tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+'/alt-day ('+mAltDayR+'mg el.)','neutral');
 
   phase2Text.innerHTML=
     '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month (diet covers '+rnd(dietNetMonth)+' mg/month of this), a practical supplement schedule would be '+tabAdvice+'</p>'+
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, an every-other-day dose of approximately <strong>'+mAltDayR+' mg elemental iron</strong> ('+Math.ceil(mAltDayR/65)+' ferrous sulfate tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+') is expected to match the absorption of '+mDailyR+' mg taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, <strong>'+Math.ceil(mAltDayR/65)+' ferrous sulfate 200mg tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+' every other day</strong> ('+mAltDayR+'mg elemental) is expected to match the net absorption of '+mDailyR+'mg elemental taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -2096,20 +2107,27 @@ function calcStrategy(){
     var oralIntolS=conds['oral-intol'];
     var summaryLines=[];
 
+    // Helper: tablets-first description
+    function tabFirst(elMg){
+      var t=Math.round(elMg/65*10)/10;
+      var ts=t<=1.2?'1 ferrous sulfate 200mg tablet/day':t<=2.2?'2 ferrous sulfate 200mg tablets/day':Math.round(t)+' ferrous sulfate 200mg tablets/day';
+      return ts+' ('+elMg+'mg elemental)';
+    }
+    function tabFirstWeekly(elMgPerDay){
+      var fsWk=Math.ceil(elMgPerDay/65*30/4.3);
+      return (fsWk===1?'1 ferrous sulfate 200mg tablet':fsWk+' ferrous sulfate 200mg tablets')+' per week, spread a few days apart ('+elMgPerDay+'mg elemental/day equivalent)';
+    }
+
     // Phase 1 sentence
     var p1Desc='';
     if(oralIntolS&&ivDose>0){
       p1Desc='<strong>Phase 1 — Recovery:</strong> A '+ivDose+' mg IV infusion to raise ferritin rapidly to approximately '+rnd(startFerr+mg2f(ivDose))+' µg/L. No oral supplementation (oral intolerance documented).';
     } else if(ivDose>0&&suppDoseS>0){
       var p1Mo=noIVMonths===null?'an unknown period':ivMonths===0?'immediately':ivMonths+' month'+(ivMonths===1?'':'s');
-      var fsD=Math.round(suppDoseS/65*10)/10;
-      var fsTabStr=fsD<=1.2?'1 ferrous sulfate tablet (200mg) daily':fsD<=2.2?'2 ferrous sulfate tablets (200mg) daily':Math.round(fsD)+' ferrous sulfate tablets (200mg) daily';
-      p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion at the start, then continue '+suppDoseS+' mg elemental iron/day ('+fsTabStr+') until '+target+' µg/L is reached — estimated '+p1Mo+'.';
+      p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion at the start, then continue '+tabFirst(suppDoseS)+' until '+target+' µg/L is reached — estimated '+p1Mo+'.';
     } else if(suppDoseS>0){
-      var fsD2=Math.round(suppDoseS/65*10)/10;
-      var fsTabStr2=fsD2<=1.2?'1 ferrous sulfate tablet (200mg) daily':fsD2<=2.2?'2 ferrous sulfate tablets (200mg) daily':Math.round(fsD2)+' ferrous sulfate tablets (200mg) daily';
       var p1Mo2=noIVMonths===null?'an unknown period (balance is not currently positive — review dose)':noIVMonths===0?'already at target':noIVMonths+' month'+(noIVMonths===1?'':'s');
-      p1Desc='<strong>Phase 1 — Recovery:</strong> Take '+suppDoseS+' mg elemental iron per day ('+fsTabStr2+') until ferritin reaches '+target+' µg/L — estimated '+p1Mo2+'.';
+      p1Desc='<strong>Phase 1 — Recovery:</strong> '+tabFirst(suppDoseS)+' until ferritin reaches '+target+' µg/L — estimated '+p1Mo2+'.';
     } else if(ivDose>0){
       p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion. No oral supplement currently set — consider adding one to accelerate recovery if tolerated.';
     } else {
@@ -2124,16 +2142,14 @@ function calcStrategy(){
     } else {
       var r5S=function(n){return Math.ceil(n/5)*5;};
       var mDailyS=r5S(deficitAfterDiet/(0.04*30));
-      var fsWk=Math.ceil(mDailyS/65*30/4.3);
-      var wkDesc=fsWk===1?'1 ferrous sulfate tablet (200mg) per week':fsWk+' ferrous sulfate tablets (200mg) per week, spread a few days apart';
-      p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+mDailyS+' mg elemental iron per day — equivalent to '+wkDesc+'. This covers the net deficit of '+rnd(deficitAfterDiet)+' mg/month after diet.';
+      p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+tabFirstWeekly(mDailyS)+'. This covers the net deficit of '+rnd(deficitAfterDiet)+' mg/month after diet.';
     }
     summaryLines.push(p2Desc);
 
     // Outcome sentence
     var outcomeDesc='';
     if(suppDoseS>0||ivDose>0){
-      outcomeDesc='<strong>Expected outcome:</strong> If followed consistently, ferritin should reach and hold at '+target+' µg/L'+( deficitAfterDiet>0?' with ongoing maintenance dosing':' — diet alone can sustain this level')+'. If results are not tracking as expected despite good adherence, this may indicate an absorption issue worth investigating (e.g. timing of doses, antacid use, coeliac disease, or H. pylori).';
+      outcomeDesc='<strong>Expected outcome:</strong> If followed consistently, ferritin should reach and hold at '+target+' µg/L'+(deficitAfterDiet>0?' with ongoing maintenance dosing':' — diet alone can sustain this level')+'. If results are not tracking as expected despite good adherence, this may indicate an absorption issue worth investigating (e.g. timing of doses, antacid use, coeliac disease, or H. pylori).';
     } else {
       outcomeDesc='<strong>Expected outcome:</strong> No treatment currently modelled. Set a supplement dose or infusion to generate a plan.';
     }
