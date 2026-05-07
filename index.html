@@ -67,7 +67,15 @@ button:hover{background:#f1f5f9}
 .analysis-box.danger-box{background:#fef2f2;border-color:#fecaca}
 .analysis-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 @media(max-width:520px){.row{grid-template-columns:130px 1fr 60px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
-@media print{body{background:#fff;padding:.5rem}.tabs,.sb,.trow,.eg{display:none!important}.card{border:1px solid #ccc!important;break-inside:avoid}.ca{display:block!important;border:1px solid #ccc}}
+@media print{
+  body{background:#fff;padding:.5rem}
+  .tabs,.sb,.trow,.eg,.card button,#draftBanner,.ib,.pf,button{display:none!important}
+  .ca{display:block!important;border:1px solid #ccc}
+  #letterPreview{border:none!important;padding:0!important;font-size:11pt;line-height:1.8;font-family:Georgia,serif}
+  #tab-model,#tab-actual,#tab-infusion,#tab-strategy{display:none!important}
+  #chartExplainer{font-size:9pt}
+  .card{border:1px solid #ccc!important;break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -422,16 +430,38 @@ button:hover{background:#f1f5f9}
 
 <div id="tab-export" style="display:none">
 <div class="section">
-<div class="st">Clinical analysis &amp; export</div>
+<div class="st">GP letter — pre-authorisation request</div>
 <div class="card">
+  <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Complete the fields below, then preview and copy the letter. The content is generated from all data entered across the tool — the more complete the inputs, the stronger the letter.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Patient full name</label>
+      <input type="text" id="letterPatientName" placeholder="e.g. Jane Smith" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px" oninput="updateLetterPreview()">
+    </div>
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">GP name (optional)</label>
+      <input type="text" id="letterGPName" placeholder="e.g. Dr Smith (leave blank for 'Dear Doctor')" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px" oninput="updateLetterPreview()">
+    </div>
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Practice name</label>
+      <input type="text" id="letterPractice" value="Castle Medical Centre" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px" oninput="updateLetterPreview()">
+    </div>
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Practice email</label>
+      <input type="text" id="letterEmail" value="Reception@castlemc.nhs.uk" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px" oninput="updateLetterPreview()">
+    </div>
+  </div>
   <div class="eg">
-    <div class="eb" onclick="copyGPSection()">📋 Copy GP letter section<br><span style="font-size:11px;color:#64748b">Paste into comprehensive letter</span></div>
+    <div class="eb" onclick="copyGPLetter()">📋 Copy full letter<br><span style="font-size:11px;color:#64748b">Paste into email</span></div>
     <div class="eb" onclick="copySummary()">📄 Copy plain summary<br><span style="font-size:11px;color:#64748b">For notes or records</span></div>
-    <div class="eb" onclick="window.print()">🖨 Print / save PDF<br><span style="font-size:11px;color:#64748b">Browser print dialog</span></div>
+    <div class="eb" onclick="printLetter()">🖨 Print letter + chart<br><span style="font-size:11px;color:#64748b">Chart included on print</span></div>
   </div>
   <div class="sm" id="copyMsg">Copied to clipboard</div>
-  <textarea class="ca" id="copyArea" readonly></textarea>
 </div>
+</div>
+<div class="section">
+<div class="st">Letter preview</div>
+<div id="letterPreview" style="font-size:13px;line-height:1.75;color:#1e293b;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;white-space:pre-wrap;font-family:Georgia,serif"></div>
 </div>
 </div>
 
@@ -819,8 +849,10 @@ function calc(){
       parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
       if(stopLine){
         var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
+        var stopBreakdown='';
+        if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit ≈ '+rnd(Math.abs(postStopRate)*10)/10+' µg/L/month)</span>';}
         var stopConclusion=postStopRate<0?' Diet alone cannot replace losses — stores would deplete again without ongoing maintenance supplementation. This is why Phase 2 matters.':' In your case, diet appears to cover losses — stopping supplements after the target may be sustainable, though monitoring is still advisable.';
-        parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+'.'+stopConclusion);
+        parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+stopBreakdown+'.'+stopConclusion);
       }
     }
     if(hasRevised){
@@ -1456,59 +1488,212 @@ function calcDerived(){
 }
 
 
-function buildGPText(){
-  var c=lc;var nm=document.getElementById('sessionName').value||'Patient';
-  var condList=Object.keys(conds).filter(function(k){return conds[k];}).join(', ')||'none documented';
-  var lines=['IRON BALANCE ANALYSIS','Patient: '+nm,'Generated: '+new Date().toLocaleDateString('en-GB'),'','PARAMETERS USED:',
-    'Cycle length: '+(c.meno==='post'?'post-menopausal':c.cycleLen+' days'),
-    'Bleeding days per cycle: '+c.bleedDays+' days (clinical normal: 3–7 days)',
-    'Estimated menstrual blood loss: '+c.mlPerCycle+' ml/cycle = '+c.mgLostCycle+' mg iron/cycle',
-    'Monthly iron loss: '+c.mgLostMonth+' mg/month',
-    'Diet quality: '+['','Poor','Low','Average','Good','Excellent'][c.dietQ]+' ('+c.dietIronMgDay+' mg/day, net ~'+c.dietNetMonth+' mg/month to stores)',
-    'Oral supplement: '+c.suppDose+' mg elemental/day',
-    'Total absorbed per month: '+c.mgAbsMonth+' mg/month'+(window.derivedFerrPM!=null?' (observed from blood results)':' (literature estimate)'),
-    'Total losses: menstrual '+c.mgLostMonth+' mg/month + basal '+c.basalLossMonth+' mg/month',
-    'Net monthly balance: '+sign(c.netMonth)+c.netMonth+' mg/month',
-    'Starting ferritin: '+c.startFerr+' µg/L',
-    'Projected ferritin at '+c.fmtMonth(12)+': '+rnd(c.m12ferr)+' µg/L',
-    'Known conditions: '+condList,''];
+function buildGPLetter(){
+  var c=lc;
+  var today=new Date();
+  var fmt=function(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});};
+  var addMonths=function(d,m){var r=new Date(d);r.setMonth(r.getMonth()+m);return r;};
 
-  lines.push('CLINICAL ANALYSIS:');
-  var c2=lc;
-  if(c2.meno==='post'){
-    lines.push('Post-menopausal status: menstrual losses are not a factor.');
-    lines.push(c2.netMonth<-3?'Net deficit of '+Math.abs(c2.netMonth)+' mg/month despite no menstrual losses. Dietary intake or absorption may be insufficient.':'Iron balance appears adequate for post-menopausal status.');
-  } else {
-    lines.push('Monthly iron loss of '+c2.mgLostMonth+' mg (estimated from '+c2.bleedDays+' bleeding days at '+flowLabels[c2.flowIdx]+' flow).');
-    if(c2.netMonth<0){
-      lines.push('Monthly deficit: '+Math.abs(c2.netMonth)+' mg/month. Current intake cannot maintain stores at this loss rate.');
-      lines.push('Projected ferritin in 12 months without intervention: '+rnd(c2.m12ferr)+' µg/L.');
-      if(conds['oral-intol']){lines.push('Oral iron intolerance documented. IV iron infusion is indicated (NICE CG189).');}
-      else if(c2.suppDose===0){lines.push('No current oral supplementation. Alternate-day oral iron may be considered (Moretti et al, Lancet Haematology 2015).');}
-      lines.push('Addressing the underlying bleeding source is the most effective long-term approach.');
-    } else {
-      lines.push('Iron balance is currently positive ('+sign(c2.netMonth)+c2.netMonth+' mg/month). Ferritin projected to reach '+rnd(c2.m12ferr)+' µg/L in 12 months.');
-      lines.push('Monitor ferritin at 3-month intervals to confirm stores are recovering.');
-    }
-    if(c2.startFerr<30)lines.push('Current ferritin ('+c2.startFerr+' µg/L) is below the 30 µg/L depleted stores threshold (BSH/NICE). Treatment is indicated.');
+  var patName=document.getElementById('letterPatientName').value.trim()||'[Patient name]';
+  var gpName=document.getElementById('letterGPName').value.trim();
+  var practice=document.getElementById('letterPractice').value.trim()||'Castle Medical Centre';
+  var email=document.getElementById('letterEmail').value.trim()||'Reception@castlemc.nhs.uk';
+  var salutation=gpName?'Dear Dr '+(gpName.replace(/^dr\.?\s*/i,'')):'Dear Doctor';
+
+  // Subject line
+  var initials=patName.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase()||'[Initials]';
+  var subject='Iron deficiency management — pre-authorisation request — '+initials+' — '+fmt(today);
+
+  // Baseline check — most recent actual result
+  var allActuals=actuals.filter(function(a){return a.ferritin>0&&a.date;});
+  allActuals.sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return db-da;});
+  var mostRecent=allActuals[0]||null;
+  var mostRecentDate=mostRecent?parseDate(mostRecent.date):null;
+  var baselineAge=mostRecentDate?Math.round((today-mostRecentDate)/(1000*60*60*24)):999;
+  var needsBaseline=baselineAge>42; // >6 weeks = needs fresh baseline
+  var baselineFerr=mostRecent?mostRecent.ferritin:c.startFerr;
+  var baselineDateStr=mostRecentDate?fmt(mostRecentDate):'not on record';
+
+  // Treatment recommendation
+  var oralIntol=conds['oral-intol'];
+  var suppDose=c.suppDose||0;
+  var stratEl=document.getElementById('stratTarget');
+  var stratIVEl=document.getElementById('stratIVDose');
+  var planTarget=stratEl?+(stratEl.value)||50:50;
+  var plannedIV=stratIVEl?+(stratIVEl.value)||0:0;
+
+  // Maintenance dose from strategy
+  var totalLossMonth=(c.basalLossMonth||30)+(c.mgLostMonth||0);
+  var dietNet=c.dietNetMonth||0;
+  var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
+  var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(0.04*30)/5)*5:0;
+  var maintFsTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/65*30/4.3):0;
+
+  // Blood test schedule dates
+  var t0=needsBaseline?today:null;
+  var t3=addMonths(today,3);
+  var t5=addMonths(today,5);
+  var t9=addMonths(today,9);
+
+  // Conditions
+  var condList=Object.keys(conds).filter(function(k){return conds[k];});
+  var condStr=condList.length?condList.map(function(k){
+    return {endo:'endometriosis',adeno:'adenomyosis',coeliac:'coeliac disease','oral-intol':'oral iron intolerance',pcos:'PCOS',vegan:'vegetarian/vegan diet'}[k]||k;
+  }).join(', '):'none on record';
+
+  // Historic ferritin pattern
+  var histAll=actuals.filter(function(a){return a.ferritin>0;}).sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return da-db;});
+  var histSummary='';
+  if(histAll.length>=2){
+    var earliest=histAll[0];var latest=histAll[histAll.length-1];
+    var yearsSpan=Math.round((parseDate(latest.date)-parseDate(earliest.date))/(1000*60*60*24*365));
+    histSummary='Ferritin has been documented across '+histAll.length+' measurements over approximately '+yearsSpan+' year'+(yearsSpan===1?'':'s')+', ranging from '+Math.min.apply(null,histAll.map(function(a){return a.ferritin;}))+' to '+Math.max.apply(null,histAll.map(function(a){return a.ferritin;}))+' µg/L. The pattern indicates a chronic, recurrent deficiency rather than an isolated episode.';
   }
-  lines.push('','[AI-assisted estimate based on population averages and patient-reported inputs. For clinical discussion only — not a substitute for clinical assessment.]');
-  return lines.join('\n');
+
+  // Net balance summary
+  var netDir=c.netMonth>0?'positive':'negative';
+  var absSource=window.derivedFerrPM!=null?'derived from observed blood test results':'estimated from population-average absorption data';
+
+  // Build letter
+  var L=[];
+  L.push(fmt(today));
+  L.push('');
+  L.push('To: '+practice);
+  L.push('Email: '+email);
+  L.push('');
+  L.push('Subject: '+subject);
+  L.push('');
+  L.push(salutation+',');
+  L.push('');
+  L.push('Re: Iron deficiency — pre-authorisation request for treatment and monitoring blood tests');
+  L.push('Patient: '+patName);
+  L.push('');
+  L.push('I am writing on behalf of the above patient to formally request pre-authorisation for a structured iron deficiency monitoring programme, and to request consideration of the proposed treatment outlined below. The aim is to allow the patient to book the agreed blood tests directly with the phlebotomy clinic at the intervals specified, without requiring a separate GP appointment or triage on each occasion — as confirmed to be possible in principle by your practice on 10 December 2025.');
+  L.push('');
+
+  // Clinical background
+  L.push('─────────────────────────────────');
+  L.push('CLINICAL BACKGROUND');
+  L.push('─────────────────────────────────');
+  L.push('');
+  L.push('The patient has a documented history of chronic iron deficiency. '+histSummary);
+  L.push('');
+  L.push('Most recent ferritin result: '+baselineFerr+' µg/L ('+baselineDateStr+').'+(baselineFerr<30?' This is below the BSH-defined depleted stores threshold of 30 µg/L, at which symptoms of iron deficiency are expected.':baselineFerr<50?' This is below the recommended minimum of 50 µg/L, which is the level at which clinical symptoms typically resolve.':' This is within the lower acceptable range.'));
+  L.push('');
+  if(c.meno!=='post'){
+    L.push('Estimated menstrual iron loss: '+c.mgLostCycle+' mg per cycle ('+c.mlPerCycle+' ml blood loss, cycle length '+c.cycleLen+' days, '+c.bleedDays+' bleeding days at '+flowLabels[c.flowIdx||2]+' flow) = approximately '+c.mgLostMonth+' mg/month from menstrual losses alone.');
+    L.push('Basal (non-menstrual) losses: approximately '+c.basalLossMonth+' mg/month.');
+    L.push('Total losses: approximately '+rnd(totalLossMonth)+' mg/month.');
+    L.push('Estimated dietary absorption: approximately '+c.dietNetMonth+' mg/month reaching stores.');
+    L.push('Current supplement contribution: '+(suppDose>0?suppDose+' mg elemental iron/day (approximately '+rnd(suppDose*0.04*30)+' mg/month absorbed)':'none currently prescribed')+' — absorption rate '+absSource+'.');
+    L.push('Net monthly iron balance: '+(c.netMonth>=0?'+':'')+c.netMonth+' mg/month ('+netDir+'). '+(c.netMonth<0?'Current intake is insufficient to maintain stores against ongoing losses.':'Current intake is positive but recovery will be slow without optimised dosing.'));
+  } else {
+    L.push('Post-menopausal status: menstrual losses are not a contributing factor. Deficiency appears related to '+(conds['coeliac']?'documented coeliac disease affecting absorption':'dietary insufficiency or reduced absorption')+'.');
+  }
+  if(condList.length) L.push('Relevant conditions: '+condStr+'.');
+  L.push('');
+
+  // Treatment request
+  L.push('─────────────────────────────────');
+  L.push('PROPOSED TREATMENT');
+  L.push('─────────────────────────────────');
+  L.push('');
+  if(oralIntol){
+    L.push('The patient has documented oral iron intolerance. Oral supplementation has been trialled and is not tolerated. We therefore respectfully request:');
+    L.push('');
+    L.push('  1. Referral for intravenous iron infusion ('+(plannedIV>0?plannedIV+' mg':'dose at clinician discretion, typically 500–1000 mg')+') in accordance with NICE CG189 / BSH guidance for refractory iron deficiency anaemia.');
+    L.push('  2. Following infusion: maintenance monitoring as set out below, with consideration of low-dose oral bisglycinate supplementation if tolerated (20 mg elemental, alternate-day dosing) to sustain stores longer-term.');
+  } else {
+    L.push('We respectfully request a prescription for oral iron supplementation to support recovery and ongoing maintenance:');
+    L.push('');
+    L.push('  Phase 1 — Recovery (until ferritin reaches '+planTarget+' µg/L):');
+    L.push('  Ferrous sulfate 200 mg, '+(suppDose>=130?'two tablets daily':'one tablet daily')+' ('+(suppDose>=130?'130':'65')+' mg elemental iron/day). Alternate-day dosing may be considered as an evidence-based alternative to improve net absorption and tolerability (Moretti et al, Lancet Haematology 2015).');
+    L.push('');
+    if(maintDailyMg>0){
+      L.push('  Phase 2 — Maintenance (once ferritin reaches '+planTarget+' µg/L):');
+      L.push('  Reduce to approximately '+maintDailyMg+' mg elemental iron/day — equivalent to '+maintFsTabsPerWeek+' ferrous sulfate tablet'+(maintFsTabsPerWeek===1?'':'s')+' per week, spread across the week. This covers the estimated net deficit of '+rnd(deficitAfterDiet)+' mg/month after dietary contribution (total losses '+rnd(totalLossMonth)+' mg/month minus dietary absorption '+rnd(dietNet)+' mg/month). Without ongoing maintenance, stores are projected to deplete at approximately '+rnd(Math.abs((c.ferrChangePM||0)-(suppDose>0?(Math.min(suppDose*0.04,4.0)*30)/8:0)))+' µg/L per month based on the current balance.');
+    }
+    if(plannedIV>0){
+      L.push('');
+      L.push('  Note: an IV infusion of '+plannedIV+' mg has been modelled as part of the recovery plan should oral therapy alone prove insufficient or slow. This is documented for the GP\'s awareness and can be reconsidered at the 3-month review if recovery is inadequate.');
+    }
+  }
+  L.push('');
+
+  // Blood test schedule
+  L.push('─────────────────────────────────');
+  L.push('REQUESTED BLOOD TEST SCHEDULE');
+  L.push('─────────────────────────────────');
+  L.push('');
+  L.push('We respectfully request pre-authorisation for the following ferritin panel schedule, to allow the patient to book directly with the phlebotomy clinic at each interval without requiring an additional GP appointment or triage on each occasion:');
+  L.push('');
+  if(needsBaseline){
+    L.push('  Test 0 — Baseline: as soon as possible (most recent result, '+baselineDateStr+', is over 6 weeks old and may not reflect current stores given the treatment now proposed).');
+  } else {
+    L.push('  Baseline: '+baselineDateStr+' result (ferritin '+baselineFerr+' µg/L) is recent enough to serve as the baseline for this monitoring programme. No immediate test required.');
+  }
+  L.push('  Test 1 — Recovery check: approximately '+fmt(t3)+' (3 months). To confirm ferritin is rising as expected on the prescribed dose. Expected rise: '+(c.ferrChangePM>0?'approximately '+rnd(c.ferrChangePM*3*10)/10+' µg/L based on current balance':'to be assessed — balance is currently negative and treatment is intended to address this')+'.');
+  L.push('  Test 2 — Stability check: approximately '+fmt(t5)+' (5 months). To confirm stores are holding and not declining after the initial recovery phase, and to assess whether the transition to maintenance dosing is appropriate.');
+  L.push('  Test 3 — Long-term follow-up: approximately '+fmt(t9)+' (9 months). To confirm sustained recovery and adequacy of maintenance dosing. To inform whether ongoing supplementation is required and at what dose.');
+  L.push('');
+  L.push('Justification for pre-authorisation: the patient has a documented chronic pattern of iron deficiency spanning multiple years. This monitoring schedule follows standard BSH guidance for iron deficiency follow-up and is proportionate to the clinical need. Pre-authorisation would avoid repeated 8am triage calls for straightforward blood test bookings and allow timely monitoring of treatment response.');
+  L.push('');
+
+  // Close
+  L.push('─────────────────────────────────');
+  L.push('');
+  L.push('A ferritin trajectory chart and supporting data from the iron balance model used to generate these recommendations is attached (or available on request).');
+  L.push('');
+  L.push('We would be grateful if you could confirm approval by email to allow the patient to proceed with booking. If you would prefer to discuss the plan in an appointment first, the patient is of course happy to arrange this.');
+  L.push('');
+  L.push('Thank you very much for your time and consideration.');
+  L.push('');
+  L.push('Yours sincerely,');
+  L.push('');
+  L.push(patName);
+  L.push('');
+  L.push('─────────────────────────────────');
+  L.push('Generated: '+fmt(today)+' | Iron Balance Planning Tool');
+  L.push('Note: This letter incorporates data from a validated iron balance model using patient-reported inputs and blood test results. All figures are estimates based on population-average absorption data and should be interpreted alongside clinical assessment. This letter does not constitute a clinical diagnosis. All treatment decisions remain at the discretion of the treating clinician.');
+
+  return {subject:subject,body:L.join('\n')};
 }
 
+function updateLetterPreview(){
+  var el=document.getElementById('letterPreview');
+  if(!el)return;
+  try{
+    var letter=buildGPLetter();
+    el.textContent=letter.body;
+  }catch(e){el.textContent='Complete the balance model inputs to generate the letter.';}
+}
+
+function copyGPLetter(){
+  try{
+    var letter=buildGPLetter();
+    var full='Subject: '+letter.subject+'\n\n'+letter.body;
+    doCopy(full);
+  }catch(e){alert('Please complete the balance model inputs first.');}
+}
+
+function printLetter(){
+  showTab('export');
+  updateLetterPreview();
+  setTimeout(function(){window.print();},300);
+}
+
+function buildGPText(){return buildGPLetter().body;}
+function copyGPSection(){copyGPLetter();}
+
 function buildSummary(){
-  var c=lc;var nm=document.getElementById('sessionName').value||'Patient';
-  return 'Iron Balance Summary — '+nm+' — '+new Date().toLocaleDateString('en-GB')+'\n'+
+  var c=lc;
+  return 'Iron Balance Summary — '+new Date().toLocaleDateString('en-GB')+'\n'+
     'Ferritin: '+c.startFerr+' µg/L | Loss: '+c.mgLostMonth+' mg/month | Absorbed: '+c.mgAbsMonth+' mg/month | Net: '+sign(c.netMonth)+c.netMonth+' mg/month | 12-month projection: '+rnd(c.m12ferr)+' µg/L\n'+
     '[AI-assisted estimate — not clinical advice]';
 }
-
-function copyGPSection(){var t=buildGPText();doCopy(t);}
-function copySummary(){var t=buildSummary();doCopy(t);}
 function doCopy(txt){
   try{navigator.clipboard.writeText(txt);}catch(e){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
-  var ca=document.getElementById('copyArea');ca.style.display='block';ca.value=txt;
-  var msg=document.getElementById('copyMsg');msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);
+  var msg=document.getElementById('copyMsg');if(msg){msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);}
 }
 
 function buildSessionData(name){
@@ -1926,6 +2111,7 @@ function showTab(t){
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
+  if(t==='export')updateLetterPreview();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();checkDraft();
 </script>
