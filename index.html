@@ -385,7 +385,8 @@ button:hover{background:#f1f5f9}
 <!-- PHASE 1 -->
 <div class="card" style="margin-bottom:1.25rem">
   <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px">Phase 1 — Recovery</div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:12px">How long to reach your target ferritin, and how an infusion would change that.</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:8px">How long to reach your target ferritin at the dose set in the Balance Model tab, and how an infusion would change that.</div>
+  <div id="stratPhase1DoseNote" style="font-size:12px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;margin-bottom:12px;color:#854d0e;line-height:1.5"></div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
     <div class="pf">
@@ -413,7 +414,7 @@ button:hover{background:#f1f5f9}
 </div>
 
 <!-- PHASE 2 -->
-<div class="card">
+<div class="card" style="margin-bottom:1.25rem">
   <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px">Phase 2 — Maintenance</div>
   <div style="font-size:12px;color:#64748b;margin-bottom:12px">The minimum ongoing supplementation needed to stay level — covering losses exactly, neither recovering nor depleting.</div>
 
@@ -424,6 +425,12 @@ button:hover{background:#f1f5f9}
     <div style="font-size:11px;font-weight:600;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Alternate-day dosing note</div>
     <div id="stratAltDayText" style="font-size:12px;color:#475569;line-height:1.6"></div>
   </div>
+</div>
+
+<!-- PLAN SUMMARY BOX -->
+<div id="stratSummaryBox" style="background:#0f172a;border-radius:10px;padding:16px 20px;color:#f1f5f9">
+  <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:10px">Planned strategy — summary</div>
+  <div id="stratSummaryText" style="font-size:13px;line-height:1.8;color:#e2e8f0"></div>
 </div>
 </div>
 </div>
@@ -1938,6 +1945,30 @@ function calcStrategy(){
   var phase1Text=document.getElementById('stratPhase1Text');
   if(!phase1Grid||!phase1Text)return;
 
+  // ── PHASE 1 DOSE NOTE ──
+  var doseNote=document.getElementById('stratPhase1DoseNote');
+  if(doseNote){
+    var suppDose=c.suppDose||0;
+    var oralIntol=conds['oral-intol'];
+    if(oralIntol){
+      doseNote.innerHTML='<strong>Oral iron intolerance is flagged.</strong> Phase 1 recovery is modelled without oral supplementation — recovery depends on '+( ivDose>0?'the infusion selected below.':'an infusion (none currently selected — choose one above to model the effect).');
+      doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
+    } else if(suppDose===0){
+      doseNote.innerHTML='⚠️ <strong>No supplement is set in the Balance Model tab.</strong> Phase 1 recovery rate is based on diet alone — ferritin will not recover without supplementation or an infusion. Go to the Balance Model tab and set a supplement dose to model oral recovery.';
+      doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
+    } else {
+      // Translate elemental dose to practical tablets
+      var fsTabsPerDay=suppDose/65;
+      var tabDesc='';
+      if(fsTabsPerDay<=0.5) tabDesc='a low dose — less than one ferrous sulfate tablet per day. Consider using ferrous bisglycinate (typically 20–25mg elemental per capsule) as a lower-dose option.';
+      else if(fsTabsPerDay<=1.2) tabDesc='equivalent to approximately <strong>1 ferrous sulfate tablet (200mg) per day</strong>, providing 65mg elemental iron.';
+      else if(fsTabsPerDay<=2.2) tabDesc='equivalent to approximately <strong>2 ferrous sulfate tablets (200mg each) per day</strong>, providing 130mg elemental iron.';
+      else tabDesc='equivalent to approximately <strong>'+Math.round(fsTabsPerDay)+' ferrous sulfate tablets (200mg each) per day</strong>, providing '+suppDose+'mg elemental iron. Note: above 200mg elemental/day absorption is unlikely to increase — see the supplement slider tooltip.';
+      doseNote.innerHTML='<strong>Phase 1 uses the supplement dose set in the Balance Model tab: '+suppDose+' mg elemental iron per day</strong> — '+tabDesc+' To change the recovery dose, adjust the supplement slider on the Balance Model tab.';
+      doseNote.style.background='#fefce8';doseNote.style.borderColor='#fde047';doseNote.style.color='#854d0e';
+    }
+  }
+
   var noIVMonths,ivMonths;
   var noIVMsg='',ivMsg='';
 
@@ -2057,6 +2088,59 @@ function calcStrategy(){
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
 
   altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, an every-other-day dose of approximately <strong>'+mAltDayR+' mg elemental iron</strong> ('+Math.ceil(mAltDayR/65)+' ferrous sulfate tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+') is expected to match the absorption of '+mDailyR+' mg taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+
+  // ── PLAN SUMMARY BOX ──
+  var summaryEl=document.getElementById('stratSummaryText');
+  if(summaryEl){
+    var suppDoseS=c.suppDose||0;
+    var oralIntolS=conds['oral-intol'];
+    var summaryLines=[];
+
+    // Phase 1 sentence
+    var p1Desc='';
+    if(oralIntolS&&ivDose>0){
+      p1Desc='<strong>Phase 1 — Recovery:</strong> A '+ivDose+' mg IV infusion to raise ferritin rapidly to approximately '+rnd(startFerr+mg2f(ivDose))+' µg/L. No oral supplementation (oral intolerance documented).';
+    } else if(ivDose>0&&suppDoseS>0){
+      var p1Mo=noIVMonths===null?'an unknown period':ivMonths===0?'immediately':ivMonths+' month'+(ivMonths===1?'':'s');
+      var fsD=Math.round(suppDoseS/65*10)/10;
+      var fsTabStr=fsD<=1.2?'1 ferrous sulfate tablet (200mg) daily':fsD<=2.2?'2 ferrous sulfate tablets (200mg) daily':Math.round(fsD)+' ferrous sulfate tablets (200mg) daily';
+      p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion at the start, then continue '+suppDoseS+' mg elemental iron/day ('+fsTabStr+') until '+target+' µg/L is reached — estimated '+p1Mo+'.';
+    } else if(suppDoseS>0){
+      var fsD2=Math.round(suppDoseS/65*10)/10;
+      var fsTabStr2=fsD2<=1.2?'1 ferrous sulfate tablet (200mg) daily':fsD2<=2.2?'2 ferrous sulfate tablets (200mg) daily':Math.round(fsD2)+' ferrous sulfate tablets (200mg) daily';
+      var p1Mo2=noIVMonths===null?'an unknown period (balance is not currently positive — review dose)':noIVMonths===0?'already at target':noIVMonths+' month'+(noIVMonths===1?'':'s');
+      p1Desc='<strong>Phase 1 — Recovery:</strong> Take '+suppDoseS+' mg elemental iron per day ('+fsTabStr2+') until ferritin reaches '+target+' µg/L — estimated '+p1Mo2+'.';
+    } else if(ivDose>0){
+      p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion. No oral supplement currently set — consider adding one to accelerate recovery if tolerated.';
+    } else {
+      p1Desc='<strong>Phase 1 — Recovery:</strong> No supplement or infusion currently set. Set a dose in the Balance Model tab or select an infusion above to model recovery.';
+    }
+    summaryLines.push(p1Desc);
+
+    // Phase 2 sentence
+    var p2Desc='';
+    if(deficitAfterDiet<=0){
+      p2Desc='<strong>Phase 2 — Maintenance:</strong> Diet alone is sufficient to cover losses — no ongoing supplement is needed once the target is reached. Monitor ferritin every 3–6 months.';
+    } else {
+      var r5S=function(n){return Math.ceil(n/5)*5;};
+      var mDailyS=r5S(deficitAfterDiet/(0.04*30));
+      var fsWk=Math.ceil(mDailyS/65*30/4.3);
+      var wkDesc=fsWk===1?'1 ferrous sulfate tablet (200mg) per week':fsWk+' ferrous sulfate tablets (200mg) per week, spread a few days apart';
+      p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+mDailyS+' mg elemental iron per day — equivalent to '+wkDesc+'. This covers the net deficit of '+rnd(deficitAfterDiet)+' mg/month after diet.';
+    }
+    summaryLines.push(p2Desc);
+
+    // Outcome sentence
+    var outcomeDesc='';
+    if(suppDoseS>0||ivDose>0){
+      outcomeDesc='<strong>Expected outcome:</strong> If followed consistently, ferritin should reach and hold at '+target+' µg/L'+( deficitAfterDiet>0?' with ongoing maintenance dosing':' — diet alone can sustain this level')+'. If results are not tracking as expected despite good adherence, this may indicate an absorption issue worth investigating (e.g. timing of doses, antacid use, coeliac disease, or H. pylori).';
+    } else {
+      outcomeDesc='<strong>Expected outcome:</strong> No treatment currently modelled. Set a supplement dose or infusion to generate a plan.';
+    }
+    summaryLines.push(outcomeDesc);
+
+    summaryEl.innerHTML=summaryLines.map(function(l){return '<p style="margin:0 0 8px 0">'+l+'</p>';}).join('');
+  }
 
   // ── BUILD SCENARIO LINE FOR CHART ──
   // Phase 1: current supplement dose (from Balance Model) drives recovery — same rate as blue line
