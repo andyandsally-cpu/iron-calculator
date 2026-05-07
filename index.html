@@ -124,11 +124,266 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div class="tabs">
+  <button class="tab" onclick="showTab('about')">About iron &amp; ferritin</button>
   <button class="tab active" onclick="showTab('model')">Balance model</button>
   <button class="tab" onclick="showTab('actual')">Actual results</button>
   <button class="tab" onclick="showTab('infusion')">Infusion planner</button>
   <button class="tab" onclick="showTab('strategy')">Strategy</button>
-  <button class="tab" onclick="showTab('export')">Analysis &amp; export</button>
+  <button class="tab" onclick="showTab('tips')">Tips &amp; what-if</button>
+  <button class="tab" onclick="showTab('export')">GP letter</button>
+</div>
+
+<div id="tab-about" style="display:none">
+<div class="section">
+
+<!-- HEADER -->
+<div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d6a9f 100%);border-radius:12px;padding:20px 24px;margin-bottom:1.25rem;color:#f1f5f9">
+  <div style="font-size:22px;font-weight:700;margin-bottom:6px">Iron &amp; ferritin — what you actually need to know</div>
+  <div style="font-size:13px;color:#94a3b8;line-height:1.6">Being told "your bloods are fine" when you feel terrible is one of the most common and frustrating experiences with iron deficiency. This page explains why that happens — and why ferritin is the number that actually matters.</div>
+</div>
+
+<!-- PANEL 1: Iron vs Ferritin -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:14px">1. Iron and ferritin are not the same thing</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:12px;text-align:center">
+      <div style="font-size:22px;margin-bottom:6px">🩸</div>
+      <div style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:4px">Haemoglobin</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">Iron in red blood cells. Carries oxygen around the body. What GPs test for anaemia.</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:12px;text-align:center">
+      <div style="font-size:22px;margin-bottom:6px">🏪</div>
+      <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:4px">Ferritin</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">Iron stored inside cells. Your body's iron reserve — like a depot. This is the number that matters.</div>
+    </div>
+    <div style="background:#fefce8;border:1px solid #fde047;border-radius:9px;padding:12px;text-align:center">
+      <div style="font-size:22px;margin-bottom:6px">🚚</div>
+      <div style="font-size:12px;font-weight:700;color:#a16207;margin-bottom:4px">Serum iron</div>
+      <div style="font-size:11px;color:#475569;line-height:1.5">Iron travelling in the blood at that moment. Fluctuates constantly — not reliable on its own.</div>
+    </div>
+  </div>
+  <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:11px 14px;font-size:12px;color:#991b1b;line-height:1.6">
+    <strong>The key point:</strong> You can have normal haemoglobin, normal serum iron, and low ferritin — all at the same time. This is called <em>iron deficiency without anaemia</em>. Your GP may say "your bloods are fine" because haemoglobin looks normal. But ferritin tells a different story.
+  </div>
+</div>
+
+<!-- PANEL 2: Priority Hierarchy Diagram -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:6px">2. Why you feel terrible even when "bloods are normal"</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:14px;line-height:1.55">When iron is in short supply, your body doesn't share it equally. It follows a strict priority order — protecting the most critical functions first, rationing to everything else.</div>
+
+  <!-- Priority flow diagram -->
+  <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:0 auto 14px">
+    <!-- Priority 1: Survival -->
+    <rect x="10" y="10" width="200" height="90" rx="10" fill="#1e3a5f"/>
+    <text x="110" y="35" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#f1f5f9">PRIORITY 1</text>
+    <text x="110" y="52" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#ffffff">Blood oxygen</text>
+    <text x="110" y="68" text-anchor="middle" font-family="Arial" font-size="10" fill="#93c5fd">Haemoglobin protected first</text>
+    <text x="110" y="83" text-anchor="middle" font-family="Arial" font-size="10" fill="#93c5fd">Survival depends on this</text>
+    <text x="110" y="98" text-anchor="middle" font-family="Arial" font-size="10" fill="#6ee7b7">✓ Looks normal on blood test</text>
+
+    <!-- Arrow 1→2 -->
+    <line x1="215" y1="55" x2="255" y2="55" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arr)"/>
+    <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#cbd5e1"/></marker></defs>
+    <text x="235" y="48" text-anchor="middle" font-family="Arial" font-size="9" fill="#94a3b8">then</text>
+
+    <!-- Priority 2: Important -->
+    <rect x="260" y="10" width="200" height="90" rx="10" fill="#374151"/>
+    <text x="360" y="35" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#d1d5db">PRIORITY 2</text>
+    <text x="360" y="52" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#ffffff">Vital organs</text>
+    <text x="360" y="68" text-anchor="middle" font-family="Arial" font-size="10" fill="#d1d5db">Heart, liver, kidneys</text>
+    <text x="360" y="83" text-anchor="middle" font-family="Arial" font-size="10" fill="#d1d5db">Iron maintained if possible</text>
+    <text x="360" y="98" text-anchor="middle" font-family="Arial" font-size="10" fill="#6ee7b7">✓ Usually looks OK on tests</text>
+
+    <!-- Arrow 2→3 -->
+    <line x1="465" y1="55" x2="505" y2="55" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="485" y="48" text-anchor="middle" font-family="Arial" font-size="9" fill="#94a3b8">then</text>
+
+    <!-- Priority 3: Rationed -->
+    <rect x="510" y="10" width="160" height="90" rx="10" fill="#7f1d1d"/>
+    <text x="590" y="35" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fecaca">LAST PRIORITY</text>
+    <text x="590" y="52" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#ffffff">Brain, muscle</text>
+    <text x="590" y="68" text-anchor="middle" font-family="Arial" font-size="10" fill="#fca5a5">nerves, hair, immune</text>
+    <text x="590" y="83" text-anchor="middle" font-family="Arial" font-size="10" fill="#fca5a5">Gets minimum only</text>
+    <text x="590" y="98" text-anchor="middle" font-family="Arial" font-size="10" fill="#fca5a5">✗ Not tested — you just feel it</text>
+
+    <!-- Ferritin depleting arrows down -->
+    <text x="340" y="135" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#64748b">When ferritin (your iron stores) runs low...</text>
+    <line x1="340" y1="142" x2="340" y2="162" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+    <!-- Result boxes -->
+    <rect x="10" y="165" width="200" height="70" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+    <text x="110" y="185" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#15803d">Blood tests say NORMAL</text>
+    <text x="110" y="200" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">Haemoglobin: normal ✓</text>
+    <text x="110" y="215" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">Serum iron: normal ✓</text>
+    <text x="110" y="228" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">GP says: "nothing wrong"</text>
+
+    <rect x="240" y="165" width="200" height="70" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="340" y="185" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#b91c1c">But you feel terrible</text>
+    <text x="340" y="200" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">Ferritin: LOW ✗</text>
+    <text x="340" y="215" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">Tissues: rationed iron</text>
+    <text x="340" y="228" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">Reality: iron deficient</text>
+
+    <rect x="470" y="165" width="200" height="70" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+    <text x="570" y="185" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#c2410c">Both can be true</text>
+    <text x="570" y="200" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">at the same time</text>
+    <text x="570" y="215" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">"Fine bloods" ≠</text>
+    <text x="570" y="228" text-anchor="middle" font-family="Arial" font-size="10" fill="#475569">"No iron problem"</text>
+
+    <!-- Connecting lines to result boxes -->
+    <line x1="110" y1="102" x2="110" y2="163" stroke="#86efac" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="340" y1="102" x2="340" y2="163" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+    <!-- Fuel depot analogy label -->
+    <text x="340" y="260" text-anchor="middle" font-family="Arial" font-size="11" font-style="italic" fill="#64748b">Think of it like this: the motorway (blood) looks busy and flowing — but the fuel depot (ferritin) is nearly empty.</text>
+    <text x="340" y="278" text-anchor="middle" font-family="Arial" font-size="11" font-style="italic" fill="#64748b">Local users (brain, muscles) can't get enough fuel — even though the motorway looks fine from above.</text>
+    <text x="340" y="296" text-anchor="middle" font-family="Arial" font-size="11" font-style="italic" fill="#64748b">Anaemia only happens when the depot hits absolute zero — long after symptoms have already started.</text>
+  </svg>
+</div>
+
+<!-- PANEL 3: Symptom recognition -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:6px">3. Recognising low ferritin symptoms</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.55">These symptoms are caused by tissues — particularly brain, muscles, and nerves — not getting enough iron to function properly. They are frequently misattributed to stress, depression, burnout, or "just being tired." If you have several of these alongside low ferritin, they are very likely connected.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <!-- Left column -->
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Energy &amp; physical</div>
+      <div style="display:grid;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">😴</span><span><strong>Fatigue &amp; low stamina</strong> — tired despite sleep, hits a wall</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🏃</span><span><strong>Poor exercise tolerance</strong> — out of breath quickly, slow recovery</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">💓</span><span><strong>Palpitations or dizziness</strong> — heart working harder to compensate</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🤕</span><span><strong>Headaches</strong> — particularly tension-type, frequent</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">❄️</span><span><strong>Feeling cold</strong> — especially hands and feet</span></div>
+      </div>
+    </div>
+    <!-- Right column -->
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Brain &amp; mood</div>
+      <div style="display:grid;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#ede9fe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🧠</span><span><strong>Brain fog</strong> — difficulty concentrating, slow thinking, poor memory</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#ede9fe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">😔</span><span><strong>Low mood or anxiety</strong> — iron is needed for neurotransmitter production</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#ede9fe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">😤</span><span><strong>Irritability</strong> — low frustration tolerance, emotional dysregulation</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ede9fe;border-radius:6px;gap:8px"><span style="width:28px;height:28px;background:#ede9fe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:#1e293b">💇</span><span style="color:#1e293b"><strong>Hair loss</strong> — telogen effluvium; diffuse shedding, often delayed 2–3 months</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b"><span style="width:28px;height:28px;background:#ede9fe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🦵</span><span><strong>Restless legs</strong> — uncomfortable urge to move legs, worse at night</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#f8fafc;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;padding:10px 14px;font-size:12px;color:#475569;line-height:1.6">
+    <strong>Why these symptoms are so often missed:</strong> Because haemoglobin looks normal, doctors and patients assume iron is fine. These symptoms get attributed to stress, poor sleep, anxiety, or "just being run down." Many people normalise them and stop mentioning them. The connection to low ferritin is only made when someone specifically tests ferritin — which is not always done as a matter of course.
+  </div>
+</div>
+
+<!-- PANEL 4: The cycle diagram -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:6px">4. Why people get stuck in a long-term cycle</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.55">This pattern is extremely common — and the reason this tool exists.</div>
+
+  <svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:660px;display:block;margin:0 auto 12px">
+    <!-- Cycle nodes -->
+    <!-- Node 1 -->
+    <rect x="10" y="70" width="110" height="60" rx="8" fill="#7f1d1d"/>
+    <text x="65" y="94" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">Ferritin drops</text>
+    <text x="65" y="110" text-anchor="middle" font-family="Arial" font-size="10" fill="#fca5a5">symptoms worsen</text>
+    <text x="65" y="122" text-anchor="middle" font-family="Arial" font-size="10" fill="#fca5a5">feel exhausted</text>
+    <!-- Arrow 1→2 -->
+    <line x1="122" y1="100" x2="145" y2="100" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker></defs>
+    <!-- Node 2 -->
+    <rect x="148" y="70" width="110" height="60" rx="8" fill="#92400e"/>
+    <text x="203" y="94" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">GP visit</text>
+    <text x="203" y="110" text-anchor="middle" font-family="Arial" font-size="10" fill="#fde68a">bloods checked</text>
+    <text x="203" y="122" text-anchor="middle" font-family="Arial" font-size="10" fill="#fde68a">haemoglobin normal</text>
+    <!-- Arrow 2→3 -->
+    <line x1="260" y1="100" x2="283" y2="100" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <!-- Node 3 -->
+    <rect x="286" y="70" width="110" height="60" rx="8" fill="#1e3a5f"/>
+    <text x="341" y="88" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">Short course</text>
+    <text x="341" y="104" text-anchor="middle" font-family="Arial" font-size="10" fill="#93c5fd">of iron tablets</text>
+    <text x="341" y="116" text-anchor="middle" font-family="Arial" font-size="10" fill="#93c5fd">or reassurance</text>
+    <text x="341" y="128" text-anchor="middle" font-family="Arial" font-size="10" fill="#93c5fd">"come back if worse"</text>
+    <!-- Arrow 3→4 -->
+    <line x1="398" y1="100" x2="421" y2="100" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <!-- Node 4 -->
+    <rect x="424" y="70" width="110" height="60" rx="8" fill="#14532d"/>
+    <text x="479" y="88" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">Feels slightly</text>
+    <text x="479" y="104" text-anchor="middle" font-family="Arial" font-size="10" fill="#86efac">better</text>
+    <text x="479" y="116" text-anchor="middle" font-family="Arial" font-size="10" fill="#86efac">stops treatment</text>
+    <text x="479" y="128" text-anchor="middle" font-family="Arial" font-size="10" fill="#86efac">ferritin never rebuilt</text>
+    <!-- Arrow 4→back to 1 (curved below) -->
+    <path d="M534,130 Q600,170 600,100 Q600,30 65,30 Q40,30 40,68" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+    <text x="600" y="170" text-anchor="middle" font-family="Arial" font-size="10" fill="#94a3b8">repeats</text>
+    <!-- Break the cycle label -->
+    <text x="330" y="190" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#dc2626">This tool exists to break this cycle — with a structured plan, monitoring, and evidence to support your GP conversation.</text>
+  </svg>
+</div>
+
+<!-- PANEL 5: Not urgent but not unimportant -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:12px">5. "Not urgent" does not mean "not important"</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:9px;padding:14px">
+      <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:8px">✓ What is true</div>
+      <div style="font-size:12px;color:#475569;line-height:1.7">
+        Low ferritin is rarely an emergency<br>
+        It does not usually need same-day treatment<br>
+        Most cases can be managed in primary care<br>
+        Symptoms are real and documentable<br>
+        A plan works — if followed properly
+      </div>
+    </div>
+    <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:9px;padding:14px">
+      <div style="font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:8px">✗ What is also true</div>
+      <div style="font-size:12px;color:#475569;line-height:1.7">
+        "Not urgent" ≠ "fine to ignore"<br>
+        Doing nothing is not neutral<br>
+        The body stays in iron-rationing mode<br>
+        Symptoms become chronic and normalised<br>
+        Risk of eventual anaemia increases
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:11px 14px;font-size:12px;color:#0369a1;line-height:1.6">
+    <strong>What chronic low ferritin actually means:</strong> The body has been running on minimum iron for an extended period. Brain, muscle, and nerve cells have been receiving the bare minimum to function — not enough for optimal performance. This is not a minor inconvenience. It affects work, mood, physical capacity, and quality of life. It deserves a clear plan, not repeated reassurance.
+  </div>
+</div>
+
+<!-- PANEL 6: What ferritin numbers mean -->
+<div class="card">
+  <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:12px">6. What your ferritin number actually means</div>
+  <div style="display:grid;gap:8px">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#fef2f2;border:1px solid #fecaca">
+      <div style="font-size:20px;font-weight:800;color:#dc2626;min-width:60px;text-align:center">&lt;15</div>
+      <div><div style="font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:2px">Critically depleted — absent iron stores</div><div style="font-size:11px;color:#475569;line-height:1.5">BSH/WHO diagnostic threshold for iron deficiency. Clinical review recommended before self-managing. Symptoms are expected and significant.</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa">
+      <div style="font-size:20px;font-weight:800;color:#ea580c;min-width:60px;text-align:center">15–30</div>
+      <div><div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:2px">Depleted stores — symptoms likely</div><div style="font-size:11px;color:#475569;line-height:1.5">Below BSH depleted stores threshold. Iron deficiency is present even if haemoglobin is normal. Supplementation and monitoring indicated.</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#fefce8;border:1px solid #fde047">
+      <div style="font-size:20px;font-weight:800;color:#ca8a04;min-width:60px;text-align:center">30–50</div>
+      <div><div style="font-size:12px;font-weight:700;color:#a16207;margin-bottom:2px">Below optimal — symptoms may persist</div><div style="font-size:11px;color:#475569;line-height:1.5">Some iron reserve present but below the level at which most people feel well. Symptoms of fatigue, brain fog and hair loss commonly persist in this range.</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#f0fdf4;border:1px solid #86efac">
+      <div style="font-size:20px;font-weight:800;color:#15803d;min-width:60px;text-align:center">50–100</div>
+      <div><div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:2px">Recommended minimum — most symptoms resolve</div><div style="font-size:11px;color:#475569;line-height:1.5">BSH recommended minimum for menstruating women. At this level tissues receive adequate iron. Most people notice meaningful improvement in energy, cognition and mood.</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#f0f9ff;border:1px solid #bae6fd">
+      <div style="font-size:20px;font-weight:800;color:#0369a1;min-width:60px;text-align:center">100+</div>
+      <div><div style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:2px">Well-repleted — optimal buffer</div><div style="font-size:11px;color:#475569;line-height:1.5">Comfortable iron reserve. Typically achieved after IV infusion. Provides headroom against ongoing monthly losses. Maintenance dosing keeps it stable.</div></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:#94a3b8;text-align:center">Many people do not feel consistently well until ferritin reaches 70–100 µg/L — even though labs may report anything above 13 as "normal."</div>
+</div>
+
+<!-- CTA -->
+<div style="text-align:center;padding:16px 0 4px">
+  <button onclick="showTab('model')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Start the balance model →</button>
+</div>
+
+</div>
 </div>
 
 <div id="tab-model">
@@ -154,10 +409,10 @@ button:hover{background:#f1f5f9}
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 5 days (UK average). Endometriosis/adenomyosis toggle increases default to 9 days.</div><div class="tt-n">Normal: 3–7 days per cycle</div><div class="tt-s">Source: NICE CG44. Heavy menstrual bleeding (HMB) is defined as >7 days duration or >80ml per cycle. Prolonged bleeding is the primary driver of iron depletion in menstruating women.</div></div></div>
   </div>
   <div class="row">
-    <label>Flow intensity</label>
+    <label>Flow intensity<br><span style="font-size:11px;color:#94a3b8">if unsure, select next category up — blood loss is often underestimated</span></label>
     <div class="sw"><div class="rb" id="rb-flowInt"></div><input type="range" id="flowInt" min="1" max="5" value="2" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="flowIntV" style="font-size:13px;font-weight:500">Light</span><span class="badge" id="bfi"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: Light-Medium. Endometriosis/adenomyosis toggle increases to Heavy.</div><div class="tt-n">Normal: 1–3 (Light to Medium)</div><div class="tt-s">Approximate volumes per cycle: Very light ~10ml, Light ~20ml, Medium ~45ml, Heavy ~80ml, Very heavy ~120ml+. Clot passage typically indicates Heavy or above. HMB threshold: >80ml. Source: BSH menorrhagia guidelines.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: Light-Medium. Endometriosis/adenomyosis toggle increases to Heavy.</div><div class="tt-n">If unsure, select the next category up — blood loss is commonly underestimated, particularly with heavy periods. Teenagers and those who have always had heavy periods often have no baseline for comparison.</div><div class="tt-s"><strong>Very light:</strong> Spotting only. 1–2 light pads/day max. No clots. Lasts 1–3 days.<br><strong>Light:</strong> Change a regular pad every 4–6 hours. No clots or very small ones.<br><strong>Moderate:</strong> Change every 2–4 hours at peak. Occasional small clots. Some cramping.<br><strong>Heavy:</strong> Change every 1–2 hours at peak. Clots larger than a 50p coin. Sometimes flood through. Affects daily activities. HMB clinical threshold: &gt;80ml/cycle.<br><strong>Very heavy:</strong> Change hourly or more. Large clots regularly. Frequently flood through to clothing or bedding. Significantly affects work and social life — you plan activities around your period.<br><br>Source: NICE NG88 (HMB); BSH menorrhagia guidelines.</div></div></div>
   </div>
   <div class="note" id="bleedNote"></div>
 </div>
@@ -263,10 +518,13 @@ button:hover{background:#f1f5f9}
     <div style="display:flex;align-items:center;gap:3px"><span id="startFerrV" style="font-size:13px;font-weight:500">25</span><span class="badge" id="bsf"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 25 µg/L. Set to the patient's most recent measured ferritin result.</div><div class="tt-n">Optimal for menstruating women: 50–150 µg/L</div><div class="tt-s">Source: BSH/NICE. Lab lower limit ≈13 µg/L. Symptoms (fatigue, brain fog, poor exercise tolerance) typically appear below 30–50 µg/L even without anaemia. Post-IV infusion ferritin typically rises to 150–250 µg/L. Model uses 1 µg/L ≈ 8 mg stored iron.</div></div></div>
   </div>
+  <div id="startFerrCritNote" style="display:none;margin:4px 0 8px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
+    ⚠️ <strong>Ferritin below 15 µg/L — critically depleted stores.</strong> At this level, absent iron stores are likely (BSH/WHO threshold). Clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause requiring investigation.
+  </div>
   <div style="font-size:12px;color:#64748b;margin-bottom:6px">IV infusions — month from start, dose in mg:</div>
   <div id="infusionList"></div>
   <button onclick="addInfusion()">+ Add infusion</button>
-  <p class="note">Typical NHS infusion: 500–1000 mg (Ferinject / ferric carboxymaltose, or iron isomaltoside). Raises ferritin by approx 60–125 µg/L per 1000 mg in absence of ongoing significant loss. Source: Ferinject SPC / NICE CG189.</p>
+  <p class="note">Typical NHS infusion: 500–1000 mg (Ferinject / ferric carboxymaltose, or iron isomaltoside). Raises ferritin by approx 60–125 µg/L per 1000 mg in absence of ongoing significant loss — actual response varies widely (±50% or more) depending on inflammation and iron utilisation. Source: Ferinject SPC / BSH 2021 guideline on management of iron deficiency in adults.</p>
 </div>
 </div>
 
@@ -431,7 +689,101 @@ button:hover{background:#f1f5f9}
 <div id="stratSummaryBox" style="background:#0f172a;border-radius:10px;padding:16px 20px;color:#f1f5f9">
   <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:10px">Planned strategy — summary</div>
   <div id="stratSummaryText" style="font-size:13px;line-height:1.8;color:#e2e8f0"></div>
+  <div style="margin-top:12px;padding-top:10px;border-top:1px solid #1e3a5f;font-size:11px;color:#64748b;line-height:1.5">⚠️ This is a modelled plan for discussion with your GP — not a prescription. Do not start or change doses without clinical review.</div>
 </div>
+</div>
+</div>
+
+<div id="tab-tips" style="display:none">
+<div class="section">
+<div class="st">Tips &amp; what-if explorer</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:1rem;line-height:1.5">This tab explores what difference practical changes could make to your ferritin trajectory — completely separately from your main plan. Toggle options to see the estimated effect on the chart below. All projections are illustrative estimates based on your current balance model settings.</p>
+
+<!-- SECTION 1: DIET & ABSORPTION TIPS -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px">Section 1 — Diet &amp; absorption optimisation</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px">Toggle changes to see their combined estimated effect on ferritin over 12 months. Effects are applied to dietary iron absorption — not to supplement dose.</div>
+  <div id="tipsDietToggles" style="display:grid;gap:8px"></div>
+</div>
+
+<!-- SECTION 2: WHAT IF THE UNDERLYING CAUSE WERE ADDRESSED -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px">Section 2 — What if the underlying cause were addressed?</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px">These scenarios show the estimated effect of addressing the root causes of iron loss or poor absorption — for GP discussion only. These are not treatment recommendations.</div>
+  
+  <!-- Hormone treatment -->
+  <div id="tipsHormoneSection" style="margin-bottom:14px">
+    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px">Menstrual loss reduction (hormone treatment)</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.55">For heavy periods, hormone treatments can dramatically reduce monthly blood loss — which is often far more effective than increasing iron intake. Select a treatment to see the indicative effect on ferritin trajectory.</div>
+    <select id="tipsHormoneTx" onchange="calcTips()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;margin-bottom:8px">
+      <option value="0">No hormone treatment — current loss unchanged</option>
+      <option value="45">Combined oral contraceptive pill — reduces loss by ~45% (NICE NG88)</option>
+      <option value="50">Tranexamic acid — reduces loss by ~50% (NICE NG88; non-hormonal)</option>
+      <option value="80">Norethisterone — reduces loss by ~80% (variable; NICE NG88)</option>
+      <option value="85">Mirena IUS (hormonal coil) — reduces loss by ~85% on average (NICE NG88)</option>
+    </select>
+    <div id="tipsHormoneNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
+  </div>
+
+  <!-- Inflammation -->
+  <div>
+    <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px">Gut inflammation / chronic stress resolution</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.55">Chronic inflammation (gut, autoimmune, or stress-related) raises hepcidin, which blocks iron from entering the bloodstream even when absorption is occurring. Resolving inflammation can substantially improve effective absorption.</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div class="tog" id="tog-tips-inflam" onclick="toggleTipInflam()" style="font-size:12px">Inflammation resolved</div>
+      <span style="font-size:12px;color:#64748b">— restores absorption to full tiered rate for current ferritin level</span>
+    </div>
+    <div id="tipsInflamNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
+  </div>
+</div>
+
+<!-- TIPS CHART -->
+<div class="section" style="margin-top:0">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px" id="tipsChartTitle">Effect on ferritin trajectory</div>
+  <div style="font-size:11px;color:#94a3b8;font-style:italic;margin-bottom:8px">Illustrative estimates only — individual results vary significantly. For discussion with your GP, not for self-prescribing.</div>
+  <div id="tipsChartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+  <div style="position:relative;width:100%;height:260px"><canvas id="tipsChart"></canvas></div>
+  <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="tipsChartLegend"></div>
+</div>
+
+<!-- SECTION 3: WORTH KNOWING -->
+<div class="card" style="margin-top:1.25rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:12px">Section 3 — Worth knowing</div>
+  <div style="display:grid;gap:10px">
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">🏃 Exercise — be aware, not alarmed</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Moderate exercise is beneficial overall and does not impair iron absorption. However heavy endurance training (marathon running, cycling, triathlon) increases iron demand through three mechanisms: foot-strike haemolysis (red blood cells destroyed on impact), sweat iron losses, and elevated hepcidin after intense sessions. If you train heavily and have refractory deficiency, exercise-related iron loss may be a contributing factor worth mentioning to your GP.</div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">😴 Sleep &amp; stress</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Poor sleep and chronic stress both elevate inflammatory markers (particularly IL-6), which in turn raise hepcidin and impair iron absorption. The effect is modest compared to heavy periods or gut inflammation, but over time it compounds. Good sleep and stress management support iron recovery — not as a replacement for supplementation, but as a genuine contributor. This is modelled in the inflammation toggle above.</div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">🦠 H. pylori — worth testing if nothing else works</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">H. pylori infection impairs gastric acid production and directly competes for iron at the gut wall. It is a frequently overlooked cause of refractory iron deficiency — meaning deficiency that does not respond to supplementation as expected. If ferritin is not recovering despite good adherence and diet, a simple breath test or stool antigen test for H. pylori is worth requesting. Successful treatment can substantially improve iron absorption long-term.</div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">🍳 Cast iron cookware</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Cooking acidic foods (tomatoes, citrus sauces, stews) in cast iron pans leaches small amounts of iron into the food — typically 1–3mg per serving depending on cooking time and acidity. This is non-haem iron with moderate bioavailability. It is a genuine if modest contribution — roughly equivalent to adding a small portion of iron-rich vegetables to a meal. Worth doing, but in the context of a 30–40mg/month deficit from heavy periods, the impact is limited.</div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">🥛 Lactoferrin — emerging evidence</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Bovine lactoferrin is a protein found in colostrum and dairy that appears to improve iron absorption by a different pathway to standard supplementation — it is less affected by hepcidin. Small studies suggest it may improve ferritin in iron-deficient women, with fewer GI side effects than ferrous sulfate. Evidence is not yet strong enough for mainstream recommendation, but it is increasingly used and discussed. Worth mentioning to your GP if standard oral iron is poorly tolerated.</div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:11px 14px">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">🌿 Commonly claimed but evidence is weak</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Blackstrap molasses, spirulina, nettle tea, and beetroot are often promoted for iron. All contain some iron, but bioavailability is generally poor — the food matrix (phytates, oxalates) inhibits absorption significantly. These are not harmful, but the effect on ferritin in a clinically deficient person is negligible compared to supplementation or dietary haem iron. Spinach is a good example: it contains iron but also oxalates that bind it — you absorb very little. Lightly cooked spinach with citrus dressing absorbs better than raw, but it is still non-haem iron with limited effect on stores.</div>
+    </div>
+
+  </div>
+</div>
+
 </div>
 </div>
 
@@ -474,6 +826,7 @@ button:hover{background:#f1f5f9}
 
 <div class="section" style="margin-top:.25rem">
 <div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
 <div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
 <div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
@@ -494,8 +847,7 @@ button:hover{background:#f1f5f9}
 var infusions=[{month:0,dose:1000}];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
-var chartInst=null;
-var historicChartInst=null;
+var tipsChartInst=null;
 window.strategyScenario=null;
 window.revisedScenario=null; // stores revised projection from last actual result
 var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false};
@@ -604,8 +956,10 @@ function calcModifiers(suppDose){
   var antac   = gv('modAntacid')/ 100;
 
   var enhancer = 1 + (vitC * 0.50) + (timing * 0.25);
-  var inhibitor = Math.max(1 - (tea*0.35) - (ca*0.25) - (antac*0.40), 0.30);
-  var multiplier = enhancer * inhibitor;
+  // Inhibitors do not stack perfectly multiplicatively — floor at 0.10 (10% of nominal)
+  // prevents unrealistic near-zero absorption when multiple inhibitors are active
+  var inhibitor = Math.max(1 - (tea*0.35) - (ca*0.25) - (antac*0.40), 0.10);
+  var multiplier = Math.max(enhancer * inhibitor, 0.10); // hard floor: never below 10%
 
   // Update display spans
   document.getElementById('modVitCV').textContent    = gv('modVitC')    + '%';
@@ -634,6 +988,7 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   if(!el)return;
   var isObserved=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined;
   var obsLabel=isObserved?'Observed (from results)':'Estimated (literature)';
+  var absRateNote=isObserved?'':(lc&&lc.tieredAbsLabel?' · absorption rate: '+lc.tieredAbsLabel:'');
   var suppTabNote=suppDose>0?' ('+Math.round(suppDose/65*10)/10+' ferrous sulfate 200mg tablets/day)':'';
   var litSupp=suppDose>0?suppDose*0.04*30:0;
   var suppTabLabel=suppDose>0?
@@ -642,7 +997,7 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   el.innerHTML=
     mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
     mc(suppTabLabel,rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo absorbed',suppDose>0?'ok':'neutral')+
-    mc('Total absorbed — '+obsLabel,rnd(mgAbsMonth),'mg/mo',isObserved?(mgAbsMonth>totalLossMonth?'ok':'danger'):'warning')+
+    mc('Total absorbed — '+obsLabel+absRateNote,rnd(mgAbsMonth),'mg/mo',isObserved?(mgAbsMonth>totalLossMonth?'ok':'danger'):'warning')+
     mc('Total losses (menstrual+basal)',rnd(totalLossMonth),'mg/mo',totalLossMonth>50?'danger':totalLossMonth>30?'warning':'ok');
   if(!isObserved){
     var hint=document.getElementById('absDiagnostic');
@@ -669,6 +1024,13 @@ function calc(){
   var startFerr=gv('startFerr')||25;
   var basalLossMonth=30; // ~1mg/day non-menstrual losses (gut lining, skin, sweat)
 
+  // === TIERED ABSORPTION RATE (Change 1) ===
+  // Absorption rate varies with iron status — iron-deficient patients absorb more
+  // Hallberg et al; Moretti et al; BSH 2021 guideline
+  // <15: ~12%, 15-30: ~8%, 30-50: ~5%, >50: ~4%
+  var tieredAbsRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
+  var tieredAbsLabel=startFerr<15?'12% (critically depleted)':startFerr<30?'8% (depleted)':startFerr<50?'5% (below optimal)':'4% (replete)';
+
   document.getElementById('cycleLenV').textContent=post?'N/A':cycleLen+'d';
   document.getElementById('bleedDaysV').textContent=post?'0d':bleedDays+'d';
   document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
@@ -687,11 +1049,13 @@ function calc(){
       tabs<=2.7?'2½ tablets/day':
       Math.round(tabs)+' tablets/day';
     document.getElementById('suppDoseV').textContent=tabPrimary;
-    if(tabVEl) tabVEl.textContent='('+suppDose+'mg elemental)';
+    if(tabVEl) tabVEl.textContent='('+suppDose+'mg iron content)';
   }
   var warnEl=document.getElementById('suppHighDoseWarn');
   if(warnEl) warnEl.style.display=suppDose>200?'block':'none';
-  document.getElementById('startFerrV').textContent=startFerr;
+  document.getElementById('startFerrV').textContent=startFerr+(startFerr<15?' ⚠':'');
+  var critEl=document.getElementById('startFerrCritNote');
+  if(critEl) critEl.style.display=startFerr<15?'block':'none';
 
   updateBadge('bcy',cycleLen,21,35);
   updateBadge('bbd',bleedDays,3,7);
@@ -711,7 +1075,7 @@ function calc(){
   // Use observed data if available (>=2 real results), otherwise use literature defaults
   var derivedAbsMonth=null; // will be set by calcDerived if real data present
   var habitMult=calcModifiers(suppDose); // adjust for tea/vit C/timing habits
-  var suppLitDefault=suppDose>0?Math.min(suppDose*0.04,4.0)*30*habitMult:0; // literature est adjusted for habits
+  var suppLitDefault=suppDose>0?Math.min(suppDose*tieredAbsRate,4.0)*30*habitMult:0; // tiered rate adjusted for habits
   var mgAbsMonthEst=dietNetMonth+suppLitDefault; // estimate when no real data
   var ferrChangePM=mg2f(mgAbsMonthEst-totalLossMonth);
   // Override with derived if calcDerived has computed it
@@ -749,6 +1113,7 @@ function calc(){
   function fmtMonth(offset){var d=new Date(baseDate2.getFullYear(),baseDate2.getMonth()+offset,1);return monthNames2[d.getMonth()]+' '+d.getFullYear();}
   lc={cycleLen,bleedDays,flowIdx,dietQ:dietQIdx,dietIronMgDay:rnd(dietIronMgDay*10)/10,dietNetMonth:rnd(dietNetMonth),suppDose,basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
     startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),totalLossMonth:rnd(totalLossMonth),
+    tieredAbsRate,tieredAbsLabel,
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
 
@@ -780,7 +1145,7 @@ function calc(){
   var stopLine=null;
   if(hasStrategy&&lc){
     var sc2=window.strategyScenario;
-    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*0.04,4.0)*30)/8:0;
+    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*(lc.tieredAbsRate||0.04),4.0)*30)/8:0;
     var postStopRate=(lc.ferrChangePM||0)-suppFerrPM2;
     var ivBoost2=sc2.ivDose>0?mg2f(sc2.ivDose):0;
     var stopArr=[startFerr];
@@ -871,7 +1236,7 @@ function calc(){
     var parts=[];
     if(hasStrategy){
       var sc=window.strategyScenario;
-      var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an immediate boost.':'';
+      var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an estimated immediate boost (actual ferritin response varies widely — ±50% or more — depending on inflammation and iron utilisation).':'';
       parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
       if(stopLine){
         var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
@@ -940,8 +1305,8 @@ function updateAnalysis(){
 
     if(c.netMonth<-10){
       lines.push('Monthly deficit of '+Math.abs(c.netMonth)+' mg means current intake cannot keep pace with losses. Ferritin is projected to '+rnd(c.m12ferr)+' µg/L by '+c.fmtMonth(12)+'.');
-      if(c.suppDose===0&&!conds['oral-intol']){lines.push('Consider: oral iron supplementation (alternate-day dosing may improve absorption and tolerability — Moretti et al, Lancet Haematology 2015, NICE CG189).');}
-      if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion is indicated per NICE CG189 where oral supplementation is insufficient or contraindicated. A typical 1000 mg infusion (Ferinject) would be expected to raise ferritin by approximately '+rnd(mg2f(1000))+' µg/L in the absence of ongoing loss.');}
+      if(c.suppDose===0&&!conds['oral-intol']){lines.push('Consider: oral iron supplementation (alternate-day dosing may improve absorption and tolerability in some patients — Moretti et al, Lancet Haematology 2015; BSH 2021 guideline on management of iron deficiency in adults).');}
+      if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion may be considered where oral supplementation is insufficient or not tolerated (BSH 2021 guideline; discuss with GP). A typical 1000 mg infusion (Ferinject) would be expected to raise ferritin by approximately '+rnd(mg2f(1000))+' µg/L in the absence of ongoing loss — actual response varies widely (±50% or more).');}
       lines.push('Addressing the underlying bleeding cause (e.g. gynaecological investigation, hormonal management) is the most effective long-term approach to stabilising iron stores.');
       severity='danger';
     } else if(c.netMonth<0){
@@ -953,7 +1318,8 @@ function updateAnalysis(){
       lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately '+rnd(c.m12ferr)+' µg/L by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
     }
 
-    if(c.startFerr<30){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 30 µg/L threshold for depleted stores (BSH/NICE). Symptoms of iron deficiency (fatigue, brain fog, poor exercise tolerance) are likely even without anaemia.');}
+    if(c.startFerr<15){lines.push('⚠️ Critically depleted ferritin ('+c.startFerr+' µg/L). Below 15 µg/L is consistent with absent iron stores (BSH/WHO diagnostic threshold). Urgent clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause and agree on the appropriate treatment approach.');}
+    else if(c.startFerr<30){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 30 µg/L threshold for depleted stores (BSH/NICE). Symptoms of iron deficiency (fatigue, brain fog, poor exercise tolerance) are likely even without anaemia.');}
     else if(c.startFerr<50){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 50 µg/L level associated with optimal function in menstruating women.');}
   }
 
@@ -1055,13 +1421,14 @@ function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivD
     lines.push('Results are behind the planned trajectory, which is consistent with the stated adherence level. At full adherence, the plan would project ferritin to change by '+(fullAdherenceProjChange>=0?'+':'')+rnd(fullAdherenceProjChange)+' µg/L over this period. Improving supplement consistency — even from '+rnd(adherence*100)+'% to 80% — would likely make a meaningful difference to the trend.');
     severity='warn';
   } else if(!isAhead && highAdherence && !ivDominates){
-    // Behind despite good adherence — the clinically important flag
-    lines.push('This is worth noting: ferritin is rising more slowly than the plan predicted despite good reported adherence. When someone follows a supplement plan closely but does not respond as expected, possible explanations include:');
+    // Behind despite good adherence — lead with GP referral, then list causes
+    lines.push('Ferritin is rising more slowly than the plan predicted despite good reported adherence. This pattern — following a plan closely but not responding as expected — is worth discussing with your GP sooner rather than later, as some causes require clinical investigation and cannot be resolved by adjusting the supplement alone.');
+    lines.push('In the meantime, possible contributing factors include:');
     lines.push('• Supplement timing — taking iron within an hour of food, tea, or coffee significantly reduces absorption. Taking on an empty stomach with vitamin C is optimal.');
     lines.push('• Formulation — ferrous sulfate and fumarate absorb better than some over-the-counter formulations. Ferrous bisglycinate is gentler and may absorb comparably.');
     lines.push('• Hepcidin effect — daily dosing can suppress next-day absorption. Alternate-day dosing (see Strategy tab) may improve net absorbed iron.');
-    lines.push('• Underlying condition — coeliac disease, H. pylori infection, or regular antacid/PPI use can all impair iron absorption and cause refractory deficiency. If timing and formulation are already optimised, this is worth raising with a clinician.');
-    lines.push('• Losses higher than modelled — if bleeding is heavier than the parameters entered in the Balance Model, losses may be outpacing absorption even with good supplementation.');
+    lines.push('• Underlying condition — coeliac disease, H. pylori infection, or regular antacid/PPI use can all impair absorption and cause refractory deficiency. These require clinical testing to identify.');
+    lines.push('• Losses higher than modelled — if bleeding is heavier than entered in the Balance Model, losses may be outpacing absorption.');
     severity='danger';
   } else if(!isAhead && highAdherence && ivDominates){
     lines.push('Ferritin has not risen as much as expected following the infusion, despite good reported supplement adherence. This may reflect elevated hepcidin or inflammation at the time of the infusion reducing iron utilisation — checking CRP alongside ferritin is useful here. Alternatively, losses may be higher than the model assumes.');
@@ -1206,6 +1573,276 @@ function renderCycleChart(){
       }
     }]
   });
+}
+
+var tipsChartInst=null;
+var tipsInflamOn=false;
+
+function toggleTipInflam(){
+  tipsInflamOn=!tipsInflamOn;
+  document.getElementById('tog-tips-inflam').classList.toggle('on',tipsInflamOn);
+  calcTips();
+}
+
+// Diet tip definitions — each has: id, label, description, dietMultiplier (applies to dietary iron abs), suppMultiplier (applies to supplement abs if any)
+var DIET_TIPS=[
+  {id:'vitC_meals', label:'Vitamin C with every iron-rich meal',
+   desc:'A glass of orange juice or 200mg vitamin C supplement with each meal converts Fe³⁺ to absorbable Fe²⁺ and chelates iron to keep it soluble in the gut. One of the most evidence-based dietary changes available.',
+   dietMult:1.25, suppMult:1.0, source:'Hallberg et al, Am J Clin Nutr 1989'},
+  {id:'avoid_tea', label:'Avoid tea/coffee within 2 hours of meals',
+   desc:'Tannins in tea and polyphenols in coffee bind iron and reduce absorption by 40–60% when consumed with or within an hour of a meal. Extending the gap to 2 hours substantially reduces this effect.',
+   dietMult:1.20, suppMult:1.0, source:'Hurrell et al, Br J Nutr 1999'},
+  {id:'avoid_calcium', label:'Avoid calcium-rich foods near iron meals',
+   desc:'Calcium competes with iron for the same intestinal transporter (DMT1). Dairy, calcium supplements, and fortified foods within an hour of iron-rich meals reduce absorption by 15–30%. Separating them by 2 hours avoids most of the inhibition.',
+   dietMult:1.15, suppMult:1.0, source:'Hallberg et al, Am J Clin Nutr 1991'},
+  {id:'haem_iron', label:'Add haem iron sources (red meat, liver)',
+   desc:'Haem iron (from meat and fish) is absorbed at 20–30% efficiency — roughly 5× better than non-haem iron from plants (2–5%). Adding 2–3 portions of red meat per week, or one serving of liver per week, meaningfully increases absorbed iron. Liver is the most iron-dense food available — one serving (80g) provides ~5mg highly bioavailable iron.',
+   dietMult:1.30, suppMult:1.0, source:'Monsen et al, Am J Clin Nutr 1978'},
+  {id:'reduce_phytates', label:'Reduce phytate inhibition (soak grains/legumes, avoid bran with meals)',
+   desc:'Phytates in bran, raw oats, and legumes bind non-haem iron tightly, reducing absorption by 50–80%. Soaking beans overnight, choosing sourdough over standard bread, and avoiding bran cereals with iron-rich meals reduces this inhibition significantly.',
+   dietMult:1.18, suppMult:1.0, source:'Lönnerdal, Am J Clin Nutr 2010'},
+  {id:'cast_iron', label:'Cook in cast iron (especially acidic foods)',
+   desc:'Slow-cooking tomato-based sauces, stews, or citrus dishes in cast iron leaches 1–3mg iron per serving. This is non-haem iron with moderate bioavailability. Small but real — equivalent to adding a portion of iron-rich vegetables.',
+   dietMult:1.05, suppMult:1.0, source:'Brittin & Nossaman, J Am Diet Assoc 1986'},
+];
+
+var tipsDietState={}; // id -> true/false
+
+function buildDietToggles(){
+  var el=document.getElementById('tipsDietToggles');
+  if(!el)return;
+  el.innerHTML='';
+  DIET_TIPS.forEach(function(tip){
+    var on=tipsDietState[tip.id]||false;
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;background:'+(on?'#f0fdf4':'#fff');
+    row.innerHTML=
+      '<div style="flex-shrink:0;width:18px;height:18px;border-radius:4px;border:2px solid '+(on?'#16a34a':'#cbd5e1')+';background:'+(on?'#16a34a':'#fff')+';display:flex;align-items:center;justify-content:center;margin-top:1px">'+(on?'<svg width="10" height="8" viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1" style="fill:none;stroke:#fff;stroke-width:2"/></svg>':'')+'</div>'+
+      '<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:2px">'+tip.label+'</div>'+
+      '<div style="font-size:11px;color:#64748b;line-height:1.5">'+tip.desc+'</div>'+
+      '<div style="font-size:10px;color:#94a3b8;margin-top:3px">Source: '+tip.source+'</div></div>';
+    row.onclick=function(){tipsDietState[tip.id]=!tipsDietState[tip.id];buildDietToggles();calcTips();};
+    el.appendChild(row);
+  });
+}
+
+function calcTips(){
+  if(!lc||!lc.startFerr){
+    var el=document.getElementById('tipsChartExplainer');
+    if(el) el.textContent='Set up the Balance Model tab first to see personalised projections.';
+    return;
+  }
+  buildDietToggles();
+
+  // Hide hormone section for post-menopausal
+  var hmSection=document.getElementById('tipsHormoneSection');
+  if(hmSection) hmSection.style.display=post?'none':'';
+
+  var c=lc;
+  var startFerr=c.startFerr||25;
+  var totalLossMonth=c.totalLossMonth||30;
+  var dietNetMonth=c.dietNetMonth||0;
+  var suppDose=c.suppDose||0;
+  var tieredRate=c.tieredAbsRate||0.04;
+  var months=13;
+  var post=document.getElementById('menopause').value==='post';
+
+  // ── Baseline line (no changes) ──
+  var baseFerrPM=c.ferrChangePM||0;
+  var baseLine=[startFerr];
+  for(var i=1;i<months;i++) baseLine.push(Math.max(0,+(baseLine[i-1]+baseFerrPM).toFixed(1)));
+
+  // ── Diet optimised line ──
+  // Apply selected diet multipliers to dietary absorption
+  var dietMult=1.0;
+  DIET_TIPS.forEach(function(tip){if(tipsDietState[tip.id]) dietMult*=tip.dietMult;});
+  // Cap total dietary multiplier at 2.5x — can't absorb more than ~100% of dietary iron
+  dietMult=Math.min(dietMult,2.5);
+
+  // Compute new diet net with multiplier (but cap at reasonable max)
+  var newDietNet=Math.min(dietNetMonth*dietMult, 8.0); // max 8mg/month net dietary
+  var dietDiff=newDietNet-dietNetMonth;
+  var dietFerrPM=baseFerrPM+mg2f(dietDiff);
+  var dietLine=[startFerr];
+  for(var i=1;i<months;i++) dietLine.push(Math.max(0,+(dietLine[i-1]+dietFerrPM).toFixed(1)));
+
+  // ── Hormone treatment line ──
+  var hormoneReduction=+(document.getElementById('tipsHormoneTx').value)||0;
+  var hormoneLine=null;
+  var hormoneFerrPM=baseFerrPM;
+  if(hormoneReduction>0&&!post){
+    var reducedMgLostMonth=c.mgLostMonth*(1-hormoneReduction/100);
+    var reducedTotalLoss=reducedMgLostMonth+(c.basalLossMonth||30);
+    var suppAbsMonth=suppDose>0?Math.min(suppDose*tieredRate,4.0)*30:0;
+    var newNetMonth=(newDietNet+suppAbsMonth)-reducedTotalLoss;
+    hormoneFerrPM=mg2f(newNetMonth);
+    hormoneLine=[startFerr];
+    for(var i=1;i<months;i++) hormoneLine.push(Math.max(0,+(hormoneLine[i-1]+hormoneFerrPM).toFixed(1)));
+  }
+
+  // ── Inflammation resolved line ──
+  var inflammLine=null;
+  var inflammFerrPM=baseFerrPM;
+  if(tipsInflamOn){
+    // Restore absorption to full tiered rate (inflammation was impairing it)
+    // Use a boosted rate — 1.5x current tiered rate, max at the fully healthy rate for this ferritin
+    var healthyRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
+    var suppAbsInflam=suppDose>0?Math.min(suppDose*healthyRate,4.0)*30:0;
+    var newNetInflam=(newDietNet+suppAbsInflam)-totalLossMonth;
+    inflammFerrPM=mg2f(newNetInflam);
+    inflammLine=[startFerr];
+    for(var i=1;i<months;i++) inflammLine.push(Math.max(0,+(inflammLine[i-1]+inflammFerrPM).toFixed(1)));
+  }
+
+  // ── Combined all line ──
+  var healthyRateC=tipsInflamOn?(startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04):tieredRate;
+  var combinedLine=null;
+  if(hormoneReduction>0||tipsInflamOn){
+    var reducedLoss=hormoneReduction>0&&!post?
+      (c.mgLostMonth*(1-hormoneReduction/100))+(c.basalLossMonth||30):
+      totalLossMonth;
+    var suppAbsC=suppDose>0?Math.min(suppDose*healthyRateC,4.0)*30:0;
+    var newNetC=(newDietNet+suppAbsC)-reducedLoss;
+    var combinedFerrPM=mg2f(newNetC);
+    combinedLine=[startFerr];
+    for(var i=1;i<months;i++) combinedLine.push(Math.max(0,+(combinedLine[i-1]+combinedFerrPM).toFixed(1)));
+  }
+
+  // ── Hormone treatment note ──
+  var hmNoteEl=document.getElementById('tipsHormoneNote');
+  if(hmNoteEl){
+    if(hormoneReduction>0&&!post){
+      var txName=['','Combined pill (~45% reduction)','Tranexamic acid (~50% reduction — non-hormonal, taken during period only)','Norethisterone (~80% reduction — variable)','Mirena IUS (~85% reduction on average)'][
+        [0,45,50,80,85].indexOf(hormoneReduction)];
+      if(!txName) txName='Selected treatment';
+      var origLoss=rnd(c.mgLostMonth);
+      var newLoss=rnd(c.mgLostMonth*(1-hormoneReduction/100));
+      hmNoteEl.style.display='block';
+      hmNoteEl.innerHTML='<strong>'+txName+'</strong> — menstrual iron loss would reduce from approximately '+origLoss+' mg/month to '+newLoss+' mg/month. '+(hormoneReduction>=80?'At this level of reduction, menstrual losses become a much smaller factor in your iron balance. The Mirena IUS additionally releases a small amount of levonorgestrel locally (not systemically absorbed in significant amounts) and typically causes very light or no periods within 3–6 months of fitting. Suitable for most women including nulliparous women; fitted by a GP or gynaecologist.':hormoneReduction>=50?'Tranexamic acid is taken only during the period (not daily) and is non-hormonal — it works by reducing fibrinolysis. It does not affect ovulation or hormones. Available on prescription.':'The combined pill stops ovulation and typically produces a lighter, more predictable withdrawal bleed. Also provides contraception.');
+    } else {
+      hmNoteEl.style.display='none';
+    }
+  }
+
+  // ── Inflammation note ──
+  var infNoteEl=document.getElementById('tipsInflamNote');
+  if(infNoteEl){
+    if(tipsInflamOn){
+      infNoteEl.style.display='block';
+      infNoteEl.innerHTML='Chronic inflammation — from gut conditions (IBD, coeliac), autoimmune disease, or persistent stress — raises hepcidin, which blocks iron from entering the bloodstream even when gut absorption is occurring. Resolving the inflammation restores ferroportin function and allows absorbed iron to actually reach the bloodstream. This model assumes resolution restores absorption to the full healthy rate for your current ferritin level ('+rnd(healthyRateC*100)+'%). In practice, the effect depends on the cause and degree of inflammation — this is illustrative of the potential benefit, not a guarantee.';
+    } else {
+      infNoteEl.style.display='none';
+    }
+  }
+
+  // ── Render chart ──
+  renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,months,dietMult,hormoneReduction,baseFerrPM,dietFerrPM,hormoneFerrPM,inflammFerrPM);
+}
+
+function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,months,dietMult,hormoneReduction,baseFerrPM,dietFerrPM,hormoneFerrPM,inflammFerrPM){
+  var canvas=document.getElementById('tipsChart');
+  var explainer=document.getElementById('tipsChartExplainer');
+  var legendEl=document.getElementById('tipsChartLegend');
+  if(!canvas)return;
+
+  var c=lc;
+  var startFerr=c.startFerr||25;
+  var post=document.getElementById('menopause').value==='post';
+
+  // Build labels
+  var baseDate=new Date();
+  var sdv=document.getElementById('startDate').value;
+  if(sdv) baseDate=new Date(sdv);
+  var labels=[];
+  for(var i=0;i<months;i++){
+    var d=new Date(baseDate);d.setMonth(d.getMonth()+i);
+    labels.push(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getFullYear().toString().slice(2));
+  }
+
+  var anyDietOn=Object.values(tipsDietState).some(Boolean);
+  var anyScenario=hormoneReduction>0||tipsInflamOn;
+
+  // Datasets
+  var ds=[
+    {label:'Current trajectory (no changes)',data:baseLine,borderColor:'#94a3b8',borderDash:[4,3],borderWidth:1.5,pointRadius:0,fill:false,tension:.3},
+    {label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false},
+  ];
+
+  if(anyDietOn){
+    ds.push({label:'With diet optimisation',data:dietLine,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.06)',fill:true,tension:.3,pointRadius:3,borderWidth:2});
+  }
+  if(hormoneLine&&hormoneReduction>0&&!post){
+    ds.push({label:'With hormone treatment',data:hormoneLine,borderColor:'#8b5cf6',fill:false,tension:.3,pointRadius:3,borderWidth:2});
+  }
+  if(inflammLine&&tipsInflamOn){
+    ds.push({label:'If inflammation resolved',data:inflammLine,borderColor:'#0ea5e9',fill:false,tension:.3,pointRadius:3,borderWidth:2});
+  }
+  if(combinedLine){
+    ds.push({label:'All selected changes combined',data:combinedLine,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,0.08)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
+  }
+
+  var allVals=baseLine.concat(dietLine);
+  if(hormoneLine) allVals=allVals.concat(hormoneLine);
+  if(inflammLine) allVals=allVals.concat(inflammLine);
+  if(combinedLine) allVals=allVals.concat(combinedLine);
+  var yMax=Math.ceil(Math.max.apply(null,allVals.filter(function(v){return v>0;}))*1.2/10)*10||150;
+
+  if(tipsChartInst) tipsChartInst.destroy();
+  tipsChartInst=new Chart(canvas,{
+    type:'line',data:{labels:labels,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
+      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}
+  });
+
+  // Explainer
+  if(explainer){
+    var parts=[];
+    var baseDir=baseFerrPM>0.5?'rising at '+rnd(baseFerrPM*10)/10+' µg/L/month':baseFerrPM<-0.5?'falling at '+rnd(Math.abs(baseFerrPM)*10)/10+' µg/L/month':'holding roughly steady';
+    parts.push('<strong style="color:#64748b">Grey dashed — Current trajectory:</strong> With no changes, ferritin is '+baseDir+'. '+( baseLine[12]>=50?'Ferritin is projected to reach or maintain the 50 µg/L target without further changes.':'Ferritin is projected to reach '+rnd(baseLine[12])+' µg/L at 12 months — '+(baseLine[12]<50?'below the 50 µg/L target.':' on track.')));
+
+    if(anyDietOn){
+      var dietGain=rnd((dietLine[12]||0)-(baseLine[12]||0));
+      var numOn=Object.values(tipsDietState).filter(Boolean).length;
+      parts.push('<strong style="color:#f59e0b">Amber — With diet optimisation:</strong> '+numOn+' dietary change'+(numOn===1?'':'s')+' selected ('+rnd((dietMult-1)*100)+'% improvement in dietary iron absorption). Projected ferritin at 12 months: '+rnd(dietLine[12])+' µg/L'+(dietGain>0?' — '+dietGain+' µg/L gain vs no changes.':' — minimal additional benefit at these settings.')+( dietLine[12]<50?' Diet changes help but are unlikely to reach the 50 µg/L target on their own — supplementation is likely still needed.':' Diet changes appear sufficient to reach the target.'));
+    }
+
+    if(hormoneLine&&hormoneReduction>0&&!post){
+      var txLabel=['','the combined pill','tranexamic acid','norethisterone','the Mirena IUS'][[0,45,50,80,85].indexOf(hormoneReduction)];
+      var hmGain=rnd((hormoneLine[12]||0)-(baseLine[12]||0));
+      parts.push('<strong style="color:#8b5cf6">Purple — With hormone treatment ('+txLabel+'):</strong> Reducing menstrual loss by '+hormoneReduction+'% has a large effect on the balance. Projected ferritin at 12 months: '+rnd(hormoneLine[12])+' µg/L ('+hmGain+' µg/L better than no changes). '+(hormoneLine[12]>=50?'At this level of loss reduction, ferritin is projected to reach and hold above 50 µg/L — supplementation may become unnecessary or minimal.':'Even with this level of loss reduction, some supplementation would still be beneficial to reach the target sooner.'));
+    }
+
+    if(inflammLine&&tipsInflamOn){
+      var infGain=rnd((inflammLine[12]||0)-(baseLine[12]||0));
+      parts.push('<strong style="color:#0ea5e9">Blue — If inflammation resolved:</strong> Restoring full absorption for your ferritin level adds '+infGain+' µg/L vs current trajectory at 12 months (projected: '+rnd(inflammLine[12])+' µg/L). '+(inflammLine[12]>=50?'Resolving inflammation alone may be sufficient to reach the target.':'Resolving inflammation helps but supplementation would still be beneficial.'));
+    }
+
+    if(combinedLine){
+      var combGain=rnd((combinedLine[12]||0)-(baseLine[12]||0));
+      parts.push('<strong style="color:#16a34a">Green — All selected changes combined:</strong> Projected ferritin at 12 months: '+rnd(combinedLine[12])+' µg/L ('+combGain+' µg/L better than no changes). '+(combinedLine[12]>=50?'The combination of these changes is projected to reach and hold the 50 µg/L target.':'Even with all these changes combined, supplementation is likely still needed to reach the 50 µg/L target — but the required dose and duration would be reduced.'));
+    }
+
+    if(!anyDietOn&&!anyScenario){
+      parts.push('Toggle diet tips or select a scenario above to see the estimated effect on your ferritin trajectory.');
+    }
+
+    explainer.innerHTML=parts.map(function(p,i){return '<p style="margin:0'+(i<parts.length-1?';margin-bottom:5px':'')+'">'+p+'</p>';}).join('');
+  }
+
+  // Legend
+  if(legendEl){
+    legendEl.innerHTML=
+      li('#94a3b8','Grey dashed — Current trajectory',true)+
+      (anyDietOn?li('#f59e0b','Amber — Diet optimisation'):'')+
+      (hormoneLine&&hormoneReduction>0&&!post?li('#8b5cf6','Purple — Hormone treatment'):'')+
+      (inflammLine&&tipsInflamOn?li('#0ea5e9','Teal — Inflammation resolved'):'')+
+      (combinedLine?li('#16a34a','Green — All selected combined'):'')+
+      li('#16a34a','Green dashed — 50 µg/L target',true)+
+      li('#dc2626','Red dashed — 30 µg/L threshold',true);
+  }
 }
 
 function getPlanStartDate(){
@@ -1559,7 +2196,8 @@ function buildGPLetter(){
   var totalLossMonth=(c.basalLossMonth||30)+(c.mgLostMonth||0);
   var dietNet=c.dietNetMonth||0;
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
-  var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(0.04*30)/5)*5:0;
+  var maintAbsRateL=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
+  var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(maintAbsRateL*30)/5)*5:0;
   var maintFsTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/65*30/4.3):0;
 
   // Flow description
@@ -1621,26 +2259,26 @@ function buildGPLetter(){
   L.push('What I am asking for');
   L.push('');
   if(oralIntol){
-    L.push('I have tried oral iron tablets in the past and unfortunately cannot tolerate them — the side effects are quite significant for me. I would like to discuss whether an IV iron infusion would be appropriate in my case. I have read that this is an option under NICE guidance for people who cannot tolerate oral iron, and I think it could make a real difference.');
-    if(maintDailyMg>0) L.push('Once my levels are back up, I am happy to try a low-dose oral option (such as iron bisglycinate, which is often better tolerated) to maintain them, if you think that is worth trying.');
+    L.push('I have tried oral iron tablets in the past and unfortunately cannot tolerate them — the side effects are quite significant for me. I would like to discuss whether an IV iron infusion might be an appropriate option in my case. I have done some reading and understand this is something that can be considered for people who struggle with oral iron (BSH guideline on iron deficiency, 2021), though I appreciate that is entirely your decision to make.');
+    if(maintDailyMg>0) L.push('Once my levels are back up, I am also happy to discuss whether a low-dose oral option — such as iron bisglycinate, which is often better tolerated — might be worth trying for maintenance, if you think that makes sense.');
   } else {
     if(suppDose>0){
       var tabClarify=fsTabsPerDay<=1.2?
         'one ferrous sulfate 200mg tablet a day (each tablet contains 65mg of actual iron — the 200mg refers to the total tablet weight, not the iron content)':
         fsTabsPerDay<=2.2?
-        'two ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron, so two tablets gives 130mg of elemental iron per day — the 200mg is the tablet weight, not the iron dose)':
+        'two ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron, so two tablets gives 130mg — the 200mg is the tablet weight, not the iron dose)':
         Math.round(fsTabsPerDay)+' ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron — the 200mg is the tablet weight, not the iron content — so '+Math.round(fsTabsPerDay)+' tablets gives '+suppDose+'mg of elemental iron per day)';
-      L.push('I would like to request a prescription for ferrous sulfate 200mg so I can take '+tabClarify+', to bring my ferritin up to around '+planTarget+' µg/L. I have done some reading and understand that this is the level at which most people\'s symptoms improve.');
+      L.push('I would like to discuss whether a prescription for ferrous sulfate 200mg would be appropriate — based on what I have read, taking '+tabClarify+' is often recommended to bring ferritin up to around '+planTarget+' µg/L, which I understand is the level at which symptoms typically improve. I appreciate you may have a different view on the best approach and am happy to go with your recommendation.');
       if(maintDailyMg>0){
         L.push('');
-        L.push('Once I reach that level, I plan to reduce to a lower maintenance dose — around '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — to keep my levels stable without over-supplementing. I understand that once ferritin is where it needs to be, a much smaller ongoing dose is all that\'s needed to stay there.');
+        L.push('Once my levels are where they need to be, I would like to discuss reducing to a lower ongoing dose — perhaps '+maintFsTabsPerWeek+' tablet'+(maintFsTabsPerWeek===1?'':'s')+' a week — just to keep things stable without over-supplementing. I understand a smaller maintenance dose may be all that is needed once ferritin is restored, but would welcome your guidance on whether that is the right approach for me.');
       }
     } else {
-      L.push('I would like to discuss starting iron supplementation. I have not been on a prescribed course before and would welcome your guidance on the right dose to start with.');
+      L.push('I would like to discuss whether starting iron supplementation would be appropriate. I have not been on a prescribed course before and would welcome your guidance on the right dose and approach for my situation.');
     }
     if(plannedIV>0){
       L.push('');
-      L.push('I would also like to ask whether an IV iron infusion might be worth considering to give my levels an initial boost, particularly if oral supplementation alone is likely to be slow given my ongoing losses. I am happy to discuss this at an appointment if needed.');
+      L.push('I have also read that an IV iron infusion can sometimes be used to give levels an initial boost — I would be interested in your view on whether that might be worth considering, particularly given my ongoing losses. I understand this is a clinical decision and am not asking for it to be prescribed, just to have the conversation.');
     }
   }
   L.push('');
@@ -1649,13 +2287,13 @@ function buildGPLetter(){
   L.push('Blood test monitoring');
   L.push('');
   if(needsBaseline){
-    L.push('My most recent ferritin test was '+baselineDateStr+(mostRecentDate?', which is now over 6 weeks ago':'')+'. I would like to request a fresh baseline test as soon as possible before starting treatment, so we have a clear starting point.');
+    L.push('My most recent ferritin test was '+baselineDateStr+(mostRecentDate?', which is now over 6 weeks ago':'')+'. I would like to ask whether it would be possible to have a fresh baseline test before starting treatment, so we have a clear starting point.');
     L.push('');
   } else {
-    L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+baselineFerr+' µg/L), which is recent enough to use as my starting point.');
+    L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+baselineFerr+' µg/L), which I think is recent enough to use as a starting point.');
     L.push('');
   }
-  L.push('I would like to ask whether it would be possible to pre-authorise a short series of follow-up ferritin tests, so I can book them directly with the phlebotomy clinic without needing to go through triage each time. I understand from a previous conversation with your reception team that this kind of arrangement is possible in principle for ongoing conditions, and that once a doctor has agreed the plan, the bookings can be made directly.');
+  L.push('I would like to ask whether it would be possible to pre-authorise a short series of follow-up ferritin tests, so I can book them directly with the phlebotomy clinic without needing to go through triage each time. I understand this kind of arrangement can sometimes be agreed in advance for ongoing conditions, and it would make it much easier to stay on top of monitoring without taking up unnecessary GP appointments.');
   L.push('');
   L.push('The schedule I am proposing is:');
   L.push('');
@@ -2045,11 +2683,14 @@ function calcStrategy(){
     return;
   }
 
-  // Back-calculate elemental supplement needed: deficit = dose * 0.04 * 30
-  var maintDailyMg=deficitAfterDiet/(0.04*30);
-  // Alternate-day: hepcidin benefit means ~10% better absorption per dose, but only ~15 doses/month
-  // deficit = dose_altday * 0.04 * 1.10 * 15 => dose_altday = deficit / (0.04 * 1.10 * 15)
-  var maintAltDayMg=deficitAfterDiet/(0.04*1.10*15);
+  // Back-calculate elemental supplement needed using tiered absorption rate
+  // At maintenance, ferritin should be at target (>=50), so use the replete rate (4%)
+  // but if currently below 50, use the current tiered rate as a more accurate basis
+  var maintAbsRate=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04; // at least 4% for maintenance
+  var maintDailyMg=deficitAfterDiet/(maintAbsRate*30);
+  // Alternate-day: Moretti et al shows improved fractional absorption — evidence suggests
+  // meaningfully better per-dose absorption (not just 10%); framed conservatively here
+  var maintAltDayMg=deficitAfterDiet/(maintAbsRate*1.10*15);
 
   function r5(n){return Math.ceil(n/5)*5;}
   var mDailyR=r5(maintDailyMg);
@@ -2098,7 +2739,7 @@ function calcStrategy(){
     '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month (diet covers '+rnd(dietNetMonth)+' mg/month of this), a practical supplement schedule would be '+tabAdvice+'</p>'+
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, <strong>'+Math.ceil(mAltDayR/65)+' ferrous sulfate 200mg tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+' every other day</strong> ('+mAltDayR+'mg elemental) is expected to match the net absorption of '+mDailyR+'mg elemental taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+Math.ceil(mAltDayR/65)+' ferrous sulfate 200mg tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+' every other day</strong> ('+mAltDayR+'mg iron content) is estimated to provide comparable net absorption to '+mDailyR+'mg taken daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -2141,7 +2782,8 @@ function calcStrategy(){
       p2Desc='<strong>Phase 2 — Maintenance:</strong> Diet alone is sufficient to cover losses — no ongoing supplement is needed once the target is reached. Monitor ferritin every 3–6 months.';
     } else {
       var r5S=function(n){return Math.ceil(n/5)*5;};
-      var mDailyS=r5S(deficitAfterDiet/(0.04*30));
+      var maintAbsRateS=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
+      var mDailyS=r5S(deficitAfterDiet/(maintAbsRateS*30));
       p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+tabFirstWeekly(mDailyS)+'. This covers the net deficit of '+rnd(deficitAfterDiet)+' mg/month after diet.';
     }
     summaryLines.push(p2Desc);
@@ -2206,12 +2848,13 @@ function refreshList(sel){
   }catch(e){}
 }
 function showTab(t){
-  ['model','actual','infusion','strategy','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['model','actual','infusion','strategy','export'][i]===t);});
+  ['about','model','actual','infusion','strategy','tips','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','export'][i]===t);});
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
   if(t==='export')updateLetterPreview();
+  if(t==='tips')calcTips();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();checkDraft();
 </script>
