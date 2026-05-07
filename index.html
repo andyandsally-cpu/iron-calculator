@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
 <title>Fe+ — Iron Balance Tool</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231e3a5f'/%3E%3Ctext x='18' y='72' font-family='Arial' font-size='62' font-weight='700' fill='white'%3EFe%3C/text%3E%3Ctext x='74' y='48' font-family='Arial' font-size='38' font-weight='700' fill='%233b82f6'%3E+%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;font-size:15px;line-height:1.6;padding:1.5rem 0}
-.app{max-width:720px;margin:0 auto;padding:1.5rem}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;font-size:15px;line-height:1.6;padding:1.5rem}
+.app{max-width:720px;margin:0 auto}
 h1{font-size:20px;font-weight:500;margin-bottom:3px}
 .sub{font-size:13px;color:#64748b;margin-bottom:1.5rem}
 .section{margin-bottom:1.25rem}
@@ -36,12 +35,9 @@ input[type=range]:disabled{opacity:.35;cursor:not-allowed}
 .tt{display:none;position:absolute;left:24px;top:-4px;width:250px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.5;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .ib:hover .tt,.ib:focus .tt{display:block}
 .tt-d{color:#64748b;margin-bottom:3px}.tt-n{color:#16a34a;font-weight:600;margin-bottom:3px}.tt-s{color:#64748b;font-size:11px}
-.tabs{display:flex;border-bottom:2px solid #e2e8f0;margin-bottom:0;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;background:#fff;padding:0 24px}
+.tabs{display:flex;border-bottom:1px solid #e2e8f0;margin-bottom:1rem;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{font-size:13px;padding:10px 14px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
-@media(max-width:600px){.tab{font-size:12px;padding:8px 10px}}
-.tab.active{color:#1e3a5f;border-bottom-color:#1e3a5f;font-weight:600}
-.fe-header{background:#1e3a5f;padding:10px 24px;display:flex;align-items:center;gap:12px}
+.tab{font-size:13px;padding:7px 16px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
 .tab.active{color:#1e293b;border-bottom-color:#3b82f6;font-weight:500}
 .trow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.5rem}
 .tog{font-size:12px;padding:4px 10px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#f8fafc;color:#64748b;user-select:none}
@@ -86,9 +82,11 @@ button:hover{background:#f1f5f9}
 </style>
 </head>
 <body>
+<div class="app">
 <h1 style="display:none">Fe+ Iron Balance Tool</h1>
 
-<div class="fe-header">
+
+<div style="background:#1e3a5f;border-radius:10px;padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
   <svg width="36" height="36" viewBox="0 0 100 100" style="flex-shrink:0;border-radius:8px">
     <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
     <rect width="100" height="100" rx="18" fill="white" fill-opacity="0.08"/>
@@ -114,7 +112,6 @@ button:hover{background:#f1f5f9}
   <button class="tab" onclick="showTab('export')">GP letter</button>
 </div>
 
-<div class="app">
 <div id="tab-about">
 <div class="section">
 
@@ -125,20 +122,9 @@ button:hover{background:#f1f5f9}
 </div>
 
 <!-- HEADER -->
-<div style="background:#1e3a5f;border-radius:12px;padding:24px;margin-bottom:1.25rem;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-  <svg width="88" height="88" viewBox="0 0 100 100" role="img" aria-label="Fe+ logo" style="flex-shrink:0;border-radius:14px">
-    <rect width="100" height="100" rx="18" fill="#1e3a5f"/>
-    <rect width="100" height="100" rx="18" fill="white" fill-opacity="0.06"/>
-    <path d="M 14 72 Q 30 76 46 60 Q 62 44 80 34" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-    <circle cx="46" cy="60" r="3.5" fill="#3b82f6" opacity="0.8"/>
-    <circle cx="80" cy="34" r="4" fill="#3b82f6"/>
-    <text x="12" y="68" font-family="Arial" font-size="52" font-weight="700" fill="white">Fe</text>
-    <text x="70" y="44" font-family="Arial" font-size="32" font-weight="700" fill="#3b82f6">+</text>
-  </svg>
-  <div style="color:#f1f5f9;flex:1;min-width:200px">
-    <div style="font-size:26px;font-weight:700;margin-bottom:5px">Fe+ Iron Balance Tool</div>
-    <div style="font-size:13px;color:#94a3b8;line-height:1.6">Being told "your bloods are fine" when you feel terrible is one of the most common and frustrating experiences with iron deficiency. This tool explains why that happens — and helps you prepare a better conversation with your GP.</div>
-  </div>
+<div style="margin-bottom:1.25rem">
+  <div style="font-size:20px;font-weight:700;color:#1e293b;margin-bottom:6px">Iron &amp; ferritin — what you actually need to know</div>
+  <div style="font-size:13px;color:#64748b;line-height:1.6">Being told "your bloods are fine" when you feel terrible is one of the most common and frustrating experiences with iron deficiency. This page explains why that happens — and why ferritin is the number that actually matters.</div>
 </div>
 
 <!-- PANEL 1: Iron vs Ferritin -->
@@ -388,7 +374,7 @@ button:hover{background:#f1f5f9}
 
 <div id="tab-model" style="display:none">
 <div class="section">
-<div class="st">Your profile</div>
+<div class="st">Session</div>
 <div class="card">
   <div id="draftBanner" style="display:none;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#854d0e;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span>⚠️ <strong>Unsaved session found</strong> from your last visit — restore it?</span>
@@ -444,7 +430,7 @@ button:hover{background:#f1f5f9}
   <div class="note" id="condNote"></div>
 </div>
 </div>
-</div>
+
 
 <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:9px 14px;margin-bottom:.75rem;font-size:12px;color:#15803d;line-height:1.5">ℹ️ <strong>Planning &amp; discussion support only</strong> — outputs are estimates to support a GP conversation, not prescriptions or clinical recommendations.</div>
 <div class="rl">
@@ -654,25 +640,6 @@ button:hover{background:#f1f5f9}
 <div class="st">Monthly iron balance</div>
 <div class="grid3" id="metricsGrid"></div>
 <div class="analysis-box" id="analysisBox"><div class="analysis-title" id="analysisTitle"></div><div id="analysisText"></div></div>
-</div>
-
-
-<div class="section" style="margin-top:.25rem">
-<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
-<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
-<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
-<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
-</div>
-
-<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
-<div class="st">Historic ferritin record</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
-<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
-</div>
-
-<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
 </div>
 </div>
 
@@ -1201,6 +1168,24 @@ button:hover{background:#f1f5f9}
 <div class="st">Letter preview</div>
 <div id="letterPreview" style="font-size:13px;line-height:1.75;color:#1e293b;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;white-space:pre-wrap;font-family:Georgia,serif"></div>
 </div>
+</div>
+
+<div class="section" style="margin-top:.25rem">
+<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
+<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+</div>
+
+<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
+<div class="st">Historic ferritin record</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
+<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
+</div>
+
+<p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -3729,10 +3714,7 @@ function refreshList(sel){
   }catch(e){}
 }
 function showTab(t){
-  ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){
-    var el=document.getElementById('tab-'+id);
-    if(el) el.style.display=id===t?'block':'none';
-  });
+  ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
   document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
@@ -3741,7 +3723,7 @@ function showTab(t){
   if(t==='tips')calcTips();
   if(t==='tolerability')calcTolerability();
 }
-refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();
 </script>
 
 <style>
@@ -3775,21 +3757,15 @@ refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceL
 
 <script>
 var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
-
 function isUnlocked(){return localStorage.getItem('ironToolUnlocked')==='true';}
-
 function closePaywall(){document.getElementById('paywallModal').classList.remove('show');}
-
 function restoreAccess(){
   if(confirm('Restore paid access on this device? Only use this if you have already purchased.')){
-    localStorage.setItem('ironToolUnlocked','true');
-    closePaywall();location.reload();
+    localStorage.setItem('ironToolUnlocked','true');closePaywall();location.reload();
   }
 }
-
 function checkBypassCode(){
-  var p=new URLSearchParams(window.location.search);
-  var c=p.get('code');
+  var p=new URLSearchParams(window.location.search),c=p.get('code');
   if(!c)return;
   crypto.subtle.digest('SHA-256',new TextEncoder().encode(c.toLowerCase().trim())).then(function(buf){
     var hex=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
@@ -3801,10 +3777,7 @@ function checkBypassCode(){
   });
 }
 checkBypassCode();
-
 document.getElementById('paywallModal').addEventListener('click',function(e){if(e.target===this)closePaywall();});
-
-// Gate paid tabs — patch showTab AFTER it's defined
 var _showTab=showTab;
 showTab=function(t){
   var paid=['strategy','tips','tolerability','export'];
@@ -3817,8 +3790,6 @@ showTab=function(t){
   }
   _showTab(t);
 };
-
-// Lock badges on paid tabs
 if(!isUnlocked()){
   document.querySelectorAll('.tab').forEach(function(btn){
     var m=(btn.getAttribute('onclick')||'').match(/showTab\('(\w+)'\)/);
@@ -3828,6 +3799,5 @@ if(!isUnlocked()){
   });
 }
 </script>
-
 </body>
 </html>
