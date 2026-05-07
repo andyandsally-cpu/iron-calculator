@@ -403,7 +403,7 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div class="section" style="margin-top:.25rem">
-<div class="st">Ferritin trajectory — 12 months</div>
+<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
 <div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
 </div>
@@ -417,6 +417,7 @@ var infusions=[{month:0,dose:1000}];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
 var chartInst=null;
+window.strategyScenario=null; // stores {ferrLine, ivDose, target} when strategy is configured
 var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false};
 var flowLabels=['Very light','Light','Medium','Heavy','Very heavy'];
 var flowMl=[10,20,45,80,120];
@@ -662,30 +663,55 @@ function calc(){
     return monthNames[d.getMonth()]+' '+d.getFullYear().toString().slice(2);
   });
   var ds=[
-    {label:'Projected ferritin',data:ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3},
-    {label:'Optimal (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
-    {label:'Minimum (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+    {label:'Where you are currently heading',data:ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3},
+    {label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
   ];
+
+  // Add strategy scenario line if one has been computed
+  var hasStrategy=window.strategyScenario&&window.strategyScenario.ferrLine&&window.strategyScenario.ferrLine.length===months;
+  if(hasStrategy){
+    ds.push({label:'If the treatment plan is followed',data:window.strategyScenario.ferrLine,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,0.06)',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[]});
+  }
+
   var va=actuals.filter(function(a){return a.ferritin>0;});
   if(va.length){
     var ad=new Array(months).fill(null);
     va.forEach(function(a,i){if(i<months)ad[i]=a.ferritin;});
-    ds.push({label:'Actual results',data:ad,borderColor:'#ea580c',borderWidth:0,pointRadius:7,showLine:false,fill:false});
+    ds.push({label:'Your actual blood test results',data:ad,borderColor:'#ea580c',borderWidth:0,pointRadius:7,showLine:false,fill:false});
   }
+
+  // Chart y-axis max: include strategy line in range calculation
+  var allValues=ferrLine.concat(actuals.map(function(a){return a.ferritin||0;}));
+  if(hasStrategy) allValues=allValues.concat(window.strategyScenario.ferrLine);
+  var yMax=Math.min(250,Math.max(80,rnd(Math.max.apply(null,allValues)*1.25)));
+
   if(chartInst)chartInst.destroy();
   chartInst=new Chart(document.getElementById('ferrChart'),{
     type:'line',data:{labels,datasets:ds},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?c.raw+' µg/L':'n/a');}}}},
-      scales:{y:{min:0,max:Math.min(250,Math.max(80,rnd(Math.max.apply(null,ferrLine.concat(actuals.map(function(a){return a.ferritin||0;})))*1.25))),title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
         x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}
   });
+
+  // Update title
+  var titleEl=document.getElementById('chartTitle');
+  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · includes treatment plan':'');
+
+  // Legend
   document.getElementById('chartLegend').innerHTML=
-    li('#3b82f6','Projected ferritin')+li('#16a34a','Optimal (50 µg/L)',true)+li('#dc2626','Minimum (30 µg/L)',true)+
-    (va.length?li('#ea580c','Actual results'):'');
+    li('#3b82f6','Where you are currently heading')+
+    (hasStrategy?li('#f97316','If the treatment plan is followed'):'')+
+    li('#16a34a','Recommended minimum (50 µg/L)',true)+
+    li('#dc2626','Depleted stores threshold (30 µg/L)',true)+
+    (va.length?li('#ea580c','Your actual blood test results'):'');
   if(!window._inCalcDerived) calcDerived();
-  // Refresh strategy tab if it's visible
-  if(document.getElementById('tab-strategy').style.display!=='none') calcStrategy();
+  // Refresh strategy tab if it's visible, or recompute scenario line if already computed
+  if(!window._inCalcStrategy){
+    if(document.getElementById('tab-strategy').style.display!=='none') calcStrategy();
+    else if(window.strategyScenario) calcStrategy(); // keep scenario line in sync even on other tabs
+  }
 }
 
 function updateAnalysis(){
@@ -1396,6 +1422,41 @@ function calcStrategy(){
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
 
   altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, an every-other-day dose of approximately <strong>'+mAltDayR+' mg elemental iron</strong> ('+Math.ceil(mAltDayR/65)+' ferrous sulfate tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+') is expected to match the absorption of '+mDailyR+' mg taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+
+  // ── BUILD SCENARIO LINE FOR CHART ──
+  // Phase 1: apply infusion boost at month 0, then track at current oral rate until target is hit
+  // Phase 2: once target reached (or from month 0 if already there), track at maintenance rate
+  // Maintenance ferrChangePM = (dietNetMonth - totalLossMonth + maintAbsFromSupp) / 8
+  // where maintAbsFromSupp = deficitAfterDiet (exactly covering the gap)
+  // => net = 0 => ferrChangePM for maintenance = 0 (flat by definition)
+  // But if diet alone covers losses, maintenance is also flat at current level
+  var scenMonths=13;
+  var scenLine=[startFerr];
+  var scenIVBoost=ivDose>0?mg2f(ivDose):0;
+  // Recovery rate = current ferrChangePM from balance model (oral + diet)
+  var recoveryRate=lc.ferrChangePM||0;
+  // Maintenance rate = 0 (plan is designed to hold ferritin flat)
+  // However if diet alone covers losses, rate = dietNetMonth contribution = lc.ferrChangePM without supp
+  var suppFerrPM=lc.suppDose>0?(Math.min(lc.suppDose*0.04,4.0)*30)/8:0;
+  var maintenanceRate=deficitAfterDiet<=0?(lc.ferrChangePM||0):0;
+
+  var reachedTarget=startFerr>=target;
+  for(var sm=1;sm<scenMonths;sm++){
+    var prev=scenLine[sm-1];
+    var boost=sm===1?scenIVBoost:0; // infusion applied at month 1 (first month of plan)
+    var next;
+    if(!reachedTarget){
+      next=prev+boost+recoveryRate;
+      if(next>=target){reachedTarget=true;next=Math.max(next,target);}
+    } else {
+      next=prev+maintenanceRate;
+    }
+    scenLine.push(Math.max(0,+next.toFixed(1)));
+  }
+  window.strategyScenario={ferrLine:scenLine,ivDose:ivDose,target:target};
+
+  // Trigger chart redraw to show the new scenario line
+  if(!window._inCalcDerived&&!window._inCalcStrategy){window._inCalcStrategy=true;calc();window._inCalcStrategy=false;}
 }
 
 function refreshList(sel){
