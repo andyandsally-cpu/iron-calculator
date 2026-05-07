@@ -275,7 +275,27 @@ button:hover{background:#f1f5f9}
   <div class="note" id="derivedNote"></div>
 </div>
 </div>
+
+<div class="section" id="adherenceSection" style="display:none">
+<div class="st">Plan adherence</div>
+<div class="card">
+  <p style="font-size:13px;color:#64748b;margin-bottom:12px">How closely have you been following the supplement plan set out in the Strategy tab? This helps interpret whether your actual ferritin results are tracking as expected.</p>
+  <div class="row">
+    <label>Plan adherence<br><span style="font-size:11px;color:#94a3b8">0% = not followed · 100% = followed exactly</span></label>
+    <div class="sw"><input type="range" id="adherenceSlider" min="0" max="100" value="70" step="10" oninput="updateAdherenceLabel();calcDerived()"></div>
+    <div style="display:flex;align-items:center;gap:3px"><span id="adherenceV" style="font-size:13px;font-weight:500">70%</span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Your honest estimate of how consistently you have taken the recommended supplement dose over the period covered by your blood test results.</div><div class="tt-n">Used to interpret whether any gap between planned and actual ferritin is due to adherence or a genuine absorption issue.</div><div class="tt-s">Example: 50% means you took roughly half the recommended doses. This is used to adjust what "expected" ferritin should be before comparing against actual results.</div></div></div>
+  </div>
+  <div id="adherenceLabel" style="font-size:12px;color:#64748b;margin-top:2px;margin-left:0"></div>
+</div>
+</div>
+
 <div class="section"><div class="st">Derived analysis</div><div class="grid2" id="derivedGrid"></div></div>
+
+<div class="section" id="planVsActualSection" style="display:none">
+<div class="st">Performance against plan</div>
+<div class="card" id="planVsActualBox"></div>
+</div>
 </div>
 
 <div id="tab-infusion" style="display:none">
@@ -725,10 +745,122 @@ function parseDate(s){
   if(!s)return null;
   var d=new Date(s);
   if(!isNaN(d))return d;
-  // try dd/mm/yyyy
   var p=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
   if(p)return new Date(p[3],p[2]-1,p[1]);
   return null;
+}
+
+function updateAdherenceLabel(){
+  var v=+(document.getElementById('adherenceSlider').value)||70;
+  document.getElementById('adherenceV').textContent=v+'%';
+  var el=document.getElementById('adherenceLabel');
+  var txt,col;
+  if(v===0){txt='Not followed at all — no supplement taken';col='#dc2626';}
+  else if(v<=25){txt='Rarely followed — occasional doses only';col='#b45309';}
+  else if(v<=50){txt='Partially followed — roughly half the recommended doses taken';col='#b45309';}
+  else if(v<=75){txt='Mostly followed — some missed doses';col='#16a34a';}
+  else if(v<100){txt='Closely followed — very few missed doses';col='#16a34a';}
+  else{txt='Followed exactly — every dose taken as planned';col='#16a34a';}
+  el.textContent=txt;el.style.color=col;
+}
+
+function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivDominates){
+  // Only run if a strategy plan exists (stratTarget slider is present and lc is populated)
+  var stratEl=document.getElementById('stratTarget');
+  var pvBox=document.getElementById('planVsActualSection');
+  var pvCard=document.getElementById('planVsActualBox');
+  var adhSection=document.getElementById('adherenceSection');
+  if(!stratEl||!pvBox||!pvCard||!lc||!lc.startFerr){pvBox.style.display='none';if(adhSection)adhSection.style.display='none';return;}
+
+  // We need a strategy plan to have been configured — check ferrChangePM is meaningful
+  // Strategy planned rate comes from lc (the balance model)
+  var plannedFerrPM=lc.ferrChangePM||0; // µg/L per month at full adherence
+  var planTarget=+(stratEl.value)||50;
+  var adherence=(+(document.getElementById('adherenceSlider').value)||70)/100;
+
+  // Show adherence section now we know a plan exists
+  if(adhSection) adhSection.style.display='';
+
+  // Expected ferritin change per month adjusted for adherence
+  // At 0% adherence: only diet contributes (no supplement), so rate = diet-only ferrChangePM
+  // We back-calculate the diet-only rate: suppLit = suppDose * 0.04 * 30 / 8 (in µg/L/month)
+  var suppDose=lc.suppDose||0;
+  var suppFerrPM=suppDose>0?(Math.min(suppDose*0.04,4.0)*30)/8:0; // supplement's contribution to ferrChangePM
+  var dietOnlyFerrPM=plannedFerrPM-suppFerrPM;
+  var expectedFerrPM=dietOnlyFerrPM+(suppFerrPM*adherence); // scale supplement by adherence
+
+  var expectedTotalChange=expectedFerrPM*months;
+  var actualTotalChange=lastFerr-firstFerr;
+  var gap=actualTotalChange-expectedTotalChange; // positive = doing better than expected, negative = worse
+
+  // Build commentary
+  var lines=[];
+  var severity='ok';
+
+  // Opening: state the facts plainly
+  var dirActual=actualTotalChange>=0?'risen':'fallen';
+  var dirExpected=expectedTotalChange>=0?'rise':'fall';
+  lines.push('Over the '+rnd(months*10)/10+' months covered by your results, ferritin has '+dirActual+' from '+firstFerr+' to '+lastFerr+' µg/L — a change of '+(actualTotalChange>=0?'+':'')+rnd(actualTotalChange)+' µg/L ('+rnd(ferrPM*10)/10+' µg/L per month).');
+
+  // What was expected at stated adherence
+  lines.push('At '+rnd(adherence*100)+'% plan adherence, the expected change over this period was '+(expectedTotalChange>=0?'+':'')+rnd(expectedTotalChange)+' µg/L ('+rnd(expectedFerrPM*10)/10+' µg/L per month). '+(gap>=0?'Actual results are ahead of this expectation by '+rnd(Math.abs(gap))+' µg/L.':'Actual results are behind this expectation by '+rnd(Math.abs(gap))+' µg/L.'));
+
+  // Interpretation — the core logic
+  var gapIsSignificant=Math.abs(gap)>5; // >5µg/L gap is meaningful
+  var isAhead=gap>0;
+  var highAdherence=adherence>=0.7;
+  var lowAdherence=adherence<=0.4;
+
+  if(!gapIsSignificant){
+    // On track
+    lines.push('Ferritin is tracking closely to the plan — results are within the expected range given stated adherence. Continue the current approach and recheck in 3 months.');
+  } else if(isAhead && highAdherence){
+    lines.push('Ferritin is responding better than the plan projected. This is a positive sign — absorption may be somewhat higher than the population average estimate used in the model, or losses are slightly lower than modelled. No change needed; continue and recheck.');
+  } else if(isAhead && lowAdherence){
+    lines.push('Ferritin is ahead of what would be expected given the stated adherence level. Either the doses that were taken are absorbing particularly well, or losses are lower than the model estimates. This is a good result — if adherence improves further, progress should accelerate.');
+  } else if(!isAhead && lowAdherence){
+    // Behind, but adherence is low — expected
+    var fullAdherenceProjChange=plannedFerrPM*months;
+    lines.push('Results are behind the planned trajectory, which is consistent with the stated adherence level. At full adherence, the plan would project ferritin to change by '+(fullAdherenceProjChange>=0?'+':'')+rnd(fullAdherenceProjChange)+' µg/L over this period. Improving supplement consistency — even from '+rnd(adherence*100)+'% to 80% — would likely make a meaningful difference to the trend.');
+    severity='warn';
+  } else if(!isAhead && highAdherence && !ivDominates){
+    // Behind despite good adherence — the clinically important flag
+    lines.push('This is worth noting: ferritin is rising more slowly than the plan predicted despite good reported adherence. When someone follows a supplement plan closely but does not respond as expected, possible explanations include:');
+    lines.push('• Supplement timing — taking iron within an hour of food, tea, or coffee significantly reduces absorption. Taking on an empty stomach with vitamin C is optimal.');
+    lines.push('• Formulation — ferrous sulfate and fumarate absorb better than some over-the-counter formulations. Ferrous bisglycinate is gentler and may absorb comparably.');
+    lines.push('• Hepcidin effect — daily dosing can suppress next-day absorption. Alternate-day dosing (see Strategy tab) may improve net absorbed iron.');
+    lines.push('• Underlying condition — coeliac disease, H. pylori infection, or regular antacid/PPI use can all impair iron absorption and cause refractory deficiency. If timing and formulation are already optimised, this is worth raising with a clinician.');
+    lines.push('• Losses higher than modelled — if bleeding is heavier than the parameters entered in the Balance Model, losses may be outpacing absorption even with good supplementation.');
+    severity='danger';
+  } else if(!isAhead && highAdherence && ivDominates){
+    lines.push('Ferritin has not risen as much as expected following the infusion, despite good reported supplement adherence. This may reflect elevated hepcidin or inflammation at the time of the infusion reducing iron utilisation — checking CRP alongside ferritin is useful here. Alternatively, losses may be higher than the model assumes.');
+    severity='warn';
+  }
+
+  // Distance to target
+  var currentFerr=lastFerr;
+  if(currentFerr<planTarget){
+    var remaining=planTarget-currentFerr;
+    if(ferrPM>0){
+      var monthsToTarget=Math.ceil(remaining/ferrPM);
+      lines.push('At the current rate of '+rnd(ferrPM*10)/10+' µg/L/month, the '+planTarget+' µg/L target would be reached in approximately '+monthsToTarget+' more month'+(monthsToTarget===1?'':'s')+'.');
+    } else {
+      lines.push('Ferritin is currently '+rnd(remaining)+' µg/L below the '+planTarget+' µg/L target and is not rising at the current rate — a change in approach is needed to reach it.');
+    }
+  } else {
+    lines.push('Ferritin ('+currentFerr+' µg/L) is at or above the '+planTarget+' µg/L target. The focus can shift to maintenance — see Phase 2 in the Strategy tab.');
+  }
+
+  // Render
+  var cls=severity==='danger'?'danger-box':severity==='warn'?'warn':'';
+  pvBox.style.display='';
+  pvCard.className='analysis-box '+cls;
+  pvCard.style.display='block';
+  pvCard.innerHTML='<div class="analysis-title">'+(severity==='danger'?'Performance against plan — attention needed':severity==='warn'?'Performance against plan — monitor closely':'Performance against plan — on track')+'</div>'+
+    lines.map(function(l){
+      if(l.startsWith('•')) return '<p style="margin:2px 0 2px 12px;font-size:13px">'+l+'</p>';
+      return '<p style="margin-bottom:6px;font-size:13px">'+l+'</p>';
+    }).join('');
 }
 
 function calcDerived(){
@@ -739,7 +871,11 @@ function calcDerived(){
   var gridEl=document.getElementById('derivedGrid');
   if(valid.length<2){
     noteEl.textContent='Add at least 2 ferritin results with dates to derive your real absorption rate.';
-    gridEl.innerHTML='';window.derivedFerrPM=null;return;
+    gridEl.innerHTML='';
+    window.derivedFerrPM=null;
+    var pvs=document.getElementById('planVsActualSection');if(pvs)pvs.style.display='none';
+    var ads=document.getElementById('adherenceSection');if(ads)ads.style.display='none';
+    return;
   }
   noteEl.textContent='';
 
@@ -898,9 +1034,13 @@ function calcDerived(){
       diagLines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
   }
 
+  // Plan vs actual commentary
+  calcPlanVsActual(ferrPM, months, first.ferritin, last.ferritin, impliedAbsPM, ivDominates);
+
   // derivedFerrPM is now set — calc() will pick it up on next run
   window._inCalcDerived=false;
 }
+
 
 function buildGPText(){
   var c=lc;var nm=document.getElementById('sessionName').value||'Patient';
@@ -1269,7 +1409,7 @@ function showTab(t){
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
 }
-refreshList('');renderInfusions();renderActuals();updateBands();calc();
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();calc();
 </script>
 </body>
 </html>
