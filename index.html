@@ -36,7 +36,8 @@ input[type=range]:disabled{opacity:.35;cursor:not-allowed}
 .ib:hover .tt,.ib:focus .tt{display:block}
 .tt-d{color:#64748b;margin-bottom:3px}.tt-n{color:#16a34a;font-weight:600;margin-bottom:3px}.tt-s{color:#64748b;font-size:11px}
 .tabs{display:flex;border-bottom:1px solid #e2e8f0;margin-bottom:1rem;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
-.tabs::-webkit-scrollbar{display:none}
+.tabs-wrap{position:relative}
+.tabs-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,#fff);pointer-events:none}
 .tab{font-size:13px;padding:7px 16px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
 .tab.active{color:#1e293b;border-bottom-color:#3b82f6;font-weight:500}
 .trow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.5rem}
@@ -101,15 +102,17 @@ button:hover{background:#f1f5f9}
   </div>
 </div>
 
+<div class="tabs-wrap">
 <div class="tabs">
-  <button class="tab active" onclick="showTab('about')">About iron &amp; ferritin</button>
+  <button class="tab active" onclick="showTab('about')">About</button>
   <button class="tab" onclick="showTab('model')">Balance model</button>
-  <button class="tab" onclick="showTab('actual')">Actual results</button>
-  <button class="tab" onclick="showTab('infusion')">Infusion planner</button>
-  <button class="tab" onclick="showTab('strategy')">Strategy</button>
-  <button class="tab" onclick="showTab('tips')">Tips &amp; what-if</button>
-  <button class="tab" onclick="showTab('tolerability')">Side effects &amp; tolerability</button>
-  <button class="tab" onclick="showTab('export')">GP letter</button>
+  <button class="tab" onclick="showTab('actual')">Results</button>
+  <button class="tab" onclick="showTab('infusion')">Infusion</button>
+  <button class="tab" onclick="showTab('strategy')">Strategy 🔒</button>
+  <button class="tab" onclick="showTab('tips')">Tips 🔒</button>
+  <button class="tab" onclick="showTab('tolerability')">Tolerability 🔒</button>
+  <button class="tab" onclick="showTab('export')">GP letter 🔒</button>
+</div>
 </div>
 
 <div id="tab-about">
@@ -3790,14 +3793,6 @@ showTab=function(t){
   }
   _showTab(t);
 };
-if(!isUnlocked()){
-  document.querySelectorAll('.tab').forEach(function(btn){
-    var m=(btn.getAttribute('onclick')||'').match(/showTab\('(\w+)'\)/);
-    if(m&&['strategy','tips','tolerability','export'].indexOf(m[1])>-1){
-      btn.insertAdjacentText('beforeend',' 🔒');
-    }
-  });
-}
 </script>
 </body>
 </html>
