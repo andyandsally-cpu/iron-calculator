@@ -1493,6 +1493,8 @@ function calc(){
   var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
   var dietQmg=[0,6,8,10,13,16];
+  var dietQIdx=gv('dietQ')||3;
+  var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
   // net = gross absorbed minus basal utilisation; calibrated to ~10-15mg/month for average diet)
