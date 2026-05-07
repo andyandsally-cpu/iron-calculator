@@ -1099,11 +1099,13 @@ function doCopy(txt){
 
 function saveSession(){
   var name=document.getElementById('sessionName').value||('Patient '+Date.now());
-  var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr','modVitC','modTiming','modTea','modCa','modAntacid'];
+  var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr','modVitC','modTiming','modTea','modCa','modAntacid','stratTarget','adherenceSlider'];
+  var selects=['stratIVDose'];
   var data={name,age:document.getElementById('patAge').value,meno:document.getElementById('menopause').value,startDate:document.getElementById('startDate').value,
     conds:Object.assign({},conds),infusions:JSON.parse(JSON.stringify(infusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
-    sliders:sliders.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{})};
+    sliders:sliders.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{}),
+    selects:selects.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{})};
   try{
     var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');
     s[name]=data;localStorage.setItem('ironSessions',JSON.stringify(s));
@@ -1125,7 +1127,8 @@ function loadSession(name){
     infusions=d.infusions||[{month:0,dose:1000}];
     actuals=d.actuals||[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
     if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
-    renderInfusions();renderActuals();updateCondNote();calc();
+    if(d.selects){Object.keys(d.selects).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.selects[id];});}
+    renderInfusions();renderActuals();updateCondNote();updateAdherenceLabel();calc();
   }catch(e){}
 }
 function deleteSession(){
