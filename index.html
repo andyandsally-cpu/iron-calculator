@@ -433,13 +433,13 @@ button:hover{background:#f1f5f9}
   </div>
 
   <div class="row">
-    <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">ferrous sulfate 200mg tablets/day · each tablet = 65mg elemental iron</span></label>
-    <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="400" value="0" step="5" oninput="calc()"></div>
-    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span id="suppDoseV" style="font-size:13px;font-weight:500">0</span><span id="suppDoseTabV" style="font-size:12px;color:#64748b"></span><span class="badge" id="bsd"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Elemental iron per day — not tablet weight. Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Ferrous bisglycinate varies — check label. Set 0 if not supplementing.</div><div class="tt-n">Typical prescribed elemental dose: 65–200 mg/day. Above ~200mg/day, absorption does not increase further — hepcidin rises after each dose and closes the intestinal iron transporter for ~24 hours, so excess iron passes unabsorbed and simply increases GI side effects.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set 0 automatically when oral iron intolerance is toggled.</div></div></div>
+    <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">drag to set tablets per day — slider moves in 1-tablet steps</span></label>
+    <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="390" value="0" step="65" oninput="calc()"></div>
+    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span id="suppDoseV" style="font-size:13px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:12px;color:#64748b"></span><span class="badge" id="bsd"></span></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Set how many ferrous sulfate 200mg tablets you take per day. Each tablet is labelled 200mg — that is the tablet weight, not the iron dose. Each 200mg tablet contains 65mg of actual (elemental) iron that your body can absorb.</div><div class="tt-n">Most prescribed courses are 1–3 tablets per day (65–195mg elemental). Above 3 tablets (195mg elemental), absorption does not meaningfully increase — hepcidin rises after each dose and blocks the iron transporter for ~24 hours. Taking more tablets just increases side effects.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set to 0 automatically when oral iron intolerance is toggled.</div></div></div>
   </div>
   <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
-    ⚠️ <strong>Above ~200mg elemental/day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — excess iron passes through unabsorbed and increases the risk of GI side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better net absorption. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
+    ⚠️ <strong>Above 3 tablets (195mg actual iron) per day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — extra tablets pass through unabsorbed and increase the risk of side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better results. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
   </div>
 
   <div style="margin-top:14px;border-top:1px solid #f1f5f9;padding-top:12px">
@@ -860,7 +860,7 @@ var sdefs={
   bleedDays:{lo:3,hi:7,min:0,max:40},
   flowInt:{lo:1,hi:3,min:1,max:5},
   dietQ:{lo:3,hi:5,min:1,max:5},
-  suppDose:{lo:0,hi:200,min:0,max:400},
+  suppDose:{lo:0,hi:195,min:0,max:390},
   startFerr:{lo:50,hi:150,min:5,max:300}
 };
 
@@ -992,7 +992,10 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   var suppTabNote=suppDose>0?' ('+Math.round(suppDose/65*10)/10+' ferrous sulfate 200mg tablets/day)':'';
   var litSupp=suppDose>0?suppDose*0.04*30:0;
   var suppTabLabel=suppDose>0?
-    (function(){var t=Math.round(suppDose/65*10)/10;var ts=t<=1.2?'1 tablet/day':t<=2.2?'2 tablets/day':Math.round(t)+' tablets/day';return 'Supplement ('+ts+' = '+suppDose+'mg elemental)';})():
+    (function(){
+      var nt=Math.round(suppDose/65);
+      return 'Supplement ('+nt+' tablet'+(nt===1?'':'s')+'/day · '+nt*200+'mg on packet · '+suppDose+'mg actual iron)';
+    })():
     'Supplement (none)';
   el.innerHTML=
     mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
@@ -1040,19 +1043,16 @@ function calc(){
     document.getElementById('suppDoseV').textContent='None';
     if(tabVEl) tabVEl.textContent='';
   } else {
-    var tabs=suppDose/65;
-    var tabPrimary=tabs<=0.4?'< ½ tablet/day':
-      tabs<=0.6?'½ tablet/day':
-      tabs<=1.2?'1 tablet/day':
-      tabs<=1.6?'1½ tablets/day':
-      tabs<=2.2?'2 tablets/day':
-      tabs<=2.7?'2½ tablets/day':
-      Math.round(tabs)+' tablets/day';
-    document.getElementById('suppDoseV').textContent=tabPrimary;
-    if(tabVEl) tabVEl.textContent='('+suppDose+'mg iron content)';
+    // suppDose is elemental mg internally (65 per tablet)
+    var numTabs=Math.round(suppDose/65);
+    var packetMg=numTabs*200; // what the box says
+    var primaryText=numTabs+' tablet'+(numTabs===1?'':'s')+'/day ('+packetMg+'mg on packet)';
+    var secondaryText='= '+suppDose+'mg actual iron/day';
+    document.getElementById('suppDoseV').textContent=primaryText;
+    if(tabVEl) tabVEl.textContent=secondaryText;
   }
   var warnEl=document.getElementById('suppHighDoseWarn');
-  if(warnEl) warnEl.style.display=suppDose>200?'block':'none';
+  if(warnEl) warnEl.style.display=suppDose>195?'block':'none';
   document.getElementById('startFerrV').textContent=startFerr+(startFerr<15?' ⚠':'');
   var critEl=document.getElementById('startFerrCritNote');
   if(critEl) critEl.style.display=startFerr<15?'block':'none';
@@ -2263,11 +2263,13 @@ function buildGPLetter(){
     if(maintDailyMg>0) L.push('Once my levels are back up, I am also happy to discuss whether a low-dose oral option — such as iron bisglycinate, which is often better tolerated — might be worth trying for maintenance, if you think that makes sense.');
   } else {
     if(suppDose>0){
-      var tabClarify=fsTabsPerDay<=1.2?
-        'one ferrous sulfate 200mg tablet a day (each tablet contains 65mg of actual iron — the 200mg refers to the total tablet weight, not the iron content)':
-        fsTabsPerDay<=2.2?
-        'two ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron, so two tablets gives 130mg — the 200mg is the tablet weight, not the iron dose)':
-        Math.round(fsTabsPerDay)+' ferrous sulfate 200mg tablets a day (each tablet contains 65mg of actual iron — the 200mg is the tablet weight, not the iron content — so '+Math.round(fsTabsPerDay)+' tablets gives '+suppDose+'mg of elemental iron per day)';
+      var ntabsL=Math.round(fsTabsPerDay);
+      var pkMgL=ntabsL*200;
+      var tabClarify=ntabsL===1?
+        'one ferrous sulfate tablet a day — the tablet is labelled 200mg but that is the tablet weight; it contains 65mg of actual iron':
+        ntabsL===2?
+        'two ferrous sulfate tablets a day ('+pkMgL+'mg on the packet in total, which is '+suppDose+'mg of actual iron — each tablet contains 65mg)':
+        ntabsL+' ferrous sulfate tablets a day ('+pkMgL+'mg on the packet in total · '+suppDose+'mg actual iron — each tablet is labelled 200mg but contains 65mg of actual iron)';
       L.push('I would like to discuss whether a prescription for ferrous sulfate 200mg would be appropriate — based on what I have read, taking '+tabClarify+' is often recommended to bring ferritin up to around '+planTarget+' µg/L, which I understand is the level at which symptoms typically improve. I appreciate you may have a different view on the best approach and am happy to go with your recommendation.');
       if(maintDailyMg>0){
         L.push('');
@@ -2607,13 +2609,12 @@ function calcStrategy(){
       doseNote.innerHTML='⚠️ <strong>No supplement is set in the Balance Model tab.</strong> Go to the Balance Model tab and set a supplement dose to model oral recovery.';
       doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
     } else {
-      var fsT=suppDose/65;
-      var tabPrimary2=fsT<=0.5?'less than 1 ferrous sulfate 200mg tablet per day':
-        fsT<=1.2?'<strong>1 ferrous sulfate 200mg tablet per day</strong>':
-        fsT<=2.2?'<strong>2 ferrous sulfate 200mg tablets per day</strong>':
-        '<strong>'+Math.round(fsT)+' ferrous sulfate 200mg tablets per day</strong>';
-      var elemNote2='('+suppDose+'mg elemental iron — each 200mg tablet contains 65mg elemental iron; the 200mg is the tablet weight, not the iron dose)';
-      doseNote.innerHTML='<strong>Phase 1 dose (from Balance Model tab):</strong> '+tabPrimary2+' '+elemNote2+'. To change this, adjust the supplement slider on the Balance Model tab.';
+      var ntabs=Math.round(suppDose/65);
+      var pkMg=ntabs*200;
+      var tabPrimary2=ntabs===0?'less than 1 tablet per day':
+        '<strong>'+ntabs+' ferrous sulfate tablet'+(ntabs===1?'':'s')+' per day ('+pkMg+'mg on the packet)</strong>';
+      var elemNote2='Each tablet is labelled '+pkMg/ntabs+'mg — that is the tablet weight, not the iron dose. Each tablet contains 65mg of actual iron your body can absorb, so '+ntabs+' tablet'+(ntabs===1?'':'s')+' = '+suppDose+'mg actual iron per day.';
+      doseNote.innerHTML='<strong>Phase 1 dose (from Balance Model tab):</strong> '+tabPrimary2+'. '+elemNote2+' To change this, adjust the supplement slider on the Balance Model tab.';
       doseNote.style.background='#fefce8';doseNote.style.borderColor='#fde047';doseNote.style.color='#854d0e';
     }
   }
@@ -2728,18 +2729,22 @@ function calcStrategy(){
 
   var tabAdvice=tabletAdvice(mDailyR);
 
+  var mDailyTabs=Math.max(1,Math.round(mDailyR/65));
+  var mDailyPkMg=mDailyTabs*200;
   phase2Grid.innerHTML=
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
     mc('Diet covers',rnd(Math.min(dietNetMonth,totalLossMonth)),'mg/mo',dietNetMonth>=totalLossMonth?'ok':'warning')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
-    mc('Maintenance dose',Math.round(mDailyR/65*10)/10<=1.2?'1 tablet/day':Math.round(mDailyR/65*10)/10<=2.2?'2 tablets/day':Math.round(mDailyR/65)+' tablets/day','('+mDailyR+'mg el.)','neutral')+
-    mc('Alternate-day dose',Math.ceil(mAltDayR/65),'tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+'/alt-day ('+mAltDayR+'mg el.)','neutral');
+    mc('Maintenance dose',mDailyTabs+' tablet'+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg packet · '+mDailyR+'mg actual iron)','neutral')+
+    mc('Alt-day option',altDayTabs+' tablet'+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg packet · '+mAltDayR+'mg actual iron)','neutral');
 
   phase2Text.innerHTML=
     '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month (diet covers '+rnd(dietNetMonth)+' mg/month of this), a practical supplement schedule would be '+tabAdvice+'</p>'+
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+Math.ceil(mAltDayR/65)+' ferrous sulfate 200mg tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+' every other day</strong> ('+mAltDayR+'mg iron content) is estimated to provide comparable net absorption to '+mDailyR+'mg taken daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  var altDayTabs=Math.ceil(mAltDayR/65);
+  var altDayPkMg=altDayTabs*200;
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+altDayTabs+' ferrous sulfate tablet'+(altDayTabs===1?'':'s')+' every other day — '+altDayPkMg+'mg on the packet ('+mAltDayR+'mg actual iron)</strong> is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -2750,13 +2755,14 @@ function calcStrategy(){
 
     // Helper: tablets-first description
     function tabFirst(elMg){
-      var t=Math.round(elMg/65*10)/10;
-      var ts=t<=1.2?'1 ferrous sulfate 200mg tablet/day':t<=2.2?'2 ferrous sulfate 200mg tablets/day':Math.round(t)+' ferrous sulfate 200mg tablets/day';
-      return ts+' ('+elMg+'mg elemental)';
+      var nt=Math.round(elMg/65);
+      var pkMg=nt*200;
+      return nt+' ferrous sulfate tablet'+(nt===1?'':'s')+'/day ('+pkMg+'mg on the packet · '+elMg+'mg actual iron)';
     }
     function tabFirstWeekly(elMgPerDay){
       var fsWk=Math.ceil(elMgPerDay/65*30/4.3);
-      return (fsWk===1?'1 ferrous sulfate 200mg tablet':fsWk+' ferrous sulfate 200mg tablets')+' per week, spread a few days apart ('+elMgPerDay+'mg elemental/day equivalent)';
+      var pkMgWk=fsWk*200;
+      return (fsWk===1?'1 ferrous sulfate tablet':fsWk+' ferrous sulfate tablets')+' per week — '+pkMgWk+'mg on packet per week ('+elMgPerDay+'mg actual iron/day equivalent), spread a few days apart';
     }
 
     // Phase 1 sentence
