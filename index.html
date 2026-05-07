@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fe+</title>
+<title>Iron Balance Calculator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;font-size:15px;line-height:1.6;padding:1.5rem}
@@ -72,7 +72,7 @@ button:hover{background:#f1f5f9}
 </head>
 <body>
 <div class="app">
-<h1>Fe+</h1>
+<h1>Iron balance calculator</h1>
 <p class="sub">Evidence-based iron modelling · Multi-patient · Session storage · Clinical analysis</p>
 
 <div class="section">
@@ -114,6 +114,7 @@ button:hover{background:#f1f5f9}
   <button class="tab active" onclick="showTab('model')">Balance model</button>
   <button class="tab" onclick="showTab('actual')">Actual results</button>
   <button class="tab" onclick="showTab('infusion')">Infusion planner</button>
+  <button class="tab" onclick="showTab('strategy')">Strategy</button>
   <button class="tab" onclick="showTab('export')">Analysis &amp; export</button>
 </div>
 
@@ -165,9 +166,12 @@ button:hover{background:#f1f5f9}
 
   <div class="row">
     <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">elemental iron mg/day</span></label>
-    <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="200" value="0" step="5" oninput="calc()"></div>
+    <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="400" value="0" step="5" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="suppDoseV" style="font-size:13px;font-weight:500">0mg</span><span class="badge" id="bsd"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Elemental iron per day — not tablet weight. Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Ferrous bisglycinate varies — check label. Set 0 if not supplementing.</div><div class="tt-n">Typical prescribed elemental dose: 65-200 mg/day</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set 0 automatically when oral iron intolerance is toggled.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Elemental iron per day — not tablet weight. Ferrous sulfate 200mg = 65mg elemental. Ferrous fumarate 210mg = 69mg. Ferrous bisglycinate varies — check label. Set 0 if not supplementing.</div><div class="tt-n">Typical prescribed elemental dose: 65–200 mg/day. Above ~200mg/day, absorption does not increase further — hepcidin rises after each dose and closes the intestinal iron transporter for ~24 hours, so excess iron passes unabsorbed and simply increases GI side effects.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set 0 automatically when oral iron intolerance is toggled.</div></div></div>
+  </div>
+  <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
+    ⚠️ <strong>Above ~200mg elemental/day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — excess iron passes through unabsorbed and increases the risk of GI side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better net absorption. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
   </div>
 
   <div style="margin-top:14px;border-top:1px solid #f1f5f9;padding-top:12px">
@@ -312,6 +316,57 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
+<div id="tab-strategy" style="display:none">
+<div class="section">
+<div class="st">Treatment strategy overview</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:1rem;line-height:1.5">Iron management typically has two distinct phases. <strong>Phase 1</strong> is recovery — getting ferritin up to a safe level. <strong>Phase 2</strong> is maintenance — the minimum ongoing input needed to simply stay level against losses. These are calculated from your current balance model settings.</p>
+
+<!-- PHASE 1 -->
+<div class="card" style="margin-bottom:1.25rem">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px">Phase 1 — Recovery</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px">How long to reach your target ferritin, and how an infusion would change that.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:6px">Recovery target ferritin (µg/L)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <input type="range" id="stratTarget" min="20" max="150" value="50" step="5" oninput="calcStrategy()" style="flex:1;height:4px;-webkit-appearance:none;appearance:none;background:#e2e8f0;border-radius:2px;outline:none;cursor:pointer">
+        <span id="stratTargetV" style="font-size:14px;font-weight:600;color:#1e293b;min-width:40px">50</span>
+      </div>
+      <div id="stratTargetLabel" style="font-size:11px;color:#b45309;font-weight:500"></div>
+    </div>
+    <div class="pf">
+      <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Infusion to include in plan (mg)</label>
+      <select id="stratIVDose" onchange="calcStrategy()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff">
+        <option value="0" selected>No infusion</option>
+        <option value="500">500 mg</option>
+        <option value="1000">1000 mg (typical NHS)</option>
+        <option value="1500">1500 mg</option>
+        <option value="2000">2000 mg</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid3" id="stratPhase1Grid" style="margin-bottom:10px"></div>
+  <div id="stratPhase1Text" style="font-size:13px;color:#475569;line-height:1.65;background:#f8fafc;border-radius:8px;padding:10px 14px"></div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="card">
+  <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px">Phase 2 — Maintenance</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:12px">The minimum ongoing supplementation needed to stay level — covering losses exactly, neither recovering nor depleting.</div>
+
+  <div class="grid3" id="stratPhase2Grid" style="margin-bottom:10px"></div>
+  <div id="stratPhase2Text" style="font-size:13px;color:#475569;line-height:1.65;background:#f8fafc;border-radius:8px;padding:10px 14px"></div>
+
+  <div style="margin-top:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px">
+    <div style="font-size:11px;font-weight:600;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Alternate-day dosing note</div>
+    <div id="stratAltDayText" style="font-size:12px;color:#475569;line-height:1.6"></div>
+  </div>
+</div>
+</div>
+</div>
+
 <div id="tab-export" style="display:none">
 <div class="section">
 <div class="st">Clinical analysis &amp; export</div>
@@ -352,7 +407,7 @@ var sdefs={
   bleedDays:{lo:3,hi:7,min:0,max:40},
   flowInt:{lo:1,hi:3,min:1,max:5},
   dietQ:{lo:3,hi:5,min:1,max:5},
-  suppDose:{lo:0,hi:200,min:0,max:200},
+  suppDose:{lo:0,hi:200,min:0,max:400},
   startFerr:{lo:50,hi:150,min:5,max:300}
 };
 
@@ -514,6 +569,8 @@ function calc(){
   document.getElementById('flowIntV').textContent=post?'None':flowLabels[flowIdx];
   document.getElementById('dietQV').textContent=dietQLabels[dietQIdx];
   document.getElementById('suppDoseV').textContent=suppDose+'mg';
+  var warnEl=document.getElementById('suppHighDoseWarn');
+  if(warnEl) warnEl.style.display=suppDose>200?'block':'none';
   document.getElementById('startFerrV').textContent=startFerr;
 
   updateBadge('bcy',cycleLen,21,35);
@@ -571,7 +628,7 @@ function calc(){
   var monthNames2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtMonth(offset){var d=new Date(baseDate2.getFullYear(),baseDate2.getMonth()+offset,1);return monthNames2[d.getMonth()]+' '+d.getFullYear();}
   lc={cycleLen,bleedDays,flowIdx,dietQ:dietQIdx,dietIronMgDay:rnd(dietIronMgDay*10)/10,dietNetMonth:rnd(dietNetMonth),suppDose,basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
-    startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),
+    startFerr,mgLostMonth:rnd(mgLostMonth),mgAbsMonth:rnd(mgAbsMonth),netMonth:rnd(netMonth),totalLossMonth:rnd(totalLossMonth),
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
 
@@ -607,6 +664,8 @@ function calc(){
     li('#3b82f6','Projected ferritin')+li('#16a34a','Optimal (50 µg/L)',true)+li('#dc2626','Minimum (30 µg/L)',true)+
     (va.length?li('#ea580c','Actual results'):'');
   if(!window._inCalcDerived) calcDerived();
+  // Refresh strategy tab if it's visible
+  if(document.getElementById('tab-strategy').style.display!=='none') calcStrategy();
 }
 
 function updateAnalysis(){
@@ -1043,6 +1102,159 @@ function calcIV(){
     (schedule.length?ivli('#7c3aed','Infusion given','triangle'):'');
 }
 
+function calcStrategy(){
+  var c=lc;
+  if(!c||!c.startFerr) return;
+
+  var startFerr=c.startFerr||25;
+  var ferrChangePM=c.ferrChangePM||0;   // µg/L per month from current net balance
+  var totalLossMonth=(c.basalLossMonth||30)+(c.mgLostMonth||0);
+  var dietNetMonth=c.dietNetMonth||0;
+  var netMonth=c.netMonth||0;
+
+  // ── TARGET SLIDER LABEL ──
+  var target=+(document.getElementById('stratTarget').value)||50;
+  document.getElementById('stratTargetV').textContent=target;
+  var tLabel=document.getElementById('stratTargetLabel');
+  var tText,tColor;
+  if(target<30){tText='Below depleted stores threshold — not recommended as a target';tColor='#dc2626';}
+  else if(target<50){tText='Below optimal — depleted stores, symptoms likely';tColor='#b45309';}
+  else if(target<=70){tText='Recommended minimum for menstruating women (BSH/NICE)';tColor='#16a34a';}
+  else if(target<=100){tText='Optimal — good symptom buffer and recovery headroom';tColor='#16a34a';}
+  else{tText='Well-repleted — typically seen after IV infusion';tColor='#64748b';}
+  tLabel.textContent=tText;tLabel.style.color=tColor;
+
+  var ivDose=+(document.getElementById('stratIVDose').value)||0;
+
+  // ── PHASE 1: RECOVERY ──
+  var ivFerrBoost=ivDose>0?mg2f(ivDose):0;
+  var startAfterIV=startFerr+ivFerrBoost;
+
+  var phase1Grid=document.getElementById('stratPhase1Grid');
+  var phase1Text=document.getElementById('stratPhase1Text');
+  if(!phase1Grid||!phase1Text)return;
+
+  var noIVMonths,ivMonths;
+  var noIVMsg='',ivMsg='';
+
+  // Months to target — oral only
+  if(startFerr>=target){
+    noIVMonths=0;
+    noIVMsg='Ferritin is already at or above the '+target+' µg/L target.';
+  } else if(ferrChangePM<=0){
+    noIVMonths=null;
+    noIVMsg='With the current balance ('+sign(netMonth)+rnd(netMonth)+' mg/month net), ferritin is '+(netMonth<0?'declining':'not rising')+' — the target cannot be reached without increasing intake or reducing losses.';
+  } else {
+    noIVMonths=Math.ceil((target-startFerr)/ferrChangePM);
+    noIVMsg='At the current rate of +'+rnd(ferrChangePM*10)/10+' µg/L/month, recovery to '+target+' µg/L should take approximately '+noIVMonths+' month'+(noIVMonths===1?'':'s')+'.';
+  }
+
+  // Months to target — with infusion
+  if(ivDose>0){
+    if(startAfterIV>=target){
+      ivMonths=0;
+      ivMsg='A '+ivDose+' mg infusion would be expected to raise ferritin to approximately '+rnd(startAfterIV)+' µg/L immediately — meeting or exceeding the '+target+' µg/L target in one step.';
+    } else if(ferrChangePM<=0){
+      ivMonths=null;
+      ivMsg='A '+ivDose+' mg infusion would raise ferritin to approximately '+rnd(startAfterIV)+' µg/L, but with the current oral balance not positive, ferritin would then plateau or decline. Ongoing oral supplementation or loss reduction is needed to sustain it.';
+    } else {
+      ivMonths=Math.ceil((target-startAfterIV)/ferrChangePM);
+      ivMsg='A '+ivDose+' mg infusion would raise ferritin to approximately '+rnd(startAfterIV)+' µg/L immediately. The remaining gap to '+target+' µg/L would take approximately '+ivMonths+' further month'+(ivMonths===1?'':'s')+' at the current oral rate.';
+    }
+  }
+
+  phase1Grid.innerHTML=
+    mc('Starting ferritin',startFerr,'µg/L',startFerr<30?'danger':startFerr<50?'warning':'ok')+
+    mc('Recovery target',target,'µg/L','neutral')+
+    (noIVMonths===null
+      ?mc('Time to target (oral only)','Not achievable','','danger')
+      :mc('Time to target (oral only)',noIVMonths===0?'Already there':noIVMonths+(noIVMonths>0?' mo':''),'',noIVMonths===0?'ok':noIVMonths<=3?'ok':noIVMonths<=6?'warning':'danger'))+
+    (ivDose>0
+      ?(ivMonths===null
+        ?mc('With '+ivDose+' mg infusion','Needs ongoing support','','warning')
+        :mc('With '+ivDose+' mg infusion',ivMonths===0?'Target met immediately':ivMonths+' mo further','','ok'))
+      :'')+
+    (ivDose>0?mc('Post-infusion ferritin','~'+rnd(startAfterIV),'µg/L',startAfterIV>=target?'ok':'warning'):'');
+
+  var p1html='<p style="margin-bottom:'+(ivDose>0?'6':'0')+'px">'+noIVMsg+'</p>';
+  if(ivDose>0) p1html+='<p style="margin:0">'+ivMsg+'</p>';
+  phase1Text.innerHTML=p1html;
+
+  // ── PHASE 2: MAINTENANCE ──
+  // How much elemental iron from supplements is needed monthly to exactly cover the remaining deficit after diet
+  var deficitAfterDiet=Math.max(0,totalLossMonth-dietNetMonth);
+
+  var phase2Grid=document.getElementById('stratPhase2Grid');
+  var phase2Text=document.getElementById('stratPhase2Text');
+  var altDayText=document.getElementById('stratAltDayText');
+  if(!phase2Grid||!phase2Text||!altDayText)return;
+
+  if(deficitAfterDiet<=0){
+    phase2Grid.innerHTML=
+      mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
+      mc('Diet covers',rnd(dietNetMonth),'mg/mo','ok')+
+      mc('Supplement needed','None','','ok');
+    phase2Text.innerHTML='<p style="margin:0">Diet alone appears sufficient to cover total losses ('+rnd(totalLossMonth)+' mg/month). No supplement is needed for maintenance — though checking ferritin every 3–6 months is still sensible.</p>';
+    altDayText.innerHTML='Not applicable — diet alone covers losses.';
+    return;
+  }
+
+  // Back-calculate elemental supplement needed: deficit = dose * 0.04 * 30
+  var maintDailyMg=deficitAfterDiet/(0.04*30);
+  // Alternate-day: hepcidin benefit means ~10% better absorption per dose, but only ~15 doses/month
+  // deficit = dose_altday * 0.04 * 1.10 * 15 => dose_altday = deficit / (0.04 * 1.10 * 15)
+  var maintAltDayMg=deficitAfterDiet/(0.04*1.10*15);
+
+  function r5(n){return Math.ceil(n/5)*5;}
+  var mDailyR=r5(maintDailyMg);
+  var mAltDayR=r5(maintAltDayMg);
+
+  // Practical tablet translation
+  // Ferrous sulfate 200mg tablet = 65mg elemental
+  // Ferrous fumarate 210mg tablet = 69mg elemental
+  // Ferrous bisglycinate ~20mg elemental per capsule (OTC)
+  function tabletAdvice(dailyMg){
+    // Monthly elemental needed from supplement
+    var monthlyNeeded=deficitAfterDiet; // mg/month net absorbed needed
+    // At 4% absorption: elemental per month = monthlyNeeded/0.04
+    var elemPerMonth=monthlyNeeded/0.04;
+    // Ferrous sulfate 200mg tab = 65mg elemental
+    var fsTabsPerMonth=elemPerMonth/65;
+    var fsPerWeek=fsTabsPerMonth/4.3;
+
+    var advice='';
+    if(fsPerWeek<0.8){
+      advice='less than one ferrous sulfate tablet per week would be sufficient — a low-dose bisglycinate supplement (e.g. 20mg elemental per capsule, OTC) taken a few times a week may be more practical.';
+    } else if(fsPerWeek<1.5){
+      advice='approximately <strong>1 ferrous sulfate tablet (200mg) per week</strong>. Take on an empty stomach if tolerated, ideally not two days in a row.';
+    } else if(fsPerWeek<2.5){
+      advice='approximately <strong>2 ferrous sulfate tablets (200mg each) per week</strong>, spread a few days apart — for example Monday and Thursday. Ferrous fumarate 210mg is an equivalent alternative.';
+    } else if(fsPerWeek<3.5){
+      advice='approximately <strong>3 ferrous sulfate tablets (200mg each) per week</strong>, spread evenly — for example Monday, Wednesday, Friday.';
+    } else {
+      // High need — daily or close to it
+      var tabsPerDay=Math.round(dailyMg/65*10)/10;
+      advice='approximately <strong>'+Math.round(tabsPerDay)+' ferrous sulfate tablet'+(Math.round(tabsPerDay)>1?'s':'')+' per day</strong> ('+rnd(dailyMg)+' mg elemental). At this level, note that absorption is limited by hepcidin — alternate-day dosing at a higher per-dose amount may be more effective than splitting into daily doses.';
+    }
+    return advice;
+  }
+
+  var tabAdvice=tabletAdvice(mDailyR);
+
+  phase2Grid.innerHTML=
+    mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
+    mc('Diet covers',rnd(Math.min(dietNetMonth,totalLossMonth)),'mg/mo',dietNetMonth>=totalLossMonth?'ok':'warning')+
+    mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
+    mc('Daily elemental needed',mDailyR,'mg/day','neutral')+
+    mc('Alternate-day dose',mAltDayR,'mg/dose','neutral');
+
+  phase2Text.innerHTML=
+    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month (diet covers '+rnd(dietNetMonth)+' mg/month of this), a practical supplement schedule would be '+tabAdvice+'</p>'+
+    '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>';
+
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in similar or slightly better total absorption from fewer tablets and with fewer GI side effects (nausea, constipation).<br><br>For maintenance, an every-other-day dose of approximately <strong>'+mAltDayR+' mg elemental iron</strong> ('+Math.ceil(mAltDayR/65)+' ferrous sulfate tablet'+(Math.ceil(mAltDayR/65)>1?'s':'')+') is expected to match the absorption of '+mDailyR+' mg taken daily. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+}
+
 function refreshList(sel){
   try{
     var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');
@@ -1052,9 +1264,10 @@ function refreshList(sel){
   }catch(e){}
 }
 function showTab(t){
-  ['model','actual','infusion','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['model','actual','infusion','export'][i]===t);});
+  ['model','actual','infusion','strategy','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['model','actual','infusion','strategy','export'][i]===t);});
   if(t==='infusion')calcIV();
+  if(t==='strategy')calcStrategy();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();calc();
 </script>
