@@ -130,7 +130,7 @@ button:hover{background:#f1f5f9}
     </div>
     <div style="display:flex;align-items:center;gap:3px">
       <div class="tog" id="tog-pcos" onclick="toggleCond('pcos')">PCOS</div>
-      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Cycle length default → 35 days (irregular/longer cycles)<br>• Note about insulin resistance and low-grade inflammation potentially raising hepcidin and reducing iron absorption</div><div class="tt-s">PCOS commonly causes irregular, often infrequent periods (oligomenorrhoea). Longer cycles mean fewer bleeds per year — potentially less iron loss than regular cycles, but periods when they occur can be heavy. Insulin resistance in PCOS is associated with low-grade inflammation which may raise hepcidin. Source: NICE CG156.</div></div></div>
+      <div class="ib" tabindex="0" style="font-size:10px;width:14px;height:14px">?<div class="tt"><div class="tt-d">What this changes in the model:</div><div class="tt-n">• Cycle length default → 35 days (irregular/longer cycles)<br>• Informational note added about insulin resistance and hepcidin<br>• No numeric absorption penalty applied — evidence for the specific effect size is not strong enough to quantify reliably</div><div class="tt-s">PCOS commonly causes irregular periods. Insulin resistance is associated with low-grade inflammation which may raise hepcidin — but the effect size is not reliably quantified in the literature. If ferritin is not recovering despite good adherence, raise this with your GP. Source: NICE CG156.</div></div></div>
     </div>
     <div style="display:flex;align-items:center;gap:3px">
       <div class="tog" id="tog-vegan" onclick="toggleCond('vegan')">Vegetarian / vegan</div>
@@ -154,6 +154,12 @@ button:hover{background:#f1f5f9}
 
 <div id="tab-about">
 <div class="section">
+
+<!-- GLOBAL POSITIONING STATEMENT -->
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 18px;margin-bottom:1rem;display:flex;align-items:center;gap:12px">
+  <div style="font-size:20px;flex-shrink:0">ℹ️</div>
+  <div style="font-size:13px;color:#15803d;line-height:1.55"><strong>This tool helps you understand your iron balance and supports a conversation with your GP — it does not recommend or prescribe treatment.</strong> All outputs are estimates based on population averages. Any treatment decisions should be made with a qualified clinician.</div>
+</div>
 
 <!-- HEADER -->
 <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d6a9f 100%);border-radius:12px;padding:20px 24px;margin-bottom:1.25rem;color:#f1f5f9">
@@ -399,6 +405,7 @@ button:hover{background:#f1f5f9}
 
 <!-- CTA -->
 <div style="text-align:center;padding:16px 0 4px">
+  <div style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.55">If you haven't already, speaking to your GP about persistent low ferritin is the single most important step — this tool helps you prepare for that conversation.</div>
   <button onclick="showTab('model')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Start the balance model →</button>
 </div>
 
@@ -406,6 +413,7 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div id="tab-model" style="display:none">
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:9px 14px;margin-bottom:.75rem;font-size:12px;color:#15803d;line-height:1.5">ℹ️ <strong>Planning &amp; discussion support only</strong> — outputs are estimates to support a GP conversation, not prescriptions or clinical recommendations.</div>
 <div class="rl">
   <span><span class="rsw" style="background:#16a34a"></span>Normal range</span>
   <span><span class="rsw" style="background:#b45309"></span>Outside normal</span>
@@ -517,7 +525,7 @@ button:hover{background:#f1f5f9}
       <input type="radio" name="formulation" id="form-bisglycinate" value="bisglycinate" onchange="calc()" style="cursor:pointer">
       <span>Ferrous bisglycinate 20mg <span style="color:#94a3b8">(20mg actual iron · OTC · best tolerated)</span></span>
     </label>
-    <div class="ib" tabindex="0" style="margin-left:2px">?<div class="tt"><div class="tt-d">Both are prescribed iron supplements available on the NHS. The difference is the tablet weight and how much actual iron each contains.</div><div class="tt-n"><strong>Ferrous sulfate 200mg</strong> — 65mg actual iron per tablet. Most commonly prescribed. Can cause nausea, constipation or dark stools in some people, especially on an empty stomach.<br><br><strong>Ferrous fumarate 210mg</strong> — 69mg actual iron per tablet. Marginally more iron per tablet. Generally considered slightly better tolerated than sulfate, though evidence is mixed. A useful alternative if sulfate causes GI side effects.<br><br><strong>Ferrous bisglycinate 20mg</strong> — 20mg actual iron per capsule. OTC only (not NHS prescribed). Chelated to glycine so does not release free iron in the gut — dramatically fewer side effects. Absorption may be 1.5–2× more efficient per mg than sulfate. Best for sensitive stomachs, maintenance, or those who cannot tolerate prescribed iron. Sold as Gentle Iron, OptiFer, and similar brands.</div><div class="tt-s">Ferrous (Fe²⁺) forms absorb significantly better than ferric (Fe³⁺) supplements. Enteric-coated or slow-release tablets are NOT recommended — they bypass the stomach where most absorption occurs. Liquid iron sachets (Spatone etc.) contain only 5mg actual iron and are only suitable if maintenance needs are very low — check the Tolerability tab.</div></div></div>
+    <div class="ib" tabindex="0" style="margin-left:2px">?<div class="tt"><div class="tt-d">Both are prescribed iron supplements available on the NHS. The difference is the tablet weight and how much actual iron each contains.</div><div class="tt-n"><strong>Ferrous sulfate 200mg</strong> — 65mg actual iron per tablet. Most commonly prescribed. Can cause nausea, constipation or dark stools in some people, especially on an empty stomach.<br><br><strong>Ferrous fumarate 210mg</strong> — 69mg actual iron per tablet. Marginally more iron per tablet. Generally considered slightly better tolerated than sulfate, though evidence is mixed. A useful alternative if sulfate causes GI side effects.<br><br><strong>Ferrous bisglycinate 20mg</strong> — 20mg actual iron per capsule. OTC only (not NHS prescribed). Chelated to glycine so does not release free iron in the gut — dramatically fewer side effects. Absorption is estimated to be better than standard iron salts per mg (typically 1.5–2× higher, though this varies by dose and individual — the evidence base is less robust than for sulfate/fumarate). Best for sensitive stomachs, maintenance, or those who cannot tolerate prescribed iron. Sold as Gentle Iron, OptiFer, and similar brands.</div><div class="tt-s">Ferrous (Fe²⁺) forms absorb significantly better than ferric (Fe³⁺) supplements. Enteric-coated or slow-release tablets are NOT recommended — they bypass the stomach where most absorption occurs. Liquid iron sachets (Spatone etc.) contain only 5mg actual iron and are only suitable if maintenance needs are very low — check the Tolerability tab.</div></div></div>
   </div>
   <div id="suppHighDoseWarn" style="display:none;margin:-4px 0 10px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
     ⚠️ <strong>Above 3 tablets (195mg actual iron) per day, absorption is unlikely to increase further.</strong> Hepcidin rises after each dose and blocks the intestinal iron transporter for approximately 24 hours — extra tablets pass through unabsorbed and increase the risk of side effects (nausea, constipation). Taking a lower dose every other day is likely to deliver equal or better results. Source: Moretti et al, <em>Lancet Haematology</em> 2015.
@@ -565,7 +573,7 @@ button:hover{background:#f1f5f9}
       <span style="font-size:12px;color:#475569">Effective supplement absorption after habits:</span>
       <span id="effAbsDisplay" style="font-size:16px;font-weight:600;color:#1e293b">—</span>
       <span id="effAbsBadge" class="badge"></span>
-      <span style="font-size:11px;color:#94a3b8">(adjusts the literature estimate used in calculations)</span>
+      <span style="font-size:11px;color:#94a3b8">(adjusts the literature estimate — combined effects are approximate and may not add linearly in real use)</span>
     </div>
 
     <details style="margin-top:10px">
@@ -773,7 +781,7 @@ button:hover{background:#f1f5f9}
       <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
         <input type="radio" name="ointolMaint" value="bisglycinate" onchange="calcStrategy()" style="margin-top:2px;cursor:pointer">
         <span>
-          <strong>Option C — Cautious bisglycinate trial:</strong> 1 capsule (20mg actual iron) every other day, building from every 3 days.
+          <strong>Option C — Cautious bisglycinate trial (discuss with GP first):</strong> 1 capsule (20mg actual iron) every other day, building from every 3 days.
           <span class="ib" tabindex="0" style="vertical-align:middle;margin-left:3px">?<div class="tt"><div class="tt-d">What counts as "low dose" for oral iron intolerance trial:</div><div class="tt-n">• Ferrous bisglycinate 1 capsule (20mg actual iron) every 3 days = ~10mg/day average — the gentlest meaningful oral iron dose available<br>• For comparison: standard prescribed ferrous sulfate = 65mg/day — 6× higher<br>• Bisglycinate does not release free iron in the gut (chelated form) — this is why it is tolerated when sulfate is not<br>• Start every 3 days, increase to every other day if tolerated after 2–3 weeks<br>• Most people who cannot tolerate sulfate or fumarate can take bisglycinate without problems</div><div class="tt-s">If bisglycinate at this low dose is well tolerated, consider removing the oral intolerance flag and remodelling with bisglycinate selected as your formulation at a higher dose for better effect.</div></div></span>
           Under supervision — report to GP if any symptoms.
         </span>
@@ -818,7 +826,7 @@ button:hover{background:#f1f5f9}
 <!-- SECTION 1: DIET & ABSORPTION TIPS -->
 <div class="card" style="margin-bottom:1rem">
   <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:3px">Section 1 — Diet &amp; absorption tips</div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:10px">Each toggle shows the estimated additional ferritin gain at 12 months from that change alone. Effects stack when multiple are selected.</div>
+  <div style="font-size:12px;color:#64748b;margin-bottom:10px">Each toggle shows the <em>estimated</em> additional ferritin at 12 months — shown as a range to reflect real-world variability. Individual results vary significantly. Effects stack when multiple are selected.</div>
   <div id="tipsDietToggles" style="display:grid;gap:6px"></div>
 </div>
 
@@ -1191,7 +1199,7 @@ var PERIOD_MGMT_NOTES={
 
   pill63:'<strong>Combined pill — extended / tricycling:</strong> You take 3 packs back-to-back (63 active days) then have a 4–7 day break. This results in only 4–6 bleeds per year instead of 13, dramatically reducing total annual iron loss. <strong>Cycle length is fixed at 63 days.</strong> This approach is commonly used for endometriosis management and is fully supported by NICE and FSRH guidance. Adjust the flow slider to match your withdrawal bleed.',
 
-  pillcont:'<strong>Combined pill — continuous / flexible extended use:</strong> You take the pill without a break until you get breakthrough spotting, then stop for a withdrawal bleed before restarting. <strong>This is completely medically safe</strong> — FSRH 2019 guidance on combined hormonal contraception explicitly endorses this approach. There is no increased health risk from taking the pill continuously in this way. <br><br>One thing worth knowing: withdrawal bleeds after 4–6 months of continuous use can be heavier and longer than a typical 21/7 withdrawal bleed, because more endometrial tissue has built up over the longer interval. Some people are caught off-guard by this — it does not mean anything is wrong. <br><br><strong>→ Set the flow intensity slider below to match your actual experience of these bleeds</strong>, not what a "normal" bleed might be. If your bleed after a long continuous stretch feels heavier than moderate, select Heavy or Very heavy — this gives the model the most accurate picture of your iron losses.',
+  pillcont:'<strong>Combined pill — continuous / flexible extended use:</strong> You take the pill without a break until you get breakthrough spotting, then stop for a withdrawal bleed before restarting. <strong>This is considered safe for most women</strong> — FSRH 2019 guidance on combined hormonal contraception supports this approach for women without specific contraindications. If you have any concerns about whether continuous use is right for you specifically, check with your GP or sexual health clinic. <br><br>One thing worth knowing: withdrawal bleeds after 4–6 months of continuous use can be heavier and longer than a typical 21/7 withdrawal bleed, because more endometrial tissue has built up over the longer interval. Some people are caught off-guard by this — it does not mean anything is wrong. <br><br><strong>→ Set the flow intensity slider below to match your actual experience of these bleeds</strong>, not what a "normal" bleed might be. If your bleed after a long continuous stretch feels heavier than moderate, select Heavy or Very heavy — this gives the model the most accurate picture of your iron losses.',
 
   mini:'<strong>Mini pill / progestogen-only pill (POP):</strong> The effect on periods varies a lot between individuals. Some people stop having periods altogether (amenorrhoea); some have frequent light spotting; some have relatively normal cycles. The defaults here assume light, irregular periods — but adjust the sliders to reflect your actual pattern. If you have stopped having periods on the mini pill, set bleeding days to 0. Cycle length is set to 28 days as an approximation but is less meaningful for irregular patterns.',
 
@@ -1326,8 +1334,8 @@ function updateCondNote(){
   if(conds.adeno)n.push('Adenomyosis: bleeding days → 9, flow → Heavy');
   if(conds.coeliac)n.push('Coeliac disease: supplement absorption reduced ~55% (villous atrophy); dietary absorption also reduced. A gluten-free diet gradually restores absorption — model will improve as adherence increases.');
   if(conds['oral-intol'])n.push('Oral iron intolerance: supplement set to 0. Strategy tab shows infusion and low-dose oral alternatives.');
-  if(conds.pcos)n.push('PCOS: cycle length → 35 days. Note: insulin resistance may raise hepcidin slightly, reducing absorption — modelled as ~10% reduction.');
-  if(conds.vegan)n.push('Vegetarian/vegan: dietary iron quantity reduced 25%; absorption efficiency reduced ~40% (non-haem only). Vitamin C with every meal is particularly important.');
+  if(conds.pcos)n.push('PCOS: cycle length → 35 days. Note: insulin resistance may raise hepcidin, potentially reducing iron absorption — evidence not strong enough to model numerically. If ferritin is not responding as expected despite good adherence, mention PCOS to your GP as a possible contributing factor.');
+  if(conds.vegan)n.push('Vegetarian/vegan: dietary iron quantity reduced 25%; absorption efficiency reduced ~40% (non-haem only). Vitamin C with every meal is particularly important.'+(conds.coeliac?' Note: vegan + coeliac combined absorption floor applied (×0.30 minimum) — these conditions together severely limit dietary iron availability.':''));
   document.getElementById('condNote').textContent=n.join(' · ');
 }
 
@@ -1416,7 +1424,7 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
   if(!el)return;
   var isObserved=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined;
   var obsLabel=isObserved?'Observed (from results)':'Estimated (literature)';
-  var absRateNote=isObserved?'':(lc&&lc.tieredAbsLabel?' · absorption rate: '+lc.tieredAbsLabel:'');
+  var absRateNote=isObserved?'':(lc&&lc.tieredAbsLabel?' · absorption rate (iron your body can use): '+lc.tieredAbsLabel:'');
   var fm2=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate'};
   var suppTabLabel='Supplement (none)';
   if(suppDose>0){
@@ -1470,7 +1478,7 @@ function calc(){
   // Hallberg et al; Moretti et al; BSH 2021 guideline
   // <15: ~12%, 15-30: ~8%, 30-50: ~5%, >50: ~4%
   var tieredAbsRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
-  var tieredAbsLabel=startFerr<15?'12% (critically depleted)':startFerr<30?'8% (depleted)':startFerr<50?'5% (below optimal)':'4% (replete)';
+  var tieredAbsLabel=startFerr<15?'~12% (stores critically low — body absorbs more when very depleted)':startFerr<30?'~8% (stores depleted — body absorbs more when low)':startFerr<50?'~5% (below optimal)':'~4% (standard rate when stores adequate)';
 
   var cycleLenDisplay=noPeriods?'N/A':pmgmt==='pill21'?'28d (fixed)':pmgmt==='pill63'?'63d (fixed)':pmgmt==='pillcont'?rawCycleLen+'d avg':pmgmt==='mini'?rawCycleLen+'d (approx)':cycleLen+'d';
   document.getElementById('cycleLenV').textContent=cycleLenDisplay;
@@ -1518,13 +1526,20 @@ function calc(){
   // === CONDITION-BASED ABSORPTION MODIFIERS ===
   var coeliacMult=conds.coeliac?0.45:1.0; // villous atrophy ~55% absorption reduction
   var veganAbsMult=conds.vegan?0.60:1.0;  // non-haem only: ~60% of haem+non-haem bioavailability
-  var pcosMult=conds.pcos?0.90:1.0;       // low-grade inflammation raises hepcidin slightly
+  // Apply minimum floor when multiple conditions stack — vegan+coeliac combined ×0.45×0.60=×0.27
+  // which may be too severe; floor at ×0.30 for combined conditions
+  var combinedAbsFloor=(conds.vegan&&conds.coeliac)?0.30:0;
+  var effectiveDietMult=Math.max(coeliacMult*veganAbsMult, combinedAbsFloor||0);
+  if(combinedAbsFloor>0&&effectiveDietMult<combinedAbsFloor) effectiveDietMult=combinedAbsFloor;
+  // PCOS: evidence for hepcidin effect is mechanistically plausible but not reliably quantified
+  // — modelled as text note only, not a numeric multiplier (removed ×0.90 per peer review)
+  var pcosMult=1.0;
 
   // === DERIVED ABSORPTION ===
   var derivedAbsMonth=null;
   var habitMult=calcModifiers(suppDoseElem);
   var suppLitDefault=suppDoseElem>0?Math.min(suppDoseElem*tieredAbsRate*fm.absMultiplier*coeliacMult*pcosMult,4.0)*30*habitMult:0;
-  var dietNetMonthAdj=dietNetMonth*coeliacMult*veganAbsMult*pcosMult;
+  var dietNetMonthAdj=dietNetMonth*effectiveDietMult*pcosMult;
   var mgAbsMonthEst=dietNetMonthAdj+suppLitDefault;
   var ferrChangePM=mg2f(mgAbsMonthEst-totalLossMonth);
   if(window.derivedFerrPM!==undefined&&window.derivedFerrPM!==null){
@@ -1574,7 +1589,7 @@ function calc(){
     suppNumTabs:numTabs,suppFormulation:fm,
     basalLossMonth,mgAbsMonth:rnd(mgAbsMonth),fmtMonth,
     startFerr,mgLostMonth:rnd(mgLostMonth),netMonth:rnd(netMonth),totalLossMonth:rnd(totalLossMonth),
-    tieredAbsRate,tieredAbsLabel,coeliacMult,veganAbsMult,pcosMult,
+    tieredAbsRate,tieredAbsLabel,coeliacMult,veganAbsMult,pcosMult,effectiveDietMult,
     ferrLine,mlPerCycle:rnd(mlPerCycle),mgLostCycle:rnd(mgLostCycle),ferrChangePM:+ferrChangePM.toFixed(2),meno,
     m12ferr:ferrLine[12]};
 
@@ -2081,13 +2096,16 @@ function buildDietToggles(){
   DIET_TIPS.forEach(function(tip){
     var on=tipsDietState[tip.id]||false;
 
-    // Compute single-tip impact for badge
+    // Compute single-tip impact for badge — show as range ±30% to convey uncertainty
     var newDietNet=Math.min(dietNetMonth*tip.dietMult,8.0);
     var dietDiff=newDietNet-dietNetMonth;
     var tipFerrPM=baseFerrPM+mg2f(dietDiff);
-    var gain12=rnd((tipFerrPM-baseFerrPM)*12);
-    var badge=gain12>0?'+'+gain12+' µg/L at 12mo':gain12===0?'minimal effect':gain12+' µg/L at 12mo';
-    var badgeColor=gain12>5?'#15803d':gain12>2?'#ca8a04':'#94a3b8';
+    var gain12raw=(tipFerrPM-baseFerrPM)*12;
+    var gain12mid=Math.round(gain12raw);
+    var gain12lo=Math.round(gain12raw*0.7);
+    var gain12hi=Math.round(gain12raw*1.3);
+    var badge=gain12mid>0?'+'+gain12lo+'–'+gain12hi+' µg/L at 12mo (estimated)':gain12mid===0?'minimal estimated effect':'minimal estimated effect';
+    var badgeColor=gain12mid>5?'#15803d':gain12mid>2?'#ca8a04':'#94a3b8';
 
     var row=document.createElement('div');
     row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border:1px solid '+(on?'#86efac':'#e2e8f0')+';border-radius:8px;cursor:pointer;background:'+(on?'#f0fdf4':'#fff');
@@ -2454,7 +2472,9 @@ function renderTolChart(){
   var compSuppAbs=compSuppElem>0?Math.min(compSuppElem*tieredRate,4.0)*30*compMult:0;
   // For alt-day: only 15 doses/month
   var isAltDay=tolState['altday'];
-  if(isAltDay&&compSuppElem>0) compSuppAbs=Math.min(compSuppElem*tieredRate*1.15,4.8)*15;
+  var isBisglycTol=lc&&lc.suppFormulation&&lc.suppFormulation.abbr==='bisglycinate';
+  var altDayMult=isBisglycTol?1.03:1.15; // bisglycinate already bypasses hepcidin partially
+  if(isAltDay&&compSuppElem>0) compSuppAbs=Math.min(compSuppElem*tieredRate*altDayMult,4.8)*15;
 
   var compNetMonth=(c.dietNetMonth||0)+compSuppAbs-c.totalLossMonth;
   var compFerrPM=mg2f(compNetMonth);
@@ -2933,6 +2953,8 @@ function buildGPLetter(){
   // Opening — personal, direct
   L.push('I am writing to ask for your help with my iron deficiency, which has been an ongoing problem for me for some time. I would like to request a prescription for iron supplementation and, if possible, pre-approval for a small number of follow-up blood tests so I can monitor my progress without needing to go through the triage system each time.');
   L.push('');
+  L.push('I have been using an iron balance planning tool to help me understand my ferritin levels and prepare for this conversation — the figures and proposed schedule in this letter come from that. I wanted to be transparent about this so you can see where the numbers are coming from.');
+  L.push('');
 
   // Background — personal history, no raw numbers dump
   L.push('My background');
@@ -2967,7 +2989,7 @@ function buildGPLetter(){
   } else if(isBisglycinate){
     // Bisglycinate: OTC, not prescribed — different framing
     var ntabsL=lc&&lc.suppNumTabs?lc.suppNumTabs:Math.round(suppDose/20);
-    L.push('I want to be transparent that I am currently self-trialling ferrous bisglycinate (sometimes called Gentle Iron) — an over-the-counter iron supplement that is not available on NHS prescription. I have found it much better tolerated than prescribed iron tablets. Each capsule contains 20mg of actual iron, and I am taking '+ntabsL+' capsule'+(ntabsL===1?'':'s')+' per day ('+ntabsL*20+'mg actual iron total). I am not asking for a prescription for this — I am purchasing it myself — but I wanted you to be aware of what I am taking.');
+    L.push('I want to be transparent that I am currently taking ferrous bisglycinate (sometimes called Gentle Iron) — an over-the-counter iron supplement that is not available on NHS prescription. I have found it much better tolerated than prescribed iron tablets. Each capsule contains 20mg of actual iron, and I am taking '+ntabsL+' capsule'+(ntabsL===1?'':'s')+' per day ('+ntabsL*20+'mg actual iron total). I am not asking for a prescription for this — I am purchasing it myself — but I wanted you to be aware of what I am taking.');
     L.push('');
     L.push('What I am asking for is your support with blood test monitoring to confirm whether this approach is working. I would like to discuss an appropriate ferritin testing schedule so I can track progress and adjust if needed.');
     if(plannedIV>0){
@@ -3433,7 +3455,12 @@ function calcStrategy(){
   var maintDailyMg=deficitAfterDiet/(maintAbsRate*30);
   // Alternate-day: Moretti et al shows improved fractional absorption — evidence suggests
   // meaningfully better per-dose absorption (not just 10%); framed conservatively here
-  var maintAltDayMg=deficitAfterDiet/(maintAbsRate*1.10*15);
+  // Alternate-day benefit: for bisglycinate, the hepcidin reset advantage is smaller
+  // because bisglycinate already partially bypasses hepcidin via chelated form.
+  // Standard iron: ×1.10 benefit. Bisglycinate: ×1.03 (minimal additional benefit).
+  var isBisglycForAlt=lc&&lc.suppFormulation&&lc.suppFormulation.abbr==='bisglycinate';
+  var altDayHepcidinMult=isBisglycForAlt?1.03:1.10;
+  var maintAltDayMg=deficitAfterDiet/(maintAbsRate*altDayHepcidinMult*15);
 
   function r5(n){return Math.ceil(n/5)*5;}
   var mDailyR=r5(maintDailyMg);
@@ -3480,7 +3507,7 @@ function calcStrategy(){
   var spatoneNote='';
   if(deficitAfterDiet>0&&deficitAfterDiet<=2.5){
     var sachetsNeeded=Math.ceil(deficitAfterDiet/spatoneAbsPerSachet);
-    spatoneNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Alternative for maintenance — liquid iron sachets (e.g. Spatone):</strong> Your maintenance need is small enough that '+sachetsNeeded+' Spatone sachet'+(sachetsNeeded===1?'':'s')+' per day ('+sachetsNeeded*5+'mg actual iron, ~'+rnd(sachetsNeeded*spatoneAbsPerSachet)+'mg absorbed) may be sufficient to stay level. This is an easy, very well-tolerated long-term option — much easier to sustain than remembering tablets. Available OTC. See the <strong>Side effects &amp; tolerability</strong> tab for a full comparison.</div>';
+    spatoneNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Alternative for maintenance — liquid iron sachets (e.g. Spatone or similar iron water):</strong> Your maintenance need is small enough that '+sachetsNeeded+' sachet'+(sachetsNeeded===1?'':'s')+' per day ('+sachetsNeeded*5+'mg actual iron, ~'+rnd(sachetsNeeded*spatoneAbsPerSachet)+'mg absorbed — absorption varies 15–25%, better with orange juice) may be sufficient to stay level. A very well-tolerated long-term option — much easier to sustain than tablets. Available OTC. See the <strong>Side effects &amp; tolerability</strong> tab for a full comparison.</div>';
   }
 
   var oralIntolNote='';
@@ -3504,7 +3531,7 @@ function calcStrategy(){
         (spatoneCoversIt?
           'Your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month) is small enough that <strong>'+sachetsNeeded2+' Spatone sachet'+(sachetsNeeded2===1?'':'s')+' per day</strong> ('+sachetsNeeded2*5+'mg actual iron · ~'+rnd(sachetsNeeded2*spatoneAbsPerSachet2)+'mg absorbed/month) should cover it. Take mixed in orange juice. Available OTC — no prescription needed.':
           'Your deficit ('+rnd(deficitAfterDiet)+' mg/month) is higher than Spatone covers reliably. <strong>2–3 sachets/day</strong> will slow ferritin decline after an infusion but may not fully maintain levels. Best used alongside infusion-based maintenance.')+
-        ' Each sachet is labelled 250ml natural iron-rich water — actual iron content is 5mg per sachet.'+
+        ' Each sachet is labelled 250ml natural iron-rich water — actual iron content is 5mg per sachet. Absorption varies — typically 15–25% depending on timing and whether taken with food or juice; taking with orange juice improves absorption (Persson et al, Acta Obstet Gynecol 2003). The ~25% figure used here is an optimistic estimate; real-world absorption may be closer to 15–20%.'+
         '</div>';
     } else if(ointolOption==='bisglycinate'){
       oralIntolNote='<div style="margin-top:8px;background:#f0fdf4;border:1px solid #86efac;border-radius:7px;padding:10px 14px;font-size:12px;color:#15803d;line-height:1.6">'+
@@ -3512,7 +3539,7 @@ function calcStrategy(){
         (bisglycCoversIt?
           'This should cover your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month needed). Combined with an initial infusion, this may eliminate the need for repeat infusions.':
           'This covers ~'+rnd(bisglycAbsPerMonth2/deficitAfterDiet*100)+'% of your deficit — ferritin may still slowly decline but much more slowly, significantly extending time between infusions.')+
-        '<br><br><strong>Start protocol:</strong> 1 capsule every 3 days for 2 weeks → increase to every other day if no symptoms. Morning, with vitamin C or orange juice. Report to GP if any GI symptoms.'+
+        '<br><br><strong>Start protocol:</strong> <em>Discuss with your GP before starting</em> — they should know you are trialling this, even though it is available OTC. Then: 1 capsule every 3 days for 2 weeks → increase to every other day if well tolerated. Morning, with vitamin C or orange juice. If any GI symptoms arise, stop and contact your GP.'+
         '<br><span style="font-size:11px;color:#475569">If well tolerated, consider removing the oral intolerance flag and remodelling with bisglycinate formulation at a higher dose.</span>'+
         '</div>';
     }
