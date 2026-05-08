@@ -84,6 +84,10 @@ button:hover{background:#f1f5f9}
 </head>
 <body>
 <div class="app">
+<div id="installBanner" style="display:none">
+  <span>📱 <strong>Tip:</strong> Add Fe+ to your home screen for easy access — iPhone: tap Share → "Add to Home Screen" · Android: tap menu → "Add to Home Screen" · PC: works in any browser, just bookmark it.</span>
+  <button onclick="dismissInstallBanner()" aria-label="Dismiss">×</button>
+</div>
 <h1 style="display:none">Fe+ Iron Balance Tool</h1>
 
 
@@ -646,11 +650,52 @@ button:hover{background:#f1f5f9}
 </div>
 </div>
 
+
+<div class="section" style="margin-top:.25rem">
+<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
+<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
+<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+</div>
+
+<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
+<div class="st">Historic ferritin record</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
+<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
+
+
 <div id="tab-actual" style="display:none">
 <div class="section">
 <div class="st">Actual ferritin results</div>
 <div class="card">
-  <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter real ferritin blood test results. The model will derive your actual absorption rate from these — a more reliable signal than any estimate. Use real dates (dd/mm/yyyy or yyyy-mm-dd) for accurate time-based calculations.</p>
+  <p style="font-size:13px;color:#64748b;margin-bottom:10px">Enter real ferritin blood test results. The model will derive your actual absorption rate from these — a more reliable signal than any estimate.</p>
+
+  <!-- NHS APP IMPORT -->
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:12px 14px;margin-bottom:14px">
+    <div style="font-size:13px;font-weight:600;color:#0369a1;margin-bottom:6px">📋 Import from NHS app</div>
+    <div style="font-size:12px;color:#475569;line-height:1.6;margin-bottom:8px">
+      <strong>How to copy your results from the NHS app:</strong><br>
+      1. Open NHS app → Health → Blood tests → Serum ferritin<br>
+      2. Long-press on the first result until it's highlighted<br>
+      3. Drag to select all visible results (date + value rows)<br>
+      4. Tap <strong>Copy</strong><br>
+      5. Paste below — repeat for each page if you have multiple pages of results
+    </div>
+    <textarea id="nhsImportBox" placeholder="Paste your NHS app results here — e.g:&#10;8 April 2026    20 ug/L&#10;23 January 2026    12 ug/L&#10;&#10;You can paste multiple batches from different pages — duplicates will be removed automatically." style="width:100%;height:100px;font-size:12px;padding:8px;border:1px solid #bae6fd;border-radius:7px;resize:vertical;background:#fff;color:#1e293b;font-family:monospace" oninput="previewNHSImport()"></textarea>
+    <div id="nhsImportPreview" style="display:none;margin-top:8px">
+      <div style="font-size:12px;font-weight:600;color:#0369a1;margin-bottom:4px">Results found — confirm to import:</div>
+      <div id="nhsImportList" style="font-size:12px;color:#1e293b;background:#fff;border:1px solid #bae6fd;border-radius:7px;padding:8px 12px;margin-bottom:8px;max-height:150px;overflow-y:auto;font-family:monospace;line-height:1.8"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="confirmNHSImport()" style="background:#0369a1;color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer">✓ Import these results</button>
+        <button onclick="clearNHSImport()" style="background:none;border:1px solid #bae6fd;border-radius:7px;padding:7px 12px;font-size:12px;color:#0369a1;cursor:pointer">Clear</button>
+      </div>
+    </div>
+    <div id="nhsImportError" style="display:none;font-size:12px;color:#dc2626;margin-top:6px"></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px">Or enter manually:</div>
   <div style="display:flex;gap:8px;font-size:12px;font-weight:600;color:#64748b;margin-bottom:4px"><span style="width:110px">Date of test</span><span style="width:80px">Ferritin µg/L</span><span style="width:80px">Supplement<br><span style="font-weight:400;font-size:10px">elemental mg/day</span></span></div>
   <div style="font-size:10px;color:#94a3b8;margin-bottom:6px">Supplement column = elemental iron mg/day · ferrous sulfate: 1 tablet = 65mg · fumarate: 1 tablet = 69mg · bisglycinate: 1 capsule = 20mg</div>
   <div id="actualList"></div>
@@ -1172,20 +1217,6 @@ button:hover{background:#f1f5f9}
 <div id="letterPreview" style="font-size:13px;line-height:1.75;color:#1e293b;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;white-space:pre-wrap;font-family:Georgia,serif"></div>
 </div>
 </div>
-
-<div class="section" style="margin-top:.25rem">
-<div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
-<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
-<div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
-<div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
-</div>
-
-<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
-<div class="st">Historic ferritin record</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
-<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
 </div>
 
 <p style="font-size:11px;color:#94a3b8;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e2e8f0">⚠️ This tool provides estimates based on population averages and patient-reported inputs. Values are for personal reference and clinical discussion only — not a substitute for clinical assessment. All treatment decisions require review by a qualified clinician.</p>
@@ -3729,9 +3760,77 @@ function showTab(t){
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
 </script>
 
+<script>
+// ── NHS APP IMPORT ────────────────────────────────────────────────────────
+var nhsParsed=[];
+
+function parseNHSText(text){
+  var results=[];
+  var lines=text.split('\n');
+  var months={january:0,february:1,march:2,april:3,may:4,june:5,july:6,
+              august:7,september:8,october:9,november:10,december:11};
+  lines.forEach(function(line){
+    line=line.trim();
+    if(!line) return;
+    var m=line.match(/(\d{1,2})\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{4})\s*[\s\t]+(\d+(?:\.\d+)?)\s*(?:ug\/L|µg\/L|ug\/l|µg\/l)/i);
+    if(m){
+      var day=parseInt(m[1]),month=months[m[2].toLowerCase()],year=parseInt(m[3]),val=parseFloat(m[4]);
+      var dateStr=year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      results.push({date:dateStr,ferritin:val,display:m[1]+' '+m[2]+' '+m[3]+' → '+val+' µg/L'});
+    }
+  });
+  var seen={};
+  results=results.filter(function(r){if(seen[r.date])return false;seen[r.date]=true;return true;});
+  results.sort(function(a,b){return a.date>b.date?1:-1;});
+  return results;
+}
+
+function previewNHSImport(){
+  var text=document.getElementById('nhsImportBox').value;
+  var preview=document.getElementById('nhsImportPreview');
+  var list=document.getElementById('nhsImportList');
+  var err=document.getElementById('nhsImportError');
+  err.style.display='none';
+  if(!text.trim()){preview.style.display='none';nhsParsed=[];return;}
+  nhsParsed=parseNHSText(text);
+  if(nhsParsed.length===0){
+    preview.style.display='none';
+    err.style.display='block';
+    err.textContent='No results found. Make sure you\'ve selected and copied the date and value rows from the NHS app (e.g. "8 April 2026    20 ug/L").';
+    return;
+  }
+  list.innerHTML=nhsParsed.map(function(r){return r.display;}).join('<br>');
+  preview.style.display='block';
+}
+
+function confirmNHSImport(){
+  if(!nhsParsed.length) return;
+  var existingDates={};
+  actuals.forEach(function(a){if(a.date)existingDates[a.date]=true;});
+  var added=0;
+  nhsParsed.forEach(function(r){
+    if(!existingDates[r.date]){actuals.push({date:r.date,ferritin:r.ferritin,supp:0});added++;}
+  });
+  actuals.sort(function(a,b){return (a.date||'')>(b.date||'')?1:-1;});
+  renderActuals();calcDerived();autoSave();clearNHSImport();
+  var err=document.getElementById('nhsImportError');
+  err.style.display='block';err.style.color='#15803d';
+  err.textContent='✓ '+added+' result'+(added===1?'':'s')+' imported. Check supplement doses in the rows below if relevant.';
+  setTimeout(function(){err.style.display='none';err.style.color='#dc2626';},5000);
+}
+
+function clearNHSImport(){
+  document.getElementById('nhsImportBox').value='';
+  document.getElementById('nhsImportPreview').style.display='none';
+  document.getElementById('nhsImportError').style.display='none';
+  nhsParsed=[];
+}
+</script>
+
 <style>
+#installBanner{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:12px;color:#0369a1;line-height:1.5}
+#installBanner button{margin-left:auto;flex-shrink:0;background:none;border:none;font-size:18px;cursor:pointer;color:#94a3b8;padding:0 4px}
 #paywallModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:16px}
-#paywallModal.show{display:flex}
 .pw-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
 .pw-btn{display:block;background:#1e3a5f;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;margin:12px 0 8px}
 .pw-list{text-align:left;font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:10px 14px;margin:8px 0;line-height:1.8}
@@ -3779,6 +3878,16 @@ function checkBypassCode(){
     }
   });
 }
+// First-visit install tip
+function dismissInstallBanner(){
+  localStorage.setItem('fe_install_dismissed','1');
+  document.getElementById('installBanner').style.display='none';
+}
+if(!localStorage.getItem('fe_install_dismissed')){
+  var ib=document.getElementById('installBanner');
+  if(ib) ib.style.display='flex';
+}
+
 checkBypassCode();
 document.getElementById('paywallModal').addEventListener('click',function(e){if(e.target===this)closePaywall();});
 var _showTab=showTab;
