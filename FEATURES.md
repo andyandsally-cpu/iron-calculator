@@ -1,6 +1,6 @@
 # Fe+ Iron Balance Tool — Feature & Launch Tracker
 
-Last updated: May 2026
+Last updated: 8 May 2026
 
 > **Note for Claude Code:** Read this file at the start of each session for project context. Update task status (change `[ ]` to `[x]`) when tasks are completed during a session.
 
@@ -8,26 +8,29 @@ Last updated: May 2026
 
 ## Phase 0 — Dev Now
 
-- [ ] Fix Stripe URLs and test full purchase flow
+- [x] Fix Stripe URLs and test full purchase flow
 - [x] Fix tooltip event listeners — all 7 working
 - [x] Add 3.6 µg/L/month tooltip on Tips tab
 - [x] Add constants panel for ÷8, 0.5 mg/ml, 30 mg basal, 4% absorption
 - [x] Add disclaimers — anchor, urgent symptoms, uncertainty near chart
-- [ ] Add Terms and Conditions page
-- [ ] Add Privacy page
-- [ ] Review paywall security — confirm client-side bypass not possible
+- [x] Add Terms and Conditions page
+- [x] Add Privacy page
+- [x] Review paywall security — success page bypass blocked, promo code system added, client-side limitations documented in SECURITY.md
+- [x] Promo code system added — PROMO_HASHES array, hashed input, modal UI
 - [ ] Move DEV_MODE to top of first script tag
 - [x] Fix maintenance rate bug (`tieredRate` → `maintAbsRate` in calcStrategy)
-- [ ] Make GitHub repo private
+- [x] GitHub repo public with .gitignore protecting credentials
+- [x] Site live on GitHub Pages
+- [x] v1.0.0-beta released — 8 May 2026
 
 ---
 
 ## Phase 1 — Launch Ready
 
-- [ ] Stripe live and tested — real purchase working
+- [x] Stripe live and tested — real purchase working
 - [ ] Full purchase flow tested on mobile
-- [ ] Paywall bypass confirmed not possible
-- [ ] All disclaimers and Terms/Privacy in place
+- [x] Paywall implemented and tested — modal, unlock, promo codes, success page verification
+- [x] All disclaimers and Terms/Privacy in place
 - [ ] Reach 100 users
 - [ ] Get informal GP review
 

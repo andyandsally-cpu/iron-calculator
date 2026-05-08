@@ -28,7 +28,7 @@ h1{font-size:20px;font-weight:500;margin-bottom:3px}
 .met-v{font-size:20px;font-weight:500}
 .met-u{font-size:11px;color:#64748b;margin-left:2px}
 .danger{color:#dc2626}.warning{color:#b45309}.ok{color:#16a34a}.neutral{color:#475569}
-.row{display:grid;grid-template-columns:165px 1fr 74px 22px;align-items:center;gap:8px;margin-bottom:11px}
+.row{display:grid;grid-template-columns:165px 1fr 110px 22px;align-items:center;gap:8px;margin-bottom:11px}
 .row label{font-size:13px;color:#64748b;line-height:1.3}
 .sw{position:relative}
 input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e2e8f0;border-radius:2px;outline:none;cursor:pointer}
@@ -76,7 +76,7 @@ button:hover{background:#f1f5f9}
 .analysis-box.warn{background:#fefce8;border-color:#fde047}
 .analysis-box.danger-box{background:#fef2f2;border-color:#fecaca}
 .analysis-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-@media(max-width:520px){.row{grid-template-columns:130px 1fr 60px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.row{grid-template-columns:130px 1fr 85px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
 @media print{
   body{background:#fff;padding:.5rem}
   .tabs,.sb,.trow,.eg,.card button,#draftBanner,.ib,.pf,button{display:none!important}
@@ -391,7 +391,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <!-- CTA -->
 <div style="text-align:center;padding:16px 0 4px">
   <div style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.55">If you haven't already, speaking to your GP about persistent low ferritin is the single most important step — this tool helps you prepare for that conversation.</div>
-  <button onclick="showTab('model')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Start the balance model →</button>
+  <button onclick="showTab('model')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Build my iron balance model →</button>
   <div style="font-size:11px;color:#94a3b8;margin-top:14px">Questions or issues? Email <a href="mailto:ironbalancetool@gmail.com" style="color:#64748b">ironbalancetool@gmail.com</a></div>
 </div>
 
@@ -563,7 +563,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <div class="row">
     <label>Oral supplement<br><span style="font-size:11px;color:#94a3b8">drag to set tablets per day — slider moves in 1-tablet steps</span></label>
     <div class="sw"><div class="rb" id="rb-suppDose"></div><input type="range" id="suppDose" min="0" max="390" value="0" step="65" oninput="calc()"></div>
-    <div style="display:flex;flex-direction:column;gap:1px"><span id="suppDoseV" style="font-size:13px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:11px;color:#64748b"></span><span class="badge" id="bsd" style="align-self:flex-start"></span></div>
+    <div style="display:flex;flex-direction:column;gap:1px"><span id="suppDoseV" style="font-size:12px;font-weight:500">None</span><span id="suppDoseTabV" style="font-size:10px;color:#64748b"></span><span class="badge" id="bsd" style="align-self:flex-start"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Set how many iron tablets you take per day. Each tablet is labelled by its total weight — not the iron dose. Select your formulation below to see the correct iron content per tablet.</div><div class="tt-n">Most prescribed courses are 1–3 tablets per day. Above 3 tablets, absorption does not meaningfully increase — hepcidin rises after each dose and blocks the iron transporter for ~24 hours.</div><div class="tt-s">Alternate-day dosing (every other day) avoids hepcidin rebound and can give better net absorption than daily dosing. Source: Moretti et al, Lancet Haematology 2015. Set to 0 automatically when oral iron intolerance is toggled.</div></div></div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin:-2px 0 8px 0;flex-wrap:wrap">
@@ -694,6 +694,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
 </div>
+<div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('actual')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Add my actual results →</button></div>
 </div>
 
 <div id="tab-actual" style="display:none">
@@ -782,6 +783,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   </div>
 </div>
 </div>
+<div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('strategy')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">See my strategy options →</button></div>
 </div>
 
 <div id="tab-infusion" style="display:none">
@@ -910,6 +912,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="stratChartLegend"></div>
 </div>
 </div>
+<div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('tolerability')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Check tolerability and side effects →</button></div>
 </div>
 
 <div id="tab-tips" style="display:none">
@@ -1002,6 +1005,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 </div>
+<div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('export')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Prepare notes for my GP appointment →</button></div>
 </div>
 
 <div id="tab-tolerability" style="display:none">
@@ -1217,6 +1221,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 </div>
+<div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('tips')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Read tips to improve absorption →</button></div>
 </div>
 
 <div id="tab-export" style="display:none">
@@ -1491,8 +1496,11 @@ function calcModifiers(suppDoseParam){
   var ca      = gv('modCa')     / 100;
   var antac   = gv('modAntacid')/ 100;
 
+  // A dose taken 2hr+ away from tea/coffee cannot also have tea within 1hr for the same dose —
+  // cap effectiveTea at the fraction of doses not already covered by optimal timing
+  var effectiveTea = Math.min(tea, Math.max(0, 1 - timing));
   var enhancer = 1 + (vitC * 0.50) + (timing * 0.25);
-  var inhibitor = Math.max(1 - (tea*0.35) - (ca*0.25) - (antac*0.40), 0.10);
+  var inhibitor = Math.max(1 - (effectiveTea*0.35) - (ca*0.25) - (antac*0.40), 0.10);
   var multiplier = Math.max(enhancer * inhibitor, 0.10);
 
   document.getElementById('modVitCV').textContent    = gv('modVitC')    + '%';
@@ -1597,7 +1605,7 @@ function calc(){
     var unitLabel=fm.abbr==='bisglycinate'?'capsule':'tablet';
     // Primary: "3 tablets/day" — Secondary new line: "600mg on packet = 195mg elemental"
     document.getElementById('suppDoseV').textContent=numTabs+' '+unitLabel+(numTabs===1?'':'s')+'/day';
-    if(tabVEl) tabVEl.textContent=packetMg+'mg on packet = '+suppDoseActual+'mg elemental'+(fm.otc?' · OTC':'');
+    if(tabVEl) tabVEl.textContent=suppDoseActual+'mg iron'+(fm.otc?' · OTC':'');
   }
   // Use formulation-adjusted elemental for all calcs below
   var suppDoseElem=suppDose>0?numTabs*fm.elemPerTab:0;
@@ -1779,9 +1787,9 @@ function calc(){
 
   // End-of-line labels
   var endLabelMap={
-    'Treatment plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Treatment plan',color:'#3b82f6'},
-    'If supplementation stops after reaching target':{text:'If you stop after target',color:'#f97316'},
-    'Revised projection from last blood test':{text:'Revised projection',color:'#7c3aed'}
+    'Treatment plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Treatment plan',color:'#3b82f6',yOff:-10},
+    'If supplementation stops after reaching target':{text:'If you stop after target',color:'#f97316',yOff:16},
+    'Revised projection from last blood test':{text:'Revised projection',color:'#7c3aed',yOff:-10}
   };
   chartInst.options.animation={onComplete:function(){
     var ctx=chartInst.ctx;
@@ -1797,7 +1805,7 @@ function calc(){
       if(!lastPt)return;
       var x=lastPt.x+5;var y=lastPt.y;
       if(x>chartInst.chartArea.right-80)x=chartInst.chartArea.right-80;
-      ctx.fillStyle=lm.color;ctx.fillText(lm.text,x,y+4);
+      ctx.fillStyle=lm.color;ctx.fillText(lm.text,x,y+(lm.yOff!==undefined?lm.yOff:4));
     });
     ctx.restore();
   }};
@@ -3663,12 +3671,22 @@ function calcStrategy(){
   var unitLabel2=fm2.abbr==='bisglycinate'?'capsule':'tablet';
   window._ctipData.maint={totalLossMonth:totalLossMonth,dietNetMonth:lc&&lc.dietNetMonth||0,deficitAfterDiet:deficitAfterDiet,tieredAbsRate:maintAbsRate,mDailyTabs:mDailyTabs,mDailyElem:mDailyElem,unitLabel:unitLabel2};
   window._ctipData.altday={deficitAfterDiet:deficitAfterDiet,maintAbsRate:maintAbsRate,isBisglycForAlt:isBisglycForAlt,altDayHepcidinMult:altDayHepcidinMult,altDayTabs:altDayTabs};
+  // Drive the maintenance-dose card from the same weekly calculation used in the text below,
+  // so they can never contradict each other. Switch to daily display only when ≥7 tabs/week.
+  var tpwV=window._ctipData.tabsWeek?window._ctipData.tabsWeek.tpw:mDailyTabs*7;
+  var useWeekly=tpwV<7;
+  var maintCardVal=useWeekly
+    ?(tpwV+' '+unitLabel2+(tpwV===1?'':'s')+'/week')
+    :(mDailyTabs+' '+unitLabel2+(mDailyTabs===1?'':'s')+'/day');
+  var maintCardSub=useWeekly
+    ?('('+tpwV*fm2.packetMg+'mg on packet/week = '+tpwV*fm2.elemPerTab+'mg elemental)')
+    :('('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)');
   phase2Grid.innerHTML=
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
     mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning','ctip-remaining-gap')+
     (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral'):
-    mc('Maintenance dose',mDailyTabs+' '+unitLabel2+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)','neutral','ctip-maint-dose')+
+    mc('Maintenance dose',maintCardVal,maintCardSub,'neutral','ctip-maint-dose')+
     mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral','ctip-altday'));
 
   phase2Text.innerHTML=
@@ -3677,7 +3695,7 @@ function calcStrategy(){
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>'+
     spatoneNote+oralIntolNote;
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance, <strong>'+altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day — '+altDayPkMg+'mg on the packet ('+altDayElem+'mg elemental per dose)</strong> is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance:<div style="text-align:center;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:8px 12px;margin:8px 0"><strong>'+altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day</strong><br><span style="font-size:11px;color:#475569">'+altDayPkMg+'mg on the packet · '+altDayElem+'mg elemental per dose</span></div>This is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -4301,12 +4319,55 @@ function clearNHSImport(){
     <div style="font-size:11px;color:#64748b;margin-bottom:10px">One-off payment · No subscription</div>
     <button onclick="closePaywall()" style="font-size:12px;color:#94a3b8;border:none;background:none;cursor:pointer;text-decoration:underline">Maybe later</button><br>
     <button onclick="restoreAccess()" style="font-size:11px;color:#2d6a9f;border:none;background:none;cursor:pointer;text-decoration:underline;margin-top:6px">Already paid? Restore access</button>
+    <div style="margin-top:10px;border-top:1px solid #f1f5f9;padding-top:10px">
+      <button onclick="togglePromoSection()" style="font-size:11px;color:#94a3b8;border:none;background:none;cursor:pointer;text-decoration:underline">Have a promo code?</button>
+      <div id="promoSection" style="display:none;margin-top:8px">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="promoInput" placeholder="Enter promo code" autocomplete="off" style="flex:1;font-size:13px;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;outline:none" oninput="document.getElementById('promoMsg').textContent=''">
+          <button onclick="applyPromo()" style="font-size:13px;font-weight:600;background:#1e3a5f;color:#fff;border:none;border-radius:7px;padding:7px 14px;cursor:pointer">Apply</button>
+        </div>
+        <div id="promoMsg" style="font-size:11px;margin-top:5px;min-height:16px"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
 var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
+// SHA-256 hashes of valid promo codes — add/remove entries here
+var PROMO_HASHES=[
+  'baf4e5c263f3226f288a86e2955658f3dcef052e66250e3fbc1675b66a7c4262', // RUSTLEAF
+  '27e2f411d4ca5cdebcc6f6afd0ef35afdf5780fa1ebe57b0e939e19ad3af132e', // FERRIC24
+  '87b44e174abfe51ed25c2de8b4960a1341d3571e31fc47752be8fd4ecd13c9a6', // BLOOMCREST
+  '8f686f6cca08b08359a45aa4de707c65e986997e53f55f9f294c588935a21dd7', // SCARLET99
+  '6b68d991137ad974fc8f038f0d3936ff54967096e7e89f19440172a55668e3b0', // IRONWITCH
+  '60838d0ea38754b257be91a8472623b4b972d792d1d8f7ce900765d4c9a8b830', // FEPILOT
+  'aa77b0847abdb83bfde961592620d4d85493f8392054aaca261aa48dbb800a48', // REDMOON7
+  'b817cbc894906119802420725d3df0c0df70757942b906be0673e91347ab2001', // SPARKRISE
+  '6ddb74c442028a13104d6cb3a47de64109e9aadfb52b39ec5116b90e86470902', // COPPERKEY
+  'ac51017013451f390629f529eb22411f191ef4e181f5e1fb15eb93997f7f69d2', // VELVETRISE
+];
 function isUnlocked(){return DEV_MODE||localStorage.getItem('ironToolUnlocked')==='true';}
+function togglePromoSection(){
+  var s=document.getElementById('promoSection');
+  s.style.display=s.style.display==='none'?'block':'none';
+  if(s.style.display==='block')document.getElementById('promoInput').focus();
+}
+function applyPromo(){
+  var code=document.getElementById('promoInput').value.toLowerCase().trim();
+  var msg=document.getElementById('promoMsg');
+  if(!code){msg.style.color='#dc2626';msg.textContent='Please enter a promo code.';return;}
+  crypto.subtle.digest('SHA-256',new TextEncoder().encode(code)).then(function(buf){
+    var hex=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    if(PROMO_HASHES.indexOf(hex)>-1){
+      localStorage.setItem('ironToolUnlocked','true');
+      msg.style.color='#15803d';msg.textContent='Code accepted — unlocking…';
+      setTimeout(function(){closePaywall();location.reload();},800);
+    } else {
+      msg.style.color='#dc2626';msg.textContent='That code wasn\'t recognised. Check for typos and try again.';
+    }
+  });
+}
 function closePaywall(){document.getElementById('paywallModal').classList.remove('show');}
 function restoreAccess(){
   if(confirm('Restore paid access on this device? Only use this if you have already purchased.')){

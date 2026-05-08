@@ -9,6 +9,7 @@ secrets.json
 *.pem
 *.p12
 *.pfx
+PROMO_CODES.md
 
 # Claude Code local data
 .claude/
