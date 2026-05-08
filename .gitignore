@@ -1,0 +1,22 @@
+# Secrets and credentials
+.env
+.env.*
+*.env
+credentials.json
+.credentials.json
+secrets.json
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Claude Code local data
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp

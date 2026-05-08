@@ -1,6 +1,12 @@
+<!--
+  Fe+ Iron Balance Tool — Proprietary and Confidential.
+  Copyright 2026. All rights reserved.
+  Unauthorised copying, modification or distribution prohibited.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>const DEV_MODE = false; // set to false before deploying</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -80,6 +86,16 @@ button:hover{background:#f1f5f9}
   #chartExplainer{font-size:9pt}
   .card{border:1px solid #ccc!important;break-inside:avoid}
 }
+#calcTooltip{display:none;position:fixed;z-index:9998;width:284px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;box-shadow:0 4px 18px rgba(0,0,0,.13);font-size:12px;line-height:1.55;color:#1e293b;pointer-events:none}
+[data-ctip]{cursor:help}
+.met-v[data-ctip]{border-bottom:1px dotted #94a3b8;padding-bottom:1px}
+span[data-ctip]{border-bottom:1px dotted #94a3b8}
+.ctip-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin-bottom:7px}
+.ctip-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:3px 0;font-size:12px;border-top:1px solid #f8fafc}
+.ctip-row:first-of-type{border-top:none}
+.ctip-k{color:#64748b;flex-shrink:0}
+.ctip-v{font-weight:600;color:#1e293b;white-space:nowrap;text-align:right}
+.ctip-note{font-size:11px;color:#94a3b8;margin-top:7px;padding-top:7px;border-top:1px solid #f1f5f9;line-height:1.5}
 </style>
 </head>
 <body>
@@ -133,6 +149,8 @@ button:hover{background:#f1f5f9}
   <div style="font-size:20px;font-weight:700;color:#1e293b;margin-bottom:6px">Iron &amp; ferritin — what you actually need to know</div>
   <div style="font-size:13px;color:#64748b;line-height:1.6">Being told "your bloods are fine" when you feel terrible is one of the most common and frustrating experiences with iron deficiency. This page explains why that happens — and why ferritin is the number that actually matters.</div>
 </div>
+<p style="font-size:12px;color:#64748b;margin-bottom:.5rem;line-height:1.5">This tool provides educational estimates to help you understand iron balance and prepare for a discussion with your GP. It does not diagnose conditions, recommend treatment, or replace medical advice.</p>
+<p style="font-size:12px;color:#b45309;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;margin-bottom:1.25rem;line-height:1.5">This tool is not suitable for urgent symptoms such as severe fatigue, chest pain, shortness of breath, or suspected anaemia — seek medical care promptly.</p>
 
 <!-- PANEL 1: Iron vs Ferritin -->
 <div class="card" style="margin-bottom:1.25rem">
@@ -380,6 +398,16 @@ button:hover{background:#f1f5f9}
 </div>
 
 <div id="tab-model" style="display:none">
+<p style="font-size:12px;color:#64748b;margin:6px 4px 8px;line-height:1.5">This tool provides educational estimates to help you understand iron balance and prepare for a discussion with your GP. It does not diagnose conditions, recommend treatment, or replace medical advice.</p>
+<details style="margin:6px 4px 2px" id="calcInfoPanel">
+  <summary style="font-size:12px;color:#64748b;cursor:pointer;user-select:none;padding:7px 4px;list-style:none;display:flex;align-items:center;gap:6px"><span>&#9658;</span> &#x2139; How are these numbers calculated?</summary>
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;font-size:12px;line-height:1.6;color:#475569;margin-top:4px;margin-bottom:8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 24px">
+    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">÷ 8 — ferritin ↔ iron stores</strong><p style="margin:4px 0 0">1 µg/L of serum ferritin = approximately 8 mg of stored iron. This is a validated clinical conversion used in haematology to estimate total body iron stores from a blood test result.</p></div>
+    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">0.5 mg/ml — iron in menstrual blood</strong><p style="margin:4px 0 0">Menstrual blood contains approximately 0.5 mg of iron per ml of blood lost. Used to convert your flow volume inputs into monthly iron loss in mg.</p></div>
+    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">30 mg/month — basal iron loss</strong><p style="margin:4px 0 0">The average person loses approximately 1 mg of iron per day through skin cell shedding, gut lining renewal, and sweat. This is a fixed baseline used in clinical iron balance models.</p></div>
+    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">4% — dietary absorption baseline</strong><p style="margin:4px 0 0">The average absorption rate for non-haem iron from a typical Western diet. Haem iron (meat) absorbs at 15–35%; non-haem at 1–10% depending on diet and gut health. 4% is the standard clinical estimate for a mixed diet.</p></div>
+  </div>
+</details>
 <div class="section">
 <div class="st">Session</div>
 <div class="card">
@@ -513,7 +541,7 @@ button:hover{background:#f1f5f9}
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: Light-Medium. Endometriosis/adenomyosis toggle increases to Heavy.</div><div class="tt-n">If unsure, select the next category up — blood loss is commonly underestimated, particularly with heavy periods. Teenagers and those who have always had heavy periods often have no baseline for comparison.</div><div class="tt-s"><strong>Very light:</strong> Spotting only. 1–2 light pads/day max. No clots. Lasts 1–3 days.<br><strong>Light:</strong> Change a regular pad every 4–6 hours. No clots or very small ones.<br><strong>Moderate:</strong> Change every 2–4 hours at peak. Occasional small clots. Some cramping.<br><strong>Heavy:</strong> Change every 1–2 hours at peak. Clots larger than a 50p coin. Sometimes flood through. Affects daily activities. HMB clinical threshold: &gt;80ml/cycle.<br><strong>Very heavy:</strong> Change hourly or more. Large clots regularly. Frequently flood through to clothing or bedding. Significantly affects work and social life — you plan activities around your period.<br><br>Source: NICE NG88 (HMB); BSH menorrhagia guidelines.</div></div></div>
   </div>
 
-  <div class="note" id="bleedNote"></div>
+  <div class="note" id="bleedNote" data-ctip="ctip-bleed-ml"></div>
 </div>
 </div>
 
@@ -598,7 +626,7 @@ button:hover{background:#f1f5f9}
     <div style="margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <span style="font-size:12px;color:#475569">Effective supplement absorption after habits:</span>
       <span id="effAbsDisplay" style="font-size:16px;font-weight:600;color:#1e293b">—</span>
-      <span id="effAbsBadge" class="badge"></span>
+      <span id="effAbsBadge" class="badge" data-ctip="ctip-eff-abs"></span>
       <span style="font-size:11px;color:#94a3b8">(adjusts the literature estimate — combined effects are approximate and may not add linearly in real use)</span>
     </div>
 
@@ -648,7 +676,6 @@ button:hover{background:#f1f5f9}
 <div class="grid3" id="metricsGrid"></div>
 <div class="analysis-box" id="analysisBox"><div class="analysis-title" id="analysisTitle"></div><div id="analysisText"></div></div>
 </div>
-</div>
 
 
 <div class="section" style="margin-top:.25rem">
@@ -657,6 +684,7 @@ button:hover{background:#f1f5f9}
 <div id="chartExplainer" style="font-size:12px;color:#475569;line-height:1.6;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:10px"></div>
 <div style="position:relative;width:100%;height:270px"><canvas id="ferrChart" role="img" aria-label="Projected ferritin trajectory over 12 months"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
+<div style="font-size:11px;color:#94a3b8;margin-top:6px;font-style:italic">Results are estimates — real responses vary between individuals.</div>
 </div>
 
 <div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
@@ -664,7 +692,8 @@ button:hover{background:#f1f5f9}
 <p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
 <div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
-
+</div>
+</div>
 
 <div id="tab-actual" style="display:none">
 <div class="section">
@@ -795,7 +824,8 @@ button:hover{background:#f1f5f9}
 <div id="tab-strategy" style="display:none">
 <div class="section">
 <div class="st">Treatment strategy overview</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:1rem;line-height:1.5">Iron management typically has two distinct phases. <strong>Phase 1</strong> is recovery — getting ferritin up to a safe level. <strong>Phase 2</strong> is maintenance — the minimum ongoing input needed to simply stay level against losses. These are calculated from your current balance model settings.</p>
+<p style="font-size:12px;color:#64748b;margin-bottom:.5rem;line-height:1.5">Iron management typically has two distinct phases. <strong>Phase 1</strong> is recovery — getting ferritin up to a safe level. <strong>Phase 2</strong> is maintenance — the minimum ongoing input needed to simply stay level against losses. These are calculated from your current balance model settings.</p>
+<p style="font-size:12px;color:#64748b;margin-bottom:1rem;line-height:1.5">These are example approaches based on your inputs — discuss any changes with your GP.</p>
 
 <!-- PHASE 1 -->
 <div class="card" style="margin-bottom:1.25rem">
@@ -871,6 +901,13 @@ button:hover{background:#f1f5f9}
   <div id="stratSummaryText" style="font-size:13px;line-height:1.8;color:#e2e8f0"></div>
   <div style="margin-top:12px;padding-top:10px;border-top:1px solid #1e3a5f;font-size:11px;color:#64748b;line-height:1.5">⚠️ This is a modelled plan for discussion with your GP — not a prescription. Do not start or change doses without clinical review.</div>
 </div>
+
+<div class="section" style="margin-top:.25rem">
+<div class="st">Ferritin trajectory</div>
+<div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections based on your balance model settings — actual results will vary.</div>
+<div style="position:relative;width:100%;height:270px"><canvas id="stratFerritinChart" role="img" aria-label="Projected ferritin trajectory for planned strategy"></canvas></div>
+<div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="stratChartLegend"></div>
+</div>
 </div>
 </div>
 
@@ -883,7 +920,7 @@ button:hover{background:#f1f5f9}
 <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-bottom:1rem">
   <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:6px">
     <div style="font-size:13px;font-weight:600;color:#1e293b" id="tipsChartTitle">Estimated ferritin trajectory</div>
-    <div style="font-size:11px;color:#94a3b8;font-style:italic">Illustrative only — individual results vary</div>
+    <div style="font-size:11px;color:#94a3b8;font-style:italic">Starting from 50 µg/L · diet only, no supplements · illustrative</div>
   </div>
   <div id="tipsChartExplainer" style="font-size:12px;color:#475569;line-height:1.6;margin-bottom:8px"></div>
   <div style="position:relative;width:100%;height:240px"><canvas id="tipsChart"></canvas></div>
@@ -911,7 +948,7 @@ button:hover{background:#f1f5f9}
       <option value="80">Norethisterone — reduces loss by ~80% (variable; NICE NG88)</option>
       <option value="85">Mirena IUS (hormonal coil) — reduces loss by ~85% on average (NICE NG88)</option>
     </select>
-    <div id="tipsHormoneNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
+    <div id="tipsHormoneNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none" data-ctip="ctip-hormone-red"></div>
   </div>
 
   <div>
@@ -921,7 +958,7 @@ button:hover{background:#f1f5f9}
       <div class="tog" id="tog-tips-inflam" onclick="toggleTipInflam()" style="font-size:12px">Inflammation resolved</div>
       <span id="tipsInflamBadge" style="font-size:11px;color:#64748b"></span>
     </div>
-    <div id="tipsInflamNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none"></div>
+    <div id="tipsInflamNote" style="font-size:12px;color:#475569;background:#f8fafc;border-radius:7px;padding:8px 12px;line-height:1.6;display:none" data-ctip="ctip-inflam-boost"></div>
   </div>
 </div>
 
@@ -1092,7 +1129,7 @@ button:hover{background:#f1f5f9}
 
   <!-- Liquid iron note (personalised) -->
   <div id="liquidIronNote" style="margin-top:12px;background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:11px 14px;font-size:12px;color:#854d0e;line-height:1.6">
-    <strong>💡 Is liquid iron (e.g. Spatone) enough for you?</strong> <span id="liquidIronText">Set up the Balance Model to see a personalised answer.</span>
+    <strong>💡 Is liquid iron (e.g. Spatone) enough for you?</strong> <span id="liquidIronText" data-ctip="ctip-spatone">Set up the Balance Model to see a personalised answer.</span>
   </div>
 </div>
 
@@ -1185,7 +1222,8 @@ button:hover{background:#f1f5f9}
 <div class="section">
 <div class="st">GP letter — pre-authorisation request</div>
 <div class="card">
-  <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Complete the fields below, then preview and copy the letter. The content is generated from all data entered across the tool — the more complete the inputs, the stronger the letter.</p>
+  <p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">Complete the fields below, then preview and copy the letter. The content is generated from all data entered across the tool — the more complete the inputs, the stronger the letter.</p>
+  <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5;font-style:italic">Please review this example text as an aid when working with your GP — your GP will interpret this alongside your full medical history.</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
     <div class="pf">
       <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Patient full name</label>
@@ -1228,6 +1266,7 @@ var infusions=[{month:0,dose:1000}];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
 var chartInst=null;
+var stratChartInst=null;
 var historicChartInst=null;
 var tipsChartInst=null;
 window.strategyScenario=null;
@@ -1236,6 +1275,7 @@ var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,ve
 var flowLabels=['Very light','Light','Medium','Heavy','Very heavy'];
 var flowMl=[10,20,45,80,120];
 var lc={};
+window._ctipData={};
 
 var sdefs={
   cycleLen:{lo:21,hi:35,min:21,max:90},
@@ -1471,6 +1511,7 @@ function calcModifiers(suppDoseParam){
     else if(multiplier >= 0.6){badgeEl.className='badge bwarn';badgeEl.textContent='reduced';}
     else{badgeEl.className='badge bhigh';badgeEl.textContent='poor';}
   }
+  window._ctipData.effAbs={base:rnd(base),adj:rnd(adj),multiplier:multiplier,vitC:gv('modVitC'),timing:gv('modTiming'),tea:gv('modTea'),ca:gv('modCa'),antac:gv('modAntacid')};
   return multiplier;
 }
 
@@ -1489,10 +1530,10 @@ function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth
     suppTabLabel='Supplement ('+nt+' '+uLabel+(nt===1?'':'s')+'/day · '+pkMg+'mg on packet · '+nt*fm2.elemPerTab+'mg elemental)';
   }
   el.innerHTML=
-    mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral')+
-    mc(suppTabLabel,rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo absorbed',suppDose>0?'ok':'neutral')+
+    mc('Diet contribution',rnd(dietNetMonth),'mg/mo','neutral','ctip-diet-contrib')+
+    mc(suppTabLabel,rnd(suppDose>0?mgAbsMonth-dietNetMonth:0),'mg/mo absorbed',suppDose>0?'ok':'neutral','ctip-supp-abs')+
     mc('Total absorbed — '+obsLabel+absRateNote,rnd(mgAbsMonth),'mg/mo',isObserved?(mgAbsMonth>totalLossMonth?'ok':'danger'):'warning')+
-    mc('Total losses (menstrual+basal)',rnd(totalLossMonth),'mg/mo',totalLossMonth>50?'danger':totalLossMonth>30?'warning':'ok');
+    mc('Total losses (menstrual+basal)',rnd(totalLossMonth),'mg/mo',totalLossMonth>50?'danger':totalLossMonth>30?'warning':'ok','ctip-total-losses');
   if(!isObserved){
     var hint=document.getElementById('absDiagnostic');
     if(hint){hint.className='';hint.style.display='block';hint.innerHTML='<p style="font-size:12px;color:#64748b;margin:0">Absorption shown is a literature estimate. Add real ferritin results in the <strong>Actual results</strong> tab to derive your observed rate and unlock diagnostic interpretation.</p>';}
@@ -1627,9 +1668,9 @@ function calc(){
   var absLabel=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined?'Absorbed/month (observed)':'Absorbed/month (estimated)';
   var absBadge=window.derivedFerrPM!==null&&window.derivedFerrPM!==undefined?'ok':'warning';
   document.getElementById('metricsGrid').innerHTML=
-    mc('Iron lost/month',rnd(totalLossMonth),'mg',lossClass)+
-    mc(absLabel,rnd(mgAbsMonth),'mg',absBadge)+
-    mc('Net balance/month',sign(netMonth)+rnd(netMonth),'mg',netClass);
+    mc('Iron lost/month',rnd(totalLossMonth),'mg',lossClass,'ctip-iron-lost')+
+    mc(absLabel,rnd(mgAbsMonth),'mg',absBadge,'ctip-abs-rate')+
+    mc('Net balance/month',sign(netMonth)+rnd(netMonth),'mg',netClass,'ctip-net-balance');
   updateAbsPanel(mgAbsMonth,dietNetMonth,suppDoseElem,totalLossMonth,netMonth);
 
   var months=13;var ferrLine=[startFerr];
@@ -1774,7 +1815,7 @@ function calc(){
       if(stopLine){
         var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
         var stopBreakdown='';
-        if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit ≈ '+rnd(Math.abs(postStopRate)*10)/10+' µg/L/month)</span>';}
+        if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span data-ctip="ctip-stop-rate" style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit ≈ '+rnd(Math.abs(postStopRate)*10)/10+' µg/L/month)</span>';}
         var stopConclusion=postStopRate<0?' Diet alone cannot replace losses — stores would deplete again without ongoing maintenance supplementation. This is why Phase 2 matters.':' In your case, diet appears to cover losses — stopping supplements after the target may be sustainable, though monitoring is still advisable.';
         parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+stopBreakdown+'.'+stopConclusion);
       }
@@ -1848,7 +1889,7 @@ function updateAnalysis(){
     } else if(c.netMonth<5){
       lines.push('Iron balance is marginally positive. Stores should stabilise. Monitor ferritin at 3–6 month intervals to confirm trend.');
     } else {
-      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately '+rnd(c.m12ferr)+' µg/L by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
+      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately <span data-ctip="ctip-m12ferr">'+rnd(c.m12ferr)+'</span> µg/L by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
     }
 
     if(c.startFerr<15){lines.push('⚠️ Critically depleted ferritin ('+c.startFerr+' µg/L). Below 15 µg/L is consistent with absent iron stores (BSH/WHO diagnostic threshold). Urgent clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause and agree on the appropriate treatment approach.');}
@@ -1862,9 +1903,10 @@ function updateAnalysis(){
   text.innerHTML=lines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
 }
 
-function mc(label,value,unit,cls){
+function mc(label,value,unit,cls,ctipId){
+  var vx=ctipId?' data-ctip="'+ctipId+'"':'';
   return '<div class="met"><div class="met-l">'+label+'</div>'+
-    '<div class="met-v '+(cls||'')+'" >'+value+'<span class="met-u">'+unit+'</span></div></div>';
+    '<div class="met-v '+(cls||'')+'"'+vx+'>'+value+'<span class="met-u">'+unit+'</span></div></div>';
 }
 function li(color,label,dashed){
   var s=dashed?'border-top:2px dashed '+color+';width:14px;height:0;display:inline-block;margin-top:6px;':'display:inline-block;background:'+color+';width:10px;height:10px;border-radius:2px;';
@@ -1922,6 +1964,8 @@ function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivD
   var expectedTotalChange=expectedFerrPM*months;
   var actualTotalChange=lastFerr-firstFerr;
   var gap=actualTotalChange-expectedTotalChange; // positive = doing better than expected, negative = worse
+  window._ctipData.expectedAdh={expectedFerrPM:expectedFerrPM,dietOnlyFerrPM:dietOnlyFerrPM,suppFerrPM:suppFerrPM,adherence:adherence,months:months};
+  window._ctipData.gapSig={gap:gap,months:months};
 
   // Build commentary
   var lines=[];
@@ -1933,7 +1977,7 @@ function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivD
   lines.push('Over the '+rnd(months*10)/10+' months covered by your results, ferritin has '+dirActual+' from '+firstFerr+' to '+lastFerr+' µg/L — a change of '+(actualTotalChange>=0?'+':'')+rnd(actualTotalChange)+' µg/L ('+rnd(ferrPM*10)/10+' µg/L per month).');
 
   // What was expected at stated adherence
-  lines.push('At '+rnd(adherence*100)+'% plan adherence, the expected change over this period was '+(expectedTotalChange>=0?'+':'')+rnd(expectedTotalChange)+' µg/L ('+rnd(expectedFerrPM*10)/10+' µg/L per month). '+(gap>=0?'Actual results are ahead of this expectation by '+rnd(Math.abs(gap))+' µg/L.':'Actual results are behind this expectation by '+rnd(Math.abs(gap))+' µg/L.'));
+  lines.push('At '+rnd(adherence*100)+'% plan adherence, the expected change over this period was '+(expectedTotalChange>=0?'+':'')+rnd(expectedTotalChange)+' µg/L (<span data-ctip="ctip-expected-adh">'+rnd(expectedFerrPM*10)/10+'</span> µg/L per month). '+(gap>=0?'Actual results are ahead of this expectation by <span data-ctip="ctip-gap-sig">'+rnd(Math.abs(gap))+'</span> µg/L.':'Actual results are behind this expectation by <span data-ctip="ctip-gap-sig">'+rnd(Math.abs(gap))+'</span> µg/L.'));
 
   // Interpretation — the core logic
   var gapIsSignificant=Math.abs(gap)>5; // >5µg/L gap is meaningful
@@ -2154,7 +2198,7 @@ function buildDietToggles(){
     var on=tipsDietState[tip.id]||false;
 
     // Compute single-tip impact for badge — show as range ±30% to convey uncertainty
-    var newDietNet=Math.min(dietNetMonth*tip.dietMult,8.0);
+    var newDietNet=dietNetMonth*tip.dietMult;
     var dietDiff=newDietNet-dietNetMonth;
     var tipFerrPM=baseFerrPM+mg2f(dietDiff);
     var gain12raw=(tipFerrPM-baseFerrPM)*12;
@@ -2194,71 +2238,65 @@ function calcTips(){
   if(hmSection) hmSection.style.display=post?'none':'';
 
   var c=lc;
-  var startFerr=c.startFerr||25;
   var totalLossMonth=c.totalLossMonth||30;
   var dietNetMonth=c.dietNetMonth||0;
-  var suppDose=c.suppDose||0;
   var tieredRate=c.tieredAbsRate||0.04;
   var months=13;
   var post=document.getElementById('menopause').value==='post';
 
-  // ── Baseline line (no changes) ──
-  var baseFerrPM=c.ferrChangePM||0;
+  // ── Baseline: fixed start at 50 µg/L, diet only (no supplements) ──
+  // This makes the chart a "what can diet/lifestyle alone achieve?" view,
+  // independent of each user's actual starting ferritin or supplement dose.
+  var startFerr=50;
+  var baseFerrPM=mg2f(dietNetMonth-totalLossMonth);
   var baseLine=[startFerr];
   for(var i=1;i<months;i++) baseLine.push(Math.max(0,+(baseLine[i-1]+baseFerrPM).toFixed(1)));
+  window._ctipData.diet12m={baseFerrPM:baseFerrPM,dietNetMonth:dietNetMonth,totalLossMonth:totalLossMonth,baseLine12:baseLine[12]};
 
   // ── Diet optimised line ──
-  // Apply selected diet multipliers to dietary absorption
   var dietMult=1.0;
   DIET_TIPS.forEach(function(tip){if(tipsDietState[tip.id]) dietMult*=tip.dietMult;});
-  // Cap total dietary multiplier at 2.5x — can't absorb more than ~100% of dietary iron
   dietMult=Math.min(dietMult,2.5);
 
-  // Compute new diet net with multiplier (but cap at reasonable max)
-  var newDietNet=Math.min(dietNetMonth*dietMult, 8.0); // max 8mg/month net dietary
+  var newDietNet=dietNetMonth*dietMult;
   var dietDiff=newDietNet-dietNetMonth;
-  var dietFerrPM=baseFerrPM+mg2f(dietDiff);
+  var dietFerrPM=mg2f(newDietNet-totalLossMonth);
   var dietLine=[startFerr];
   for(var i=1;i<months;i++) dietLine.push(Math.max(0,+(dietLine[i-1]+dietFerrPM).toFixed(1)));
 
-  // ── Hormone treatment line ──
+  // ── Hormone treatment line (no supplements) ──
   var hormoneReduction=+(document.getElementById('tipsHormoneTx').value)||0;
   var hormoneLine=null;
   var hormoneFerrPM=baseFerrPM;
   if(hormoneReduction>0&&!post){
     var reducedMgLostMonth=c.mgLostMonth*(1-hormoneReduction/100);
     var reducedTotalLoss=reducedMgLostMonth+(c.basalLossMonth||30);
-    var suppAbsMonth=suppDose>0?Math.min(suppDose*tieredRate,4.0)*30:0;
-    var newNetMonth=(newDietNet+suppAbsMonth)-reducedTotalLoss;
-    hormoneFerrPM=mg2f(newNetMonth);
+    hormoneFerrPM=mg2f(newDietNet-reducedTotalLoss);
     hormoneLine=[startFerr];
     for(var i=1;i<months;i++) hormoneLine.push(Math.max(0,+(hormoneLine[i-1]+hormoneFerrPM).toFixed(1)));
   }
 
-  // ── Inflammation resolved line ──
+  // ── Inflammation resolved: hepcidin reduction boosts dietary iron absorption ──
+  // With no supplements the only iron input is dietary, so the inflammation effect
+  // is modelled as restoring dietary absorption to the healthy rate for ferritin ≥50.
   var inflammLine=null;
   var inflammFerrPM=baseFerrPM;
+  var inflammDietBoost=1;
   if(tipsInflamOn){
-    // Restore absorption to full tiered rate (inflammation was impairing it)
-    // Use a boosted rate — 1.5x current tiered rate, max at the fully healthy rate for this ferritin
-    var healthyRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
-    var suppAbsInflam=suppDose>0?Math.min(suppDose*healthyRate,4.0)*30:0;
-    var newNetInflam=(newDietNet+suppAbsInflam)-totalLossMonth;
-    inflammFerrPM=mg2f(newNetInflam);
+    var healthyRate=0.04; // healthy rate at ferritin ≥50
+    inflammDietBoost=tieredRate>0?Math.min(healthyRate/tieredRate,3.0):1;
+    inflammFerrPM=mg2f((newDietNet*inflammDietBoost)-totalLossMonth);
     inflammLine=[startFerr];
     for(var i=1;i<months;i++) inflammLine.push(Math.max(0,+(inflammLine[i-1]+inflammFerrPM).toFixed(1)));
   }
 
   // ── Combined all line ──
-  var healthyRateC=tipsInflamOn?(startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04):tieredRate;
   var combinedLine=null;
   if(hormoneReduction>0||tipsInflamOn){
     var reducedLoss=hormoneReduction>0&&!post?
       (c.mgLostMonth*(1-hormoneReduction/100))+(c.basalLossMonth||30):
       totalLossMonth;
-    var suppAbsC=suppDose>0?Math.min(suppDose*healthyRateC,4.0)*30:0;
-    var newNetC=(newDietNet+suppAbsC)-reducedLoss;
-    var combinedFerrPM=mg2f(newNetC);
+    var combinedFerrPM=mg2f((newDietNet*inflammDietBoost)-reducedLoss);
     combinedLine=[startFerr];
     for(var i=1;i<months;i++) combinedLine.push(Math.max(0,+(combinedLine[i-1]+combinedFerrPM).toFixed(1)));
   }
@@ -2272,6 +2310,7 @@ function calcTips(){
       if(!txName) txName='Selected treatment';
       var origLoss=rnd(c.mgLostMonth);
       var newLoss=rnd(c.mgLostMonth*(1-hormoneReduction/100));
+      window._ctipData.hormoneRed={origLoss:origLoss,newLoss:newLoss,hormoneReduction:hormoneReduction,txName:txName};
       hmNoteEl.style.display='block';
       hmNoteEl.innerHTML='<strong>'+txName+'</strong> — menstrual iron loss would reduce from approximately '+origLoss+' mg/month to '+newLoss+' mg/month. '+(hormoneReduction>=80?'At this level of reduction, menstrual losses become a much smaller factor in your iron balance. The Mirena IUS additionally releases a small amount of levonorgestrel locally (not systemically absorbed in significant amounts) and typically causes very light or no periods within 3–6 months of fitting. Suitable for most women including nulliparous women; fitted by a GP or gynaecologist.':hormoneReduction>=50?'Tranexamic acid is taken only during the period (not daily) and is non-hormonal — it works by reducing fibrinolysis. It does not affect ovulation or hormones. Available on prescription.':'The combined pill stops ovulation and typically produces a lighter, more predictable withdrawal bleed. Also provides contraception.');
     } else {
@@ -2284,7 +2323,9 @@ function calcTips(){
   if(infNoteEl){
     if(tipsInflamOn){
       infNoteEl.style.display='block';
-      infNoteEl.innerHTML='Chronic inflammation — from gut conditions (IBD, coeliac), autoimmune disease, or persistent stress — raises hepcidin, which blocks iron from entering the bloodstream even when gut absorption is occurring. Resolving the inflammation restores ferroportin function and allows absorbed iron to actually reach the bloodstream. This model assumes resolution restores absorption to the full healthy rate for your current ferritin level ('+rnd(healthyRateC*100)+'%). In practice, the effect depends on the cause and degree of inflammation — this is illustrative of the potential benefit, not a guarantee.';
+      var boostPct=rnd((inflammDietBoost-1)*100);
+      window._ctipData.inflammBoost={boostPct:boostPct,inflammDietBoost:inflammDietBoost,tieredRate:tieredRate};
+      infNoteEl.innerHTML='Chronic inflammation raises hepcidin, blocking dietary iron from entering the bloodstream. This chart shows a diet-only scenario (no supplements), so the inflammation effect is modelled as a boost to dietary iron absorption when inflammation resolves.'+(boostPct>0?' Based on your balance model settings, resolving inflammation is estimated to improve dietary absorption by ~'+boostPct+'% (restoring it to the healthy rate of 4% for ferritin ≥50 µg/L).':' Your current model settings already reflect full dietary absorption, so the effect here is small.')+' In practice, the impact depends on the cause and severity of inflammation — this is illustrative, not a guarantee.';
     } else {
       infNoteEl.style.display='none';
     }
@@ -2355,13 +2396,16 @@ function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,
   // Explainer
   if(explainer){
     var parts=[];
-    var baseDir=baseFerrPM>0.5?'rising at '+rnd(baseFerrPM*10)/10+' µg/L/month':baseFerrPM<-0.5?'falling at '+rnd(Math.abs(baseFerrPM)*10)/10+' µg/L/month':'holding roughly steady';
-    parts.push('<strong style="color:#64748b">Grey dashed — Current trajectory:</strong> With no changes, ferritin is '+baseDir+'. '+( baseLine[12]>=50?'Ferritin is projected to reach or maintain the 50 µg/L target without further changes.':'Ferritin is projected to reach '+rnd(baseLine[12])+' µg/L at 12 months — '+(baseLine[12]<50?'below the 50 µg/L target.':' on track.')));
+    var _br=baseFerrPM>0.5?rnd(baseFerrPM*10)/10:rnd(Math.abs(baseFerrPM)*10)/10;
+    var _brSpan='<span data-ctip="ctip-diet-rate">'+_br+'</span>';
+    var baseDir=baseFerrPM>0.5?'rising at '+_brSpan+' µg/L/month':baseFerrPM<-0.5?'falling at '+_brSpan+' µg/L/month':'holding roughly steady';
+    parts.push('<strong style="color:#64748b">Grey dashed — Diet only, no supplements:</strong> Starting from 50 µg/L with your current diet and no supplementation, ferritin is '+baseDir+'. Projected at 12 months: <span data-ctip="ctip-diet12m">'+rnd(baseLine[12])+'</span> µg/L'+(baseLine[12]>=50?' — diet alone appears sufficient to maintain stores at this level.':' — below the 50 µg/L target, so supplementation is likely still needed alongside these changes.')+'');
 
     if(anyDietOn){
       var dietGain=rnd((dietLine[12]||0)-(baseLine[12]||0));
       var numOn=Object.values(tipsDietState).filter(Boolean).length;
-      parts.push('<strong style="color:#f59e0b">Amber — With diet optimisation:</strong> '+numOn+' dietary change'+(numOn===1?'':'s')+' selected ('+rnd((dietMult-1)*100)+'% improvement in dietary iron absorption). Projected ferritin at 12 months: '+rnd(dietLine[12])+' µg/L'+(dietGain>0?' — '+dietGain+' µg/L gain vs no changes.':' — minimal additional benefit at these settings.')+( dietLine[12]<50?' Diet changes help but are unlikely to reach the 50 µg/L target on their own — supplementation is likely still needed.':' Diet changes appear sufficient to reach the target.'));
+      window._ctipData.dietMult={multiplier:rnd(dietMult*100)/100,dietLine12:rnd(dietLine[12]||0),numOn:numOn};
+      parts.push('<strong style="color:#f59e0b">Amber — With diet optimisation:</strong> '+numOn+' dietary change'+(numOn===1?'':'s')+' selected ('+rnd((dietMult-1)*100)+'% improvement in dietary iron absorption). Projected ferritin at 12 months: <span data-ctip="ctip-diet-mult">'+rnd(dietLine[12])+'</span> µg/L'+(dietGain>0?' — '+dietGain+' µg/L gain vs no changes.':' — minimal additional benefit at these settings.')+( dietLine[12]<50?' Diet changes help but are unlikely to reach the 50 µg/L target on their own — supplementation is likely still needed.':' Diet changes appear sufficient to reach the target.'));
     }
 
     if(hormoneLine&&hormoneReduction>0&&!post){
@@ -2377,7 +2421,8 @@ function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,
 
     if(combinedLine){
       var combGain=rnd((combinedLine[12]||0)-(baseLine[12]||0));
-      parts.push('<strong style="color:#16a34a">Green — All selected changes combined:</strong> Projected ferritin at 12 months: '+rnd(combinedLine[12])+' µg/L ('+combGain+' µg/L better than no changes). '+(combinedLine[12]>=50?'The combination of these changes is projected to reach and hold the 50 µg/L target.':'Even with all these changes combined, supplementation is likely still needed to reach the 50 µg/L target — but the required dose and duration would be reduced.'));
+      window._ctipData.combined12m={combinedLine12:rnd(combinedLine[12]||0),baseLine12:rnd(baseLine[12]||0),combGain:combGain};
+      parts.push('<strong style="color:#16a34a">Green — All selected changes combined:</strong> Projected ferritin at 12 months: <span data-ctip="ctip-combined12m">'+rnd(combinedLine[12])+'</span> µg/L ('+combGain+' µg/L better than no changes). '+(combinedLine[12]>=50?'The combination of these changes is projected to reach and hold the 50 µg/L target.':'Even with all these changes combined, supplementation is likely still needed to reach the 50 µg/L target — but the required dose and duration would be reduced.'));
     }
 
     if(!anyDietOn&&!anyScenario){
@@ -2580,7 +2625,8 @@ function renderTolChart(){
     if(anyActive){
       var compDir=compFerrPM>0.5?'rising at '+rnd(compFerrPM*10)/10+' µg/L/month':compFerrPM<-0.5?'falling at '+rnd(Math.abs(compFerrPM)*10)/10+' µg/L/month':'holding roughly steady';
       var gap12=rnd(baseLine[12]-compLine[12]);
-      parts.push('<strong style="color:#f97316">Orange — With adjustments ('+activeOptions.length+' selected):</strong> Ferritin is '+compDir+'. Projected at 12 months: '+rnd(compLine[12])+' µg/L. '+(gap12>0?'Cost of these adjustments: approximately '+gap12+' µg/L less at 12 months vs ideal approach.':'These adjustments have a neutral or positive effect — no cost to absorption.'));
+      window._ctipData.tolCost={gap12:gap12,baseLine12:rnd(baseLine[12]),compLine12:rnd(compLine[12]),activeCount:activeOptions.length};
+      parts.push('<strong style="color:#f97316">Orange — With adjustments ('+activeOptions.length+' selected):</strong> Ferritin is '+compDir+'. Projected at 12 months: <span data-ctip="ctip-tol-cost">'+rnd(compLine[12])+'</span> µg/L. '+(gap12>0?'Cost of these adjustments: approximately '+gap12+' µg/L less at 12 months vs ideal approach.':'These adjustments have a neutral or positive effect — no cost to absorption.'));
     } else {
       parts.push('Select one or more tolerability adjustments above to see the effect on your trajectory.');
     }
@@ -2851,13 +2897,14 @@ function calcDerived(){
 
   // Display
   var cls=diagSeverity==='danger'?'danger-box':diagSeverity==='warn'?'warn':'';
+  window._ctipData.derived={ferrPM:ferrPM,months:rnd(months*10)/10,totalLossPerMonth:rnd((menstrualLoss+basalLoss)/months),infMg:rnd(infMg),impliedAbsPM:impliedAbsPM,firstFerr:first.ferritin,lastFerr:last.ferritin};
   document.getElementById('derivedGrid').innerHTML=
-    mc('Ferritin trend',sign(ferrPM)+rnd(ferrPM*10)/10,'µg/L/mo',ferrPM>=1?'ok':ferrPM>-1?'warning':'danger')+
+    mc('Ferritin trend',sign(ferrPM)+rnd(ferrPM*10)/10,'µg/L/mo',ferrPM>=1?'ok':ferrPM>-1?'warning':'danger','ctip-ferr-trend')+
     mc('Months observed',rnd(months*10)/10,'mo','neutral')+
     mc('Est. menstrual loss',rnd(menstrualLoss/months),'mg/mo',menstrualLoss/months>40?'danger':menstrualLoss/months>20?'warning':'ok')+
     mc('Basal loss',rnd(basalLoss/months),'mg/mo','neutral')+
     mc('Infusions in period',rnd(infMg),'mg','neutral')+
-    (impliedAbsPM!==null?mc('Derived absorption',rnd(impliedAbsPM),'mg/mo',impliedAbsPM>20?'ok':impliedAbsPM>10?'warning':'danger'):mc('Derived absorption','IV dominated','',  'neutral'));
+    (impliedAbsPM!==null?mc('Derived absorption',rnd(impliedAbsPM),'mg/mo',impliedAbsPM>20?'ok':impliedAbsPM>10?'warning':'danger','ctip-derived-abs'):mc('Derived absorption','IV dominated','','neutral','ctip-iv-dominated'));
 
   var diagBox=document.getElementById('absDiagnostic');
   if(diagBox){
@@ -3459,18 +3506,20 @@ function calcStrategy(){
     }
   }
 
+  window._ctipData.target={noIVMonths:noIVMonths,target:target,startFerr:startFerr,ferrChangePM:ferrChangePM,netMonth:netMonth};
+  if(ivDose>0) window._ctipData.ivCalc={ivDose:ivDose,startFerr:startFerr,startAfterIV:startAfterIV,ivMonths:ivMonths,target:target,ferrChangePM:ferrChangePM};
   phase1Grid.innerHTML=
     mc('Starting ferritin',startFerr,'µg/L',startFerr<30?'danger':startFerr<50?'warning':'ok')+
     mc('Recovery target',target,'µg/L','neutral')+
     (noIVMonths===null
-      ?mc('Time to target (oral only)','Not achievable','','danger')
-      :mc('Time to target (oral only)',noIVMonths===0?'Already there':noIVMonths+(noIVMonths>0?' mo':''),'',noIVMonths===0?'ok':noIVMonths<=3?'ok':noIVMonths<=6?'warning':'danger'))+
+      ?mc('Time to target (oral only)','Not achievable','','danger','ctip-time-target')
+      :mc('Time to target (oral only)',noIVMonths===0?'Already there':noIVMonths+(noIVMonths>0?' mo':''),'',noIVMonths===0?'ok':noIVMonths<=3?'ok':noIVMonths<=6?'warning':'danger','ctip-time-target'))+
     (ivDose>0
       ?(ivMonths===null
-        ?mc('With '+ivDose+' mg infusion','Needs ongoing support','','warning')
-        :mc('With '+ivDose+' mg infusion',ivMonths===0?'Target met immediately':ivMonths+' mo further','','ok'))
+        ?mc('With '+ivDose+' mg infusion','Needs ongoing support','','warning','ctip-iv-months')
+        :mc('With '+ivDose+' mg infusion',ivMonths===0?'Target met immediately':ivMonths+' mo further','','ok','ctip-iv-months'))
       :'')+
-    (ivDose>0?mc('Post-infusion ferritin','~'+rnd(startAfterIV),'µg/L',startAfterIV>=target?'ok':'warning'):'');
+    (ivDose>0?mc('Post-infusion ferritin','~'+rnd(startAfterIV),'µg/L',startAfterIV>=target?'ok':'warning','ctip-post-iv'):'');
 
   var p1html='<p style="margin-bottom:'+(ivDose>0?'6':'0')+'px">'+noIVMsg+'</p>';
   if(ivDose>0) p1html+='<p style="margin:0">'+ivMsg+'</p>';
@@ -3536,6 +3585,7 @@ function calcStrategy(){
     var tabsPerWeek=tabsPerMonth/4.3;
 
     var tpw=Math.max(1,Math.round(tabsPerWeek)); // never show 0
+    window._ctipData.tabsWeek={tabsPerMonth:rnd(tabsPerMonth*10)/10,tabsPerWeek:rnd(tabsPerWeek*10)/10,tpw:tpw};
     var pkMgPerTab=fm2.packetMg;
     var fmName=fm2.name;
 
@@ -3575,6 +3625,7 @@ function calcStrategy(){
     var bisglycAbsRate2=Math.max((lc&&lc.tieredAbsRate||0.04)*1.6,0.08);
     var bisglycAbsPerDose2=20*bisglycAbsRate2;
     var bisglycAbsPerMonth2=bisglycAbsPerDose2*15;
+    window._ctipData.bisglyc={baseRate:lc&&lc.tieredAbsRate||0.04,bisglycRate:bisglycAbsRate2,bisglycAbsPerDose:bisglycAbsPerDose2,bisglycAbsPerMonth:bisglycAbsPerMonth2,deficitAfterDiet:deficitAfterDiet};
     var bisglycCoversIt=bisglycAbsPerMonth2>=(deficitAfterDiet*0.8);
     var postStopRateStr=lc&&lc.ferrChangePM!==undefined?rnd(Math.abs(((lc.dietNetMonth||0)-lc.totalLossMonth)/8)*10)/10:'?';
 
@@ -3592,7 +3643,7 @@ function calcStrategy(){
         '</div>';
     } else if(ointolOption==='bisglycinate'){
       oralIntolNote='<div style="margin-top:8px;background:#f0fdf4;border:1px solid #86efac;border-radius:7px;padding:10px 14px;font-size:12px;color:#15803d;line-height:1.6">'+
-        '<strong>Option C selected — Bisglycinate every other day:</strong> 1 capsule (20mg actual iron) every other day = approximately <strong>'+rnd(bisglycAbsPerMonth2)+' mg absorbed per month</strong>. '+
+        '<strong>Option C selected — Bisglycinate every other day:</strong> 1 capsule (20mg actual iron) every other day = approximately <strong><span data-ctip="ctip-bisglyc">'+rnd(bisglycAbsPerMonth2)+'</span> mg absorbed per month</strong>. '+
         (bisglycCoversIt?
           'This should cover your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month needed). Combined with an initial infusion, this may eliminate the need for repeat infusions.':
           'This covers ~'+rnd(bisglycAbsPerMonth2/deficitAfterDiet*100)+'% of your deficit — ferritin may still slowly decline but much more slowly, significantly extending time between infusions.')+
@@ -3609,17 +3660,19 @@ function calcStrategy(){
   var altDayElem=altDayTabs*fm2.elemPerTab;   // always consistent with tab count
   var altDayPkMg=altDayTabs*fm2.packetMg;
   var unitLabel2=fm2.abbr==='bisglycinate'?'capsule':'tablet';
+  window._ctipData.maint={totalLossMonth:totalLossMonth,dietNetMonth:lc&&lc.dietNetMonth||0,deficitAfterDiet:deficitAfterDiet,tieredAbsRate:maintAbsRate,mDailyTabs:mDailyTabs,mDailyElem:mDailyElem,unitLabel:unitLabel2};
+  window._ctipData.altday={deficitAfterDiet:deficitAfterDiet,maintAbsRate:maintAbsRate,isBisglycForAlt:isBisglycForAlt,altDayHepcidinMult:altDayHepcidinMult,altDayTabs:altDayTabs};
   phase2Grid.innerHTML=
     mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
     mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning')+
-    mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning')+
+    mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning','ctip-remaining-gap')+
     (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral'):
-    mc('Maintenance dose',mDailyTabs+' '+unitLabel2+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)','neutral')+
-    mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral'));
+    mc('Maintenance dose',mDailyTabs+' '+unitLabel2+(mDailyTabs===1?'':'s')+'/day','('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)','neutral','ctip-maint-dose')+
+    mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral','ctip-altday'));
 
   phase2Text.innerHTML=
     (conds['oral-intol']?'<p style="margin-bottom:6px;color:#b91c1c"><strong>Oral iron intolerance flagged.</strong> Select an option above to model the maintenance approach.</p>':
-    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month, a practical supplement schedule would be '+tabAdvice+'</p>')+
+    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month, a practical supplement schedule would be <span data-ctip="ctip-tabs-week">'+tabAdvice+'</span></p>')+
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>'+
     spatoneNote+oralIntolNote;
 
@@ -3737,6 +3790,53 @@ function calcStrategy(){
 
   // Trigger chart redraw to show the new scenario line
   if(!window._inCalcDerived&&!window._inCalcStrategy){window._inCalcStrategy=true;calc();window._inCalcStrategy=false;}
+
+  renderStratChart();
+}
+
+function renderStratChart(){
+  var sc=window.strategyScenario;
+  if(!sc||!sc.ferrLine||!sc.ferrLine.length)return;
+  var canvas=document.getElementById('stratFerritinChart');
+  if(!canvas)return;
+  var months=sc.ferrLine.length;
+  var startDateVal=document.getElementById('startDate').value;
+  var baseDate=startDateVal?new Date(startDateVal):new Date();
+  var mnth=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var labels=Array.from({length:months},function(_,i){var d=new Date(baseDate.getFullYear(),baseDate.getMonth()+i,1);return mnth[d.getMonth()]+' '+d.getFullYear().toString().slice(2);});
+  var ds=[];
+  ds.push({label:'Treatment plan',data:sc.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
+  var hasStop=false;
+  if(lc&&lc.startFerr){
+    var suppFerrPM=lc.suppDose>0?(Math.min(lc.suppDose*(lc.tieredAbsRate||0.04),4.0)*30)/8:0;
+    var postStopRate=(lc.ferrChangePM||0)-suppFerrPM;
+    var ivBoost=sc.ivDose>0?mg2f(sc.ivDose):0;
+    var stopArr=[lc.startFerr];var stReached=lc.startFerr>=sc.target;
+    for(var m=1;m<months;m++){
+      var sPrev=stopArr[m-1],sBoost=(m===1&&!stReached)?ivBoost:0,sNext;
+      if(!stReached){sNext=sPrev+sBoost+(lc.ferrChangePM||0);if(sNext>=sc.target){stReached=true;sNext=sc.target;}}
+      else{sNext=sPrev+postStopRate;}
+      stopArr.push(Math.max(0,+sNext.toFixed(1)));
+    }
+    ds.push({label:'If supplementation stops after reaching target',data:stopArr,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
+    hasStop=true;
+  }
+  ds.push({label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false});
+  ds.push({label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false});
+  var allVals=sc.ferrLine.concat(hasStop?stopArr:[]).concat([50,30]);
+  var yMax=Math.ceil(Math.max.apply(null,allVals.filter(function(v){return v>0;}))*1.2/10)*10||150;
+  if(stratChartInst)stratChartInst.destroy();
+  stratChartInst=new Chart(canvas,{type:'line',data:{labels:labels,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
+      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}});
+  var legend=document.getElementById('stratChartLegend');
+  if(legend)legend.innerHTML=
+    li('#3b82f6','Blue — Treatment plan')+
+    (hasStop?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
+    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
+    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true);
 }
 
 function refreshList(sel){
@@ -3748,6 +3848,7 @@ function refreshList(sel){
   }catch(e){}
 }
 function showTab(t){
+  window.scrollTo(0,0);
   ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
   document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
   if(t==='infusion')calcIV();
@@ -3758,6 +3859,350 @@ function showTab(t){
   if(t==='tolerability')calcTolerability();
 }
 refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
+
+// ── CALCULATED-VALUE TOOLTIPS ─────────────────────────────────────────────
+(function(){
+  var tip=document.getElementById('calcTooltip');
+  if(!tip){tip=document.createElement('div');tip.id='calcTooltip';document.body.appendChild(tip);}
+  var _timer=null,_cur=null,_mx=0,_my=0;
+
+  function cancel(){
+    clearTimeout(_timer);_timer=null;_cur=null;
+    tip.style.display='none';
+  }
+
+  function show(el){
+    var id=el.getAttribute('data-ctip');
+    var html=content(id);
+    if(!html)return;
+    tip.innerHTML=html;
+    tip.style.display='block';
+    var th=tip.offsetHeight||160;
+    var left=_mx+14,top=_my+14;
+    if(left+284>window.innerWidth-8)left=_mx-298;
+    if(top+th>window.innerHeight-8)top=_my-th-14;
+    tip.style.left=Math.max(8,left)+'px';
+    tip.style.top=Math.max(8,top)+'px';
+  }
+
+  function row(k,v){return '<div class="ctip-row"><span class="ctip-k">'+k+'</span><span class="ctip-v">'+v+'</span></div>';}
+  function hdr(t){return '<div class="ctip-hdr">'+t+'</div>';}
+  function note(t){return '<div class="ctip-note">'+t+'</div>';}
+
+  function content(id){
+    var c=lc||{};
+    var d=window._ctipData||{};
+    if(id==='ctip-abs-rate'){
+      var rate=rnd((c.tieredAbsRate||0)*100);
+      var ferr=c.startFerr||'?';
+      return hdr('Monthly absorbed iron')+
+        row('Your current ferritin',ferr+' µg/L')+
+        row('Absorption tier applied',rate+'%')+
+        row('Supplement dose',rnd(c.suppMgDay||0)+' mg elemental iron/day')+
+        row('Days/month supplement taken',rnd((c.adherence||1)*30)+' days')+
+        row('Absorbed per month',rnd(c.mgAbsMonth||0)+' mg')+
+        note('Absorption rate: <15 µg/L→12%, <30→8%, <50→5%, ≥50→4%. PCOS/inflammation multipliers applied if set.');
+    }
+    if(id==='ctip-net-balance'){
+      return hdr('Monthly net iron balance')+
+        row('Absorbed from supplement',rnd(c.mgAbsMonth||0)+' mg')+
+        row('Dietary net absorption',rnd(c.dietNetMonth||0)+' mg')+
+        row('Total monthly losses',rnd(c.totalLossMonth||0)+' mg')+
+        row('Net balance',rnd(c.netMonth||0)+' mg/month')+
+        note('Badge: red = below −5 mg/month (ferritin depleting), amber = −5 to +5 mg/month (roughly stable), green = above +5 mg/month (ferritin building). Positive = iron stores building; negative = will fall even with supplementation.');
+    }
+    if(id==='ctip-m12ferr'){
+      var fpm=rnd((c.ferrChangePM||0)*10)/10;
+      return hdr('12-month projected ferritin')+
+        row('Current ferritin',rnd(c.startFerr||0)+' µg/L')+
+        row('Monthly change (ferrChangePM)',fpm+' µg/L/month')+
+        row('Projected at 12 months',rnd(c.m12ferr||0)+' µg/L')+
+        note('ferrChangePM = net balance ÷ 8 (1 µg/L ferritin ≈ 8 mg stored iron). Projection assumes consistent supplementation and diet.');
+    }
+    if(id==='ctip-derived-abs'){
+      var dr=d.derived||{};
+      return hdr('Derived absorption from blood results')+
+        row('Ferritin rise over period',rnd(dr.ferrPM||0)+' µg/L/month')+
+        row('Duration measured',dr.months+' months')+
+        row('Total loss in period',rnd(dr.totalLossPerMonth||0)+' mg/month')+
+        row('Inflammation correction',dr.infMg?'+'+dr.infMg+' mg/month corrected':'none')+
+        row('Implied absorption',rnd(dr.impliedAbsPM||0)+' mg/month')+
+        note('Back-calculated from your actual ferritin results: how much iron must have been absorbed to produce this rise, given your estimated losses.');
+    }
+    if(id==='ctip-time-target'){
+      var tr=d.target||{};
+      return hdr('Estimated time to target')+
+        row('Starting ferritin',rnd(tr.startFerr||0)+' µg/L')+
+        row('Target ferritin',rnd(tr.target||0)+' µg/L')+
+        row('Monthly change rate',rnd((tr.ferrChangePM||0)*10)/10+' µg/L/month')+
+        row('Estimated months (excl. IV)',rnd(tr.noIVMonths||0))+
+        row('Net balance at this dose',rnd(tr.netMonth||0)+' mg/month')+
+        note('Months = (target − start) ÷ ferrChangePM. Rate uses your supplement dose, diet absorption, and estimated losses.');
+    }
+    if(id==='ctip-maint-dose'){
+      var mr=d.maint||{};
+      var rateLabel=rnd((mr.tieredAbsRate||0)*100)+'%';
+      return hdr('Maintenance dose')+
+        row('Monthly iron losses',rnd(mr.totalLossMonth||0)+' mg')+
+        row('Dietary net contribution',rnd(mr.dietNetMonth||0)+' mg')+
+        row('Deficit to cover by supplement',rnd(mr.deficitAfterDiet||0)+' mg/month')+
+        row('Absorption rate at target',rateLabel)+
+        row('Required elemental iron/day',rnd(mr.mDailyElem||0)+' mg')+
+        row('Tablet dose ('+mr.unitLabel+')',rnd(mr.mDailyTabs||0)+'/day')+
+        note('Maintenance = losses minus diet, divided by absorption rate, divided by 30 days. Keeps ferritin steady once the target is reached.');
+    }
+    if(id==='ctip-diet12m'){
+      var dr2=d.diet12m||{};
+      var fpm2=rnd((dr2.baseFerrPM||0)*10)/10;
+      return hdr('Diet-only 12-month projection')+
+        row('Starting ferritin (fixed)',50+' µg/L')+
+        row('Dietary net absorption/month',rnd(dr2.dietNetMonth||0)+' mg')+
+        row('Total monthly losses',rnd(dr2.totalLossMonth||0)+' mg')+
+        row('Diet-only ferritin change/month',fpm2+' µg/L/month')+
+        row('Projected at 12 months',rnd(dr2.baseLine12||0)+' µg/L')+
+        note('No supplements. Shows what diet alone achieves from a baseline of 50 µg/L. ferrChangePM = (diet absorption − losses) ÷ 8.');
+    }
+    if(id==='ctip-diet-rate'){
+      var dr4=d.diet12m||{};
+      var netBal=rnd((dr4.dietNetMonth||0)-(dr4.totalLossMonth||0));
+      return hdr('Diet-only monthly ferritin change')+
+        row('Total monthly losses',rnd(dr4.totalLossMonth||0)+' mg')+
+        row('Diet absorption',rnd(dr4.dietNetMonth||0)+' mg')+
+        row('Net balance (diet − losses)',netBal+' mg/month')+
+        row('Ferritin change (÷ 8)',rnd((dr4.baseFerrPM||0)*10)/10+' µg/L/month')+
+        note('÷8 converts mg of stored iron to µg/L ferritin: 1 µg/L ≈ 8 mg stored iron. Negative = stores falling; positive = stores building.');
+    }
+    if(id==='ctip-iron-lost'){
+      return hdr('Monthly iron lost')+
+        row('Blood loss per cycle',c.mlPerCycle+' ml')+
+        row('Iron in blood (× 0.5 mg/ml)',c.mgLostCycle+' mg/cycle')+
+        row('Monthly menstrual loss',c.mgLostMonth+' mg')+
+        row('Basal loss (skin/gut/sweat)',rnd(c.basalLossMonth||30)+' mg')+
+        row('Total monthly loss',c.totalLossMonth+' mg')+
+        note('Badge: red = menstrual loss >40 mg/month, amber = 20–40 mg/month, green = below 20 mg/month. The 0.5 mg/ml constant is the clinical standard for iron content of menstrual blood (Hallberg et al 1966).');
+    }
+    if(id==='ctip-diet-contrib'){
+      var dm=c.effectiveDietMult||1;
+      var coelMult=c.coeliacMult||1;
+      var vegMult=c.veganAbsMult||1;
+      return hdr('Dietary iron contribution')+
+        row('Daily dietary iron estimate',c.dietIronMgDay+' mg/day')+
+        row('Base absorption rate','4%')+
+        (coelMult<1?row('Coeliac reduction applied',rnd((1-coelMult)*100)+'% less'):(vegMult<1?row('Vegan reduction applied',rnd((1-vegMult)*100)+'% less'):''))+
+        row('Combined diet multiplier',rnd(dm*100)+'% of base absorption')+
+        row('Net diet absorption',c.dietNetMonth+' mg/month')+
+        note('Formula: daily iron × 4% × multiplier × 30 days. The 4% baseline is the clinical estimate for non-haem iron absorption from a mixed diet (Monsen et al 1978). Coeliac reduces by 55%, vegan by 40%.');
+    }
+    if(id==='ctip-supp-abs'){
+      var suppOnly=c.suppDose>0?rnd(c.mgAbsMonth-(c.dietNetMonth||0)):0;
+      return hdr('Supplement absorption estimate')+
+        row('Total monthly absorbed',rnd(c.mgAbsMonth||0)+' mg')+
+        row('Minus diet contribution',rnd(c.dietNetMonth||0)+' mg')+
+        row('Estimated supplement contribution',suppOnly+' mg')+
+        note('This is estimated by subtraction — not a direct measurement. The actual split may differ if food is taken with the supplement, which reduces absorption by up to 40%.');
+    }
+    if(id==='ctip-total-losses'){
+      return hdr('Total monthly iron loss')+
+        row('Menstrual loss',rnd(c.mgLostMonth||0)+' mg')+
+        row('Basal loss (skin/gut/sweat)',rnd(c.basalLossMonth||30)+' mg')+
+        row('Total',rnd(c.totalLossMonth||0)+' mg/month')+
+        note('The 30 mg/month basal figure is a fixed clinical estimate (Green et al 1968) — it cannot be reduced. It represents approximately half of total loss for women with light periods.');
+    }
+    if(id==='ctip-bleed-ml'){
+      return hdr('Blood loss to iron conversion')+
+        row('Your blood loss per cycle',c.mlPerCycle+' ml')+
+        row('Iron content of blood','0.5 mg per ml')+
+        row('Iron lost per cycle',c.mgLostCycle+' mg')+
+        row('Monthly menstrual loss',c.mgLostMonth+' mg/month')+
+        note('Clinical standard: menstrual blood contains ~0.5 mg iron per ml lost (Hallberg et al, Scand J Clin Lab Invest 1966). Your flow intensity and bleed duration are used to estimate volume.');
+    }
+    if(id==='ctip-eff-abs'){
+      var ea=d.effAbs||{};
+      return hdr('Effective supplement absorption')+
+        row('Base estimate (dose × 4% × 30 days)',rnd(ea.base||0)+' mg')+
+        row('After habit adjustments',rnd(ea.adj||0)+' mg')+
+        row('Combined modifier',rnd((ea.multiplier||1)*100)+'% of base')+
+        note('Vitamin C adds up to +50%. Tea/coffee −35%, calcium −25%, antacids −40%. Effects are approximate — they may not add linearly in practice.');
+    }
+    if(id==='ctip-stop-rate'){
+      var tLoss=rnd((c.basalLossMonth||30)+(c.mgLostMonth||0));
+      var dNet=rnd(c.dietNetMonth||0);
+      var deficit=Math.max(0,tLoss-dNet);
+      var rate=rnd(deficit/8*10)/10;
+      return hdr('Ferritin fall rate if supplements stop')+
+        row('Total monthly losses',tLoss+' mg')+
+        row('Diet absorption',dNet+' mg')+
+        row('Monthly deficit without supplements',deficit+' mg')+
+        row('Ferritin fall per month (deficit ÷ 8)',rate+' µg/L')+
+        note('The ÷8 conversion: 1 µg/L ferritin ≈ 8 mg stored iron. A deficit of '+deficit+' mg/month means ferritin falls at ~'+rate+' µg/L/month once supplementation stops.');
+    }
+    if(id==='ctip-post-iv'){
+      var iv=d.ivCalc||{};
+      return hdr('Post-infusion ferritin estimate')+
+        row('Current ferritin',rnd(iv.startFerr||0)+' µg/L')+
+        row('IV iron dose',rnd(iv.ivDose||0)+' mg')+
+        row('Expected rise (dose ÷ 8)',rnd((iv.ivDose||0)/8)+' µg/L')+
+        row('Expected ferritin after infusion','~'+rnd(iv.startAfterIV||0)+' µg/L')+
+        note('Formula: starting ferritin + (IV dose ÷ 8). The ÷8 conversion assumes 1 µg/L ferritin = 8 mg stored iron. Actual response varies ±50% or more depending on inflammation.');
+    }
+    if(id==='ctip-iv-months'){
+      var iv=d.ivCalc||{};
+      return hdr('Months to target with infusion')+
+        row('Ferritin after infusion','~'+rnd(iv.startAfterIV||0)+' µg/L')+
+        row('Target ferritin',rnd(iv.target||0)+' µg/L')+
+        row('Remaining gap',rnd((iv.target||0)-(iv.startAfterIV||0))+' µg/L')+
+        row('Monthly oral gain rate',rnd((iv.ferrChangePM||0)*10)/10+' µg/L/month')+
+        row('Further months needed',rnd(iv.ivMonths||0))+
+        note('Months = remaining gap ÷ monthly gain rate. The infusion is a one-off head start — oral supplementation then covers the rest of the distance.');
+    }
+    if(id==='ctip-remaining-gap'){
+      var deficit2=Math.max(0,(c.totalLossMonth||0)-(c.dietNetMonth||0));
+      return hdr('Gap supplements need to cover')+
+        row('Total monthly losses',rnd(c.totalLossMonth||0)+' mg')+
+        row('Diet absorption',rnd(c.dietNetMonth||0)+' mg')+
+        row('Remaining deficit',rnd(deficit2)+' mg/month')+
+        note('This is the iron your diet cannot replace — the minimum supplement contribution needed just to stay level at the target ferritin. Subtract diet from losses to get this figure.');
+    }
+    if(id==='ctip-altday'){
+      var ad=d.altday||{};
+      return hdr('Alternate-day dosing calculation')+
+        row('Deficit to cover',rnd(ad.deficitAfterDiet||0)+' mg/month')+
+        row('Absorption rate at target',rnd((ad.maintAbsRate||0.04)*100)+'%')+
+        row('Hepcidin reset multiplier',ad.isBisglycForAlt?'×1.03 (bisglycinate)':'×1.10 (standard iron)')+
+        row('Alternate-day tablets',rnd(ad.altDayTabs||0)+'/every other day')+
+        note('Every other day allows hepcidin to reset, improving net absorption per dose. The ×1.10 benefit applies to standard iron (×1.03 for bisglycinate, which already partly bypasses hepcidin). Source: Moretti et al, Lancet Haematol 2015.');
+    }
+    if(id==='ctip-tabs-week'){
+      var tw=d.tabsWeek||{};
+      return hdr('Tablets per week calculation')+
+        row('Monthly tablets needed',tw.tabsPerMonth||'—')+
+        row('÷ 4.3 weeks per month',tw.tabsPerWeek||'—')+
+        row('Rounded to practical schedule',(tw.tpw||'—')+' tablet(s)/week')+
+        note('4.3 = average weeks per month (52.18 ÷ 12). This converts the monthly dose into a weekly schedule that is easier to stick to.');
+    }
+    if(id==='ctip-diet-mult'){
+      var dm2=d.dietMult||{};
+      return hdr('Diet tip absorption multipliers')+
+        row('Vitamin C with every iron meal','+25% dietary absorption')+
+        row('Avoid tea/coffee near meals','+20% (removes tannin inhibition)')+
+        row('Avoid calcium near iron meals','+15% (removes DMT1 competition)')+
+        row('Add haem iron sources','+30% (haem iron ~5× more bioavailable)')+
+        row('Reduce phytates','+18% dietary absorption')+
+        row('Cook in cast iron','+5% dietary iron intake')+
+        row('Combined multiplier applied',rnd((dm2.multiplier||1)*100)+'% of baseline diet absorption')+
+        note('Multipliers are estimated averages from published absorption studies (Hallberg 1989, Hurrell 1999, Monsen 1978). Individual response varies — effects compound multiplicatively in this model.');
+    }
+    if(id==='ctip-hormone-red'){
+      var hr=d.hormoneRed||{};
+      return hdr('Hormone treatment — loss reduction')+
+        row('Treatment',hr.txName||'—')+
+        row('Reduction applied',rnd(hr.hormoneReduction||0)+'%')+
+        row('Menstrual loss before',rnd(hr.origLoss||0)+' mg/month')+
+        row('Menstrual loss after',rnd(hr.newLoss||0)+' mg/month')+
+        note('Estimated reductions: combined pill ~45%, tranexamic acid ~50%, norethisterone ~80%, Mirena IUS ~85%. Based on clinical trial averages — individual response varies significantly.');
+    }
+    if(id==='ctip-inflam-boost'){
+      var ib=d.inflammBoost||{};
+      return hdr('Inflammation effect on absorption')+
+        row('Your current absorption tier',rnd((ib.tieredRate||0.04)*100)+'%')+
+        row('Healthy absorption baseline','4%')+
+        row('Absorption boost if resolved',rnd(ib.boostPct||0)+'%')+
+        note('Inflammation raises hepcidin, suppressing dietary iron absorption below the 4% baseline. This boost is calculated as: (4% ÷ current rate − 1) × 100%. Resolving inflammation restores absorption to the healthy baseline.');
+    }
+    if(id==='ctip-combined12m'){
+      var cm=d.combined12m||{};
+      return hdr('Combined scenario — 12-month projection')+
+        row('Baseline (diet only, 50 µg/L start)',rnd(cm.baseLine12||0)+' µg/L')+
+        row('Projected with all selected changes',rnd(cm.combinedLine12||0)+' µg/L')+
+        row('Total gain vs no changes','+'+rnd(cm.combGain||0)+' µg/L')+
+        note('All selected changes — diet optimisation, hormone treatment, inflammation resolution — are applied together. Effects compound multiplicatively where they interact.');
+    }
+    if(id==='ctip-ferr-trend'){
+      var dr3=d.derived||{};
+      return hdr('Ferritin trend from blood results')+
+        row('First result',rnd(dr3.firstFerr||0)+' µg/L')+
+        row('Latest result',rnd(dr3.lastFerr||0)+' µg/L')+
+        row('Change over period',rnd((dr3.lastFerr||0)-(dr3.firstFerr||0))+' µg/L')+
+        row('Duration',rnd(dr3.months||0)+' months')+
+        row('Rate per month',rnd((dr3.ferrPM||0)*10)/10+' µg/L/month')+
+        note('Rate = change ÷ months, where months uses 30.44 days/month (365.25 ÷ 12 = average days per month). This normalises the rate regardless of the exact gap between tests.');
+    }
+    if(id==='ctip-iv-dominated'){
+      return hdr('IV dominated — derived absorption skipped')+
+        row('Threshold for IV dominance','>200 mg infusion in period')+
+        row('Why skipped','An infusion raises ferritin in a single step, making it impossible to reliably separate oral absorption from the net change.')+
+        note('When total infusion dose in the measured period exceeds 200 mg, derived oral absorption is not shown as it would be meaningless.');
+    }
+    if(id==='ctip-expected-adh'){
+      var ea2=d.expectedAdh||{};
+      return hdr('Expected change at stated adherence')+
+        row('Diet-only rate (constant)',rnd((ea2.dietOnlyFerrPM||0)*10)/10+' µg/L/month')+
+        row('Supplement contribution (full adherence)',rnd((ea2.suppFerrPM||0)*10)/10+' µg/L/month')+
+        row('Adherence applied',rnd((ea2.adherence||1)*100)+'%')+
+        row('Expected monthly rate',rnd((ea2.expectedFerrPM||0)*10)/10+' µg/L/month')+
+        note('Diet absorption does not scale with adherence — only the supplement contribution scales. Missing doses reduces the expected ferritin gain proportionally.');
+    }
+    if(id==='ctip-gap-sig'){
+      var gs=d.gapSig||{};
+      return hdr('Gap between actual and expected')+
+        row('Gap value',rnd(Math.abs(gs.gap||0))+' µg/L')+
+        row('Significance threshold','>5 µg/L = meaningful')+
+        row('Status',Math.abs(gs.gap||0)>5?'Significant — investigate':'Within normal variation')+
+        note('Differences up to 5 µg/L between expected and actual are within normal biological and lab variation — ferritin assays themselves carry ~5–10% coefficient of variation.');
+    }
+    if(id==='ctip-tol-cost'){
+      var tc=d.tolCost||{};
+      return hdr('Absorption cost of tolerability adjustments')+
+        row('Ideal approach at 12 months',rnd(tc.baseLine12||0)+' µg/L')+
+        row('With adjustments at 12 months',rnd(tc.compLine12||0)+' µg/L')+
+        row('Absorption cost',rnd(tc.gap12||0)+' µg/L at 12 months')+
+        note('Adjustment multipliers: with food −38% (×0.62), alternate-day +10% (×1.10), slow build-up −30% (×0.70), bisglycinate form +15% (×1.15). Based on comparative absorption studies.');
+    }
+    if(id==='ctip-bisglyc'){
+      var bg=d.bisglyc||{};
+      return hdr('Bisglycinate absorption advantage')+
+        row('Standard absorption rate (your tier)',rnd((bg.baseRate||0.04)*100)+'%')+
+        row('Bisglycinate multiplier','×1.6 (60% better absorbed)')+
+        row('Bisglycinate absorption rate',rnd((bg.bisglycRate||0.064)*100)+'%')+
+        row('Per dose (20mg × rate × 15 doses/month)',rnd(bg.bisglycAbsPerMonth||19)+' mg/month')+
+        note('Bisglycinate chelate has higher bioavailability than ferrous sulphate in comparative studies (Bovell-Benjamin 2000). The 1.6× figure is a population average — individual variation is wide.');
+    }
+    if(id==='ctip-spatone'){
+      var spatAbs=rnd(5*0.25*30);
+      var totalWithDiet=rnd(spatAbs+(c.dietNetMonth||0));
+      return hdr('Spatone liquid iron — how the numbers work')+
+        row('Iron per sachet','5 mg actual iron')+
+        row('Absorption rate applied','~25% (optimistic estimate)')+
+        row('Absorbed per sachet','~1.25 mg')+
+        row('One sachet/day × 30 days',spatAbs+' mg absorbed/month')+
+        row('Combined with your diet (~'+rnd(c.dietNetMonth||0)+' mg/mo)','~'+totalWithDiet+' mg total')+
+        note('25% is the upper end of the published range (15–25%). Real-world absorption may be 15–20%. Taking with orange juice improves absorption (Persson et al 2003).');
+    }
+    return null;
+  }
+
+  function findCtip(node){
+    while(node&&node.nodeType===1){
+      if(node.getAttribute&&node.getAttribute('data-ctip'))return node;
+      node=node.parentNode;
+    }
+    return null;
+  }
+  document.addEventListener('mousemove',function(e){
+    _mx=e.clientX;_my=e.clientY;
+    var el=findCtip(e.target);
+    if(el===_cur)return;
+    cancel();
+    if(!el)return;
+    _cur=el;
+    _timer=setTimeout(function(){show(el);},2000);
+  });
+  document.addEventListener('mouseout',function(e){
+    if(!e.relatedTarget)cancel();
+  });
+  document.addEventListener('scroll',cancel,true);
+  document.addEventListener('click',cancel);
+})();
 </script>
 
 <script>
@@ -3859,7 +4304,7 @@ function clearNHSImport(){
 
 <script>
 var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
-function isUnlocked(){return localStorage.getItem('ironToolUnlocked')==='true';}
+function isUnlocked(){return DEV_MODE||localStorage.getItem('ironToolUnlocked')==='true';}
 function closePaywall(){document.getElementById('paywallModal').classList.remove('show');}
 function restoreAccess(){
   if(confirm('Restore paid access on this device? Only use this if you have already purchased.')){
@@ -3903,5 +4348,6 @@ showTab=function(t){
   _showTab(t);
 };
 </script>
+<footer style="text-align:center;font-size:11px;color:#94a3b8;padding:1.5rem 0 1rem;margin-top:1.5rem">© 2026 Fe+ Iron Balance Tool. All rights reserved.</footer>
 </body>
 </html>
