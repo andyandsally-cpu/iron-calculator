@@ -482,7 +482,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <!-- PERIOD MANAGEMENT DROPDOWN -->
   <div style="margin-bottom:14px">
     <label style="font-size:12px;font-weight:600;color:#1e293b;display:block;margin-bottom:5px">How do you manage your periods?</label>
-    <select id="periodMgmt" onchange="applyPeriodMgmt()" style="width:100%;font-size:13px;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b;margin-bottom:8px">
+    <select id="periodMgmt" onchange="applyPeriodMgmt(true)" style="width:100%;font-size:13px;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;color:#1e293b;margin-bottom:8px">
       <option value="natural">Natural / unmanaged cycle</option>
       <option value="pill21">Combined pill — standard 21/7 (21 active + 7 day break)</option>
       <option value="pill63">Combined pill — extended / tricycling (63 days active + break)</option>
@@ -793,6 +793,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 <div id="tab-infusion" style="display:none">
+<div class="section" id="infusionAnalysisSection" style="display:none"></div>
 <div class="section">
 <div class="st">IV infusion schedule planner</div>
 <div class="card">
@@ -1329,7 +1330,7 @@ var PERIOD_MGMT_DEFAULTS={
              cycleLabel:'No periods'}
 };
 
-function applyPeriodMgmt(){
+function applyPeriodMgmt(fromUserPillChange){
   var sel=document.getElementById('periodMgmt');
   if(!sel)return;
   var v=sel.value||'natural';
@@ -1351,10 +1352,10 @@ function applyPeriodMgmt(){
     if(bdEl)  d.bleedDays=+(bdEl.value)||7;
   }
 
-  // Set slider values
+  // Set slider values — flowInt only when user explicitly changes pill type, not on session restore
   sv('cycleLen', d.cycleLen<365?d.cycleLen:365);
-  if(!d.disableBleed) sv('bleedDays', d.bleedDays);
-  else sv('bleedDays', d.bleedDays);
+  sv('bleedDays', d.bleedDays);
+  if(fromUserPillChange) sv('flowInt', d.flowInt);
 
   // Grey out / enable sliders
   ['cycleLen'].forEach(function(id){
@@ -2730,7 +2731,7 @@ function renderHistoricChart(historicResults){
   var nonNull=data.filter(function(v){return v!=null;});
   var maxVal=Math.max.apply(null,nonNull);
   var minVal=Math.min.apply(null,nonNull);
-  var yMin=Math.max(0,Math.floor(Math.min(minVal,25)/10)*10);
+  var yMin=Math.max(0,Math.floor(minVal*0.85/10)*10);
   var yMax=Math.min(300,Math.max(80,Math.round(maxVal*1.3)));
   var pts=historicResults.length;
 
@@ -2854,10 +2855,12 @@ function calcDerived(){
   // Iron losses in period
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
+  var pmgmtDerived=document.getElementById('periodMgmt')?document.getElementById('periodMgmt').value:'natural';
+  var noPeriodsD=post||pmgmtDerived==='none';
   var cycleLen=gv('cycleLen')||28;
-  var bleedDays=post?0:gv('bleedDays');
+  var bleedDays=noPeriodsD?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
-  var mlPerCycle=post?0:flowMl[flowIdx]*(bleedDays/5);
+  var mlPerCycle=noPeriodsD?0:flowMl[flowIdx]*(bleedDays/5);
   var mgLostCycleEst=mlPerCycle*0.5;
   var basalLoss=30*months; // ~1mg/day basal
   var menstrualLoss=mgLostCycleEst*(months*30/cycleLen);
@@ -3389,7 +3392,224 @@ function deleteSession(){
   try{var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');delete s[name];localStorage.setItem('ironSessions',JSON.stringify(s));refreshList('');}catch(e){}
 }
 var ivChartInst=null;
+var infusionAnalysisChartInsts=[];
+
+function renderInfusionAnalysis(){
+  var section=document.getElementById('infusionAnalysisSection');
+  if(!section)return;
+  var validInfs=historicInfusions.filter(function(inf){return inf.date;});
+  infusionAnalysisChartInsts.forEach(function(c){if(c)c.destroy();});
+  infusionAnalysisChartInsts=[];
+  if(!validInfs.length){section.style.display='none';return;}
+  section.style.display='';
+
+  var MNAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var FLOW_LABELS=['Very light','Light','Medium','Heavy','Very heavy'];
+  var DIET_LABELS=['','Poor','Low','Average','Good','Excellent'];
+  var DIET_MG=[0,6,8,10,13,16];
+  var PMGMT_LABELS={natural:'Natural cycle',pill21:'Combined pill 21/7',pill63:'Combined pill extended (tricycling)',pillcont:'Continuous pill',mini:'Mini pill (POP)',none:'No periods'};
+
+  function fmtD(s){var d=parseDate(s);if(!d)return s;return d.getDate()+' '+MNAMES[d.getMonth()]+' '+d.getFullYear();}
+  function selOpts(pairs,cur){return pairs.map(function(p){return '<option value="'+p[0]+'"'+(p[0]===cur?' selected':'')+'>'+p[1]+'</option>';}).join('');}
+
+  // All dated actuals (historic + current) sorted by date
+  var allActuals=actuals.filter(function(a){return a.date&&a.ferritin>0;});
+  allActuals.sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return da&&db?da-db:0;});
+
+  var htmlParts=[];
+  var chartJobs=[];
+
+  validInfs.forEach(function(inf,idx){
+    var oi=historicInfusions.indexOf(inf);
+    var infDate=parseDate(inf.date);
+    if(!infDate)return;
+
+    var hPmgmt=inf.hPmgmt||'natural';
+    var hNoPeriods=hPmgmt==='none';
+    var hFlowInt=+(inf.hFlowInt||2);
+    var hFlowIdx=Math.max(0,hFlowInt-1);
+    var hBleedDays=hNoPeriods?0:+(inf.hBleedDays||5);
+    var hCycleLen=Math.max(21,+(inf.hCycleLen||28));
+    var hSuppDose=+(inf.hSuppDose||0);
+    var hDietQ=+(inf.hDietQ||3);
+
+    // Pre-infusion: nearest actual on or before infusion date (within 6 months)
+    var preActuals=allActuals.filter(function(a){var d=parseDate(a.date);return d&&d<=infDate&&(infDate-d)<180*86400000;});
+    var preResult=preActuals.length?preActuals[preActuals.length-1]:null;
+    var preFromData=!!preResult;
+    var preEstVal=preFromData?preResult.ferritin:(+(inf.preEstFerr||0)||25);
+
+    // Post-infusion: actuals within 18 months after infusion
+    var postActuals=allActuals.filter(function(a){var d=parseDate(a.date);return d&&d>infDate&&(d-infDate)<548*86400000;});
+
+    // Expected monthly net (mg/month → µg/L/month)
+    var hMlPerCycle=hNoPeriods?0:flowMl[hFlowIdx]*(hBleedDays/5);
+    var hMgLostMonth=(hMlPerCycle*0.5*(30/hCycleLen))+30;
+    var hSuppAbsMonth=hSuppDose>0?(hSuppDose*0.05*30):0; // ~5% absorption for post-infusion high ferritin
+    var hDietAbsMonth=DIET_MG[hDietQ]*0.04*30;
+    var expectedDeclinePM=mg2f(hSuppAbsMonth+hDietAbsMonth-hMgLostMonth);
+    var estimatedPeak=preEstVal+mg2f(inf.dose);
+
+    // Actual post-infusion trend (if 2+ results span ≥1 month)
+    var actualDeclinePM=null;
+    if(postActuals.length>=2){
+      var pa0=postActuals[0],paLast=postActuals[postActuals.length-1];
+      var mSpan=(parseDate(paLast.date)-parseDate(pa0.date))/(30.44*86400000);
+      if(mSpan>=1) actualDeclinePM=(paLast.ferritin-pa0.ferritin)/mSpan;
+    }
+
+    // Build inputs HTML
+    var pmOpts=[['natural','Natural cycle'],['pill21','Combined pill 21/7'],['pill63','Combined pill extended'],['pillcont','Continuous pill'],['mini','Mini pill (POP)'],['none','No periods']];
+    var flowOpts=[[1,'Very light'],[2,'Light'],[3,'Medium'],[4,'Heavy'],[5,'Very heavy']];
+    var dietOpts=[[1,'Poor'],[2,'Low'],[3,'Average'],[4,'Good'],[5,'Excellent']];
+    var cid='iaChart_'+idx;
+
+    var condHtml='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;margin-bottom:10px">';
+    condHtml+='<div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Conditions at the time of this infusion</div>';
+    condHtml+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">';
+    condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Period management</label><select onchange="historicInfusions['+oi+'].hPmgmt=this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+selOpts(pmOpts,hPmgmt)+'</select></div>';
+    condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Diet quality</label><select onchange="historicInfusions['+oi+'].hDietQ=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+selOpts(dietOpts,hDietQ)+'</select></div>';
+    condHtml+='</div>';
+    if(!hNoPeriods){
+      condHtml+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">';
+      condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Cycle length (days)</label><input type="number" min="21" max="90" value="'+hCycleLen+'" onchange="historicInfusions['+oi+'].hCycleLen=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
+      condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Bleed days</label><input type="number" min="0" max="14" value="'+hBleedDays+'" onchange="historicInfusions['+oi+'].hBleedDays=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
+      condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Flow intensity</label><select onchange="historicInfusions['+oi+'].hFlowInt=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+selOpts(flowOpts,hFlowInt)+'</select></div>';
+      condHtml+='</div>';
+    }
+    condHtml+='<div style="display:grid;grid-template-columns:1fr'+(preFromData?'':' 1fr')+';gap:8px">';
+    condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Oral iron supplement at the time (elemental mg/day, 0 if none)</label><input type="number" min="0" max="390" value="'+hSuppDose+'" onchange="historicInfusions['+oi+'].hSuppDose=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
+    if(!preFromData) condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Pre-infusion ferritin estimate (µg/L)</label><input type="number" min="1" max="300" value="'+(inf.preEstFerr||25)+'" onchange="historicInfusions['+oi+'].preEstFerr=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
+    condHtml+='</div></div>';
+
+    // Commentary
+    var commentParts=[];
+    commentParts.push('<strong>Pre-infusion ferritin:</strong> <strong>'+preEstVal+'</strong> µg/L '+(preFromData?'(from blood test '+fmtD(preResult.date)+')':'(estimated — no blood test found within 6 months before this date)')+'. Estimated ferritin immediately post-infusion: ~<strong>'+rnd(estimatedPeak)+'</strong> µg/L.');
+    var decDesc=expectedDeclinePM<-0.1?rnd(Math.abs(expectedDeclinePM)*10)/10+' µg/L/month decline':expectedDeclinePM>0.1?rnd(expectedDeclinePM*10)/10+' µg/L/month rise (intake exceeds losses)':'approximately stable';
+    commentParts.push('<strong>Expected post-infusion trend:</strong> '+decDesc+' based on the conditions above ('+rnd(hMgLostMonth)+' mg/month losses − '+rnd(hSuppAbsMonth+hDietAbsMonth)+' mg/month absorbed = '+rnd(hMgLostMonth-hSuppAbsMonth-hDietAbsMonth)+' mg/month net deficit).');
+    if(actualDeclinePM!==null){
+      var actAbs=Math.abs(actualDeclinePM);
+      var actDesc=(actualDeclinePM<0?rnd(actAbs*10)/10+' µg/L/month decline':'rising at '+rnd(actAbs*10)/10+' µg/L/month');
+      var compare='';
+      if(expectedDeclinePM<-0.1){
+        var expAbs=Math.abs(expectedDeclinePM);
+        var ratio=actualDeclinePM/expectedDeclinePM;
+        if(actualDeclinePM<0&&ratio>1.3) compare='<strong style="color:#dc2626">Faster than expected</strong> ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). This may indicate higher actual losses or lower absorption than estimated. The conditions above may underestimate blood loss during this period — worth reviewing with your GP, as it can inform how frequently repeat infusions may be needed.';
+        else if(actualDeclinePM<0&&ratio<0.75) compare='<strong style="color:#16a34a">Slower than expected</strong> ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). Ferritin held better than the model predicted — possible reasons include a supplement or dietary improvement during this period, or the model is overestimating blood loss.';
+        else if(actualDeclinePM>=0) compare='<strong style="color:#16a34a">Better than expected</strong> — ferritin was stable or rising, whereas the model predicted a decline. Iron intake appears to have exceeded losses during this period.';
+        else compare='Broadly as expected ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). The model and actual data are consistent — the conditions entered above appear to be a reasonable estimate of your iron balance at that time.';
+      } else {
+        compare='Model predicted stable or rising ferritin; actual was: '+actDesc+'.';
+      }
+      commentParts.push('<strong>Actual post-infusion trend:</strong> '+actDesc+' (based on '+postActuals.length+' blood tests over '+rnd(((parseDate(postActuals[postActuals.length-1].date)-parseDate(postActuals[0].date))/(30.44*86400000))*10)/10+' months). '+compare);
+    } else if(postActuals.length===1){
+      var d1=parseDate(postActuals[0].date);
+      var mAfter=(d1-infDate)/(30.44*86400000);
+      var expAt=estimatedPeak+expectedDeclinePM*mAfter;
+      var diff=postActuals[0].ferritin-expAt;
+      var diffDesc=Math.abs(diff)<8?'broadly as expected':diff<-8?'<strong style="color:#b45309">'+rnd(Math.abs(diff))+' µg/L below expected</strong>':'<strong style="color:#16a34a">'+rnd(diff)+' µg/L above expected</strong>';
+      commentParts.push('<strong>Post-infusion check ('+rnd(mAfter*10)/10+' months later):</strong> '+postActuals[0].ferritin+' µg/L vs model estimate of '+rnd(expAt)+' µg/L — '+diffDesc+'. Add more blood test results on the Actual Results tab to derive a full trend rate.');
+    } else {
+      commentParts.push('<span style="color:#94a3b8;font-style:italic">No blood test results found after this infusion date. Add ferritin results on the Actual Results tab to enable post-infusion analysis.</span>');
+    }
+
+    var block='<div style="margin-bottom:16px;padding:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px">';
+    block+='<div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px">'+fmtD(inf.date)+' — '+inf.dose+' mg IV infusion</div>';
+    block+=condHtml;
+    block+='<div style="position:relative;width:100%;height:220px;margin-bottom:6px"><canvas id="'+cid+'"></canvas></div>';
+    block+='<div id="iaLegend_'+idx+'" style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#64748b;margin-bottom:10px"></div>';
+    block+='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:12px;color:#475569;line-height:1.65">'+
+      commentParts.map(function(p){return '<p style="margin:0 0 6px 0">'+p+'</p>';}).join('')+'</div>';
+    block+='</div>';
+    htmlParts.push(block);
+    chartJobs.push({idx:idx,inf:inf,infDate:infDate,estimatedPeak:estimatedPeak,expectedDeclinePM:expectedDeclinePM,allActuals:allActuals,cid:cid});
+  });
+
+  section.innerHTML=
+    '<div class="st">Past infusion analysis</div>'+
+    '<p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Set the approximate conditions at the time of each past infusion. The model estimates what your ferritin trajectory should have looked like, and compares it against your actual blood test results — helping identify whether iron loss was higher or lower than expected.</p>'+
+    htmlParts.join('');
+
+  chartJobs.forEach(function(job){renderInfusionAnalysisChart(job);});
+}
+
+function renderInfusionAnalysisChart(job){
+  var canvas=document.getElementById(job.cid);
+  if(!canvas)return;
+  var MNAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var infDate=job.infDate;
+
+  // 3 months before → 15 months after
+  var wStart=new Date(infDate.getFullYear(),infDate.getMonth()-3,1);
+  var wEnd=new Date(infDate.getFullYear(),infDate.getMonth()+16,1);
+  var labels=[],infIdx=-1,monthCount=0;
+  for(var d=new Date(wStart);d<wEnd;d=new Date(d.getFullYear(),d.getMonth()+1,1)){
+    if(d.getFullYear()===infDate.getFullYear()&&d.getMonth()===infDate.getMonth()) infIdx=monthCount;
+    labels.push(MNAMES[d.getMonth()]+' '+d.getFullYear().toString().slice(2));
+    monthCount++;
+  }
+
+  // Expected trajectory
+  var expData=new Array(monthCount).fill(null);
+  if(infIdx>=0){
+    expData[infIdx]=job.estimatedPeak;
+    for(var m=infIdx+1;m<monthCount;m++) expData[m]=Math.max(0,+(expData[m-1]+job.expectedDeclinePM).toFixed(1));
+  }
+
+  // Actual readings mapped to month slots
+  var actData=new Array(monthCount).fill(null);
+  job.allActuals.forEach(function(a){
+    var ad=parseDate(a.date);
+    if(!ad)return;
+    var mi=(ad.getFullYear()-wStart.getFullYear())*12+(ad.getMonth()-wStart.getMonth());
+    if(mi>=0&&mi<monthCount) actData[mi]=actData[mi]===null?a.ferritin:Math.max(actData[mi],a.ferritin);
+  });
+
+  var allVals=expData.concat(actData,[50,30]).filter(function(v){return v!=null&&v>0;});
+  var yMax=allVals.length?Math.min(300,Math.max(80,Math.ceil(Math.max.apply(null,allVals)*1.2/10)*10)):150;
+  var yMin=allVals.length?Math.max(0,Math.floor(Math.min.apply(null,allVals)*0.85/10)*10):0;
+
+  var inst=new Chart(canvas,{
+    type:'line',
+    data:{labels:labels,datasets:[
+      {label:'Expected trajectory',data:expData,borderColor:'#3b82f6',borderDash:[5,3],borderWidth:2,pointRadius:0,fill:false,tension:0,spanGaps:false},
+      {label:'Actual ferritin readings',data:actData,borderColor:'#64748b',backgroundColor:'#64748b',borderWidth:0,pointRadius:5,pointBackgroundColor:'#64748b',showLine:false,fill:false},
+      {label:'Recommended minimum (50 µg/L)',data:new Array(monthCount).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+      {label:'Depleted stores (30 µg/L)',data:new Array(monthCount).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
+      scales:{y:{min:yMin,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:10},autoSkip:true,maxTicksLimit:13,maxRotation:45}}}},
+    plugins:[{
+      id:'iv-marker-'+job.idx,
+      afterDraw:function(chart){
+        if(infIdx<0)return;
+        var ctx2=chart.ctx;ctx2.save();
+        var xPos=chart.scales.x.getPixelForValue(infIdx);
+        var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
+        ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
+        ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
+        ctx2.setLineDash([]);
+        ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
+        ctx2.fillText(job.inf.dose+'mg IV',xPos,yTop+10);
+        ctx2.restore();
+      }
+    }]
+  });
+  infusionAnalysisChartInsts[job.idx]=inst;
+
+  var leg=document.getElementById('iaLegend_'+job.idx);
+  if(leg) leg.innerHTML=
+    li('#64748b','Grey dots — Actual ferritin readings')+
+    li('#3b82f6','Blue dashed — Expected trajectory',true)+
+    li('#f59e0b','Amber line — Infusion date',true)+
+    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
+    li('#dc2626','Red dashed — Depleted stores (30 µg/L)',true);
+}
+
 function calcIV(){
+  renderInfusionAnalysis();
   var ivDose=+(document.getElementById('ivDose').value)||1000;
   var ivFloor=+(document.getElementById('ivFloor').value)||30;
   var ivHorizon=+(document.getElementById('ivHorizon').value)||24;
@@ -3398,17 +3618,19 @@ function calcIV(){
   // Use current calc settings but zero out oral supp
   var meno=document.getElementById('menopause').value;
   var post=meno==='post';
+  var pmgmtIV=document.getElementById('periodMgmt')?document.getElementById('periodMgmt').value:'natural';
+  var noPeriods=post||pmgmtIV==='none';
   var cycleLen=gv('cycleLen')||28;
-  var bleedDays=post?0:gv('bleedDays');
+  var bleedDays=noPeriods?0:gv('bleedDays');
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
   var dietQIdx2=gv('dietQ')||3;
   var dietQmg2=[0,6,8,10,13,16];
   var dietIronDay2=conds.vegan?dietQmg2[dietQIdx2]*0.75:dietQmg2[dietQIdx2];
   var startFerr=gv('startFerr')||25;
 
-  var mlPerCycle=post?0:flowMl[flowIdx]*(bleedDays/5);
+  var mlPerCycle=noPeriods?0:flowMl[flowIdx]*(bleedDays/5);
   var mgLostCycle=mlPerCycle*0.5;
-  var cyclesPerMonth=post?0:30/cycleLen;
+  var cyclesPerMonth=noPeriods?0:30/cycleLen;
   var mgLostMonth=mgLostCycle*cyclesPerMonth;
   var mgAbsDietMonth=dietIronDay2*0.04*30; // net diet contribution
   var basalIV=30;
