@@ -693,6 +693,12 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
 <div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
+<div style="margin-top:10px;border-top:1px solid #e2e8f0;padding-top:8px">
+  <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:3px">Past infusion events</div>
+  <div style="font-size:11px;color:#64748b;margin-bottom:6px">Mark any IV iron infusions you received — they appear as amber lines on the chart, helping you see the post-infusion decline rate.</div>
+  <div id="historicInfusionList"></div>
+  <button onclick="addHistoricInfusion()" style="font-size:11px;color:#0369a1;background:none;border:1px solid #bae6fd;border-radius:6px;padding:4px 10px;cursor:pointer">+ Add infusion event</button>
+</div>
 </div>
 <div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('actual')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Add my actual results →</button></div>
 </div>
@@ -1269,6 +1275,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 var infusions=[{month:0,dose:1000}];
+var historicInfusions=[];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
 var chartInst=null;
@@ -2703,6 +2710,7 @@ function renderHistoricChart(historicResults){
   var section=document.getElementById('historicChartSection');
   var canvas=document.getElementById('historicChart');
   if(!section||!canvas){return;}
+  renderHistoricInfusionList();
   if(!historicResults||historicResults.length<1){
     section.style.display='none';
     if(historicChartInst){historicChartInst.destroy();historicChartInst=null;}
@@ -2710,10 +2718,20 @@ function renderHistoricChart(historicResults){
   }
   section.style.display='';
 
-  var labels=historicResults.map(function(a){return a.date||'?';});
-  var data=historicResults.map(function(a){return a.ferritin;});
-  var maxVal=Math.max.apply(null,data);
-  var yMax=Math.min(250,Math.max(80,Math.round(maxVal*1.3)));
+  // Merge blood test dates and past infusion event dates into one sorted label array
+  var ferritinByDate={};
+  historicResults.forEach(function(a){if(a.date)ferritinByDate[a.date]=a.ferritin;});
+  var allDates=Object.keys(ferritinByDate).slice();
+  historicInfusions.forEach(function(inf){if(inf.date&&!ferritinByDate.hasOwnProperty(inf.date))allDates.push(inf.date);});
+  allDates.sort();
+
+  var labels=allDates;
+  var data=allDates.map(function(d){return ferritinByDate.hasOwnProperty(d)?ferritinByDate[d]:null;});
+  var nonNull=data.filter(function(v){return v!=null;});
+  var maxVal=Math.max.apply(null,nonNull);
+  var minVal=Math.min.apply(null,nonNull);
+  var yMin=Math.max(0,Math.floor(Math.min(minVal,25)/10)*10);
+  var yMax=Math.min(300,Math.max(80,Math.round(maxVal*1.3)));
   var pts=historicResults.length;
 
   if(historicChartInst) historicChartInst.destroy();
@@ -2722,24 +2740,69 @@ function renderHistoricChart(historicResults){
     data:{
       labels:labels,
       datasets:[
-        {label:'Ferritin (historic)',data:data,borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,0.08)',fill:true,tension:.3,pointRadius:pts>20?3:5,pointBackgroundColor:'#64748b',borderWidth:1.5},
-        {label:'Recommended minimum (50 µg/L)',data:new Array(pts).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
-        {label:'Depleted stores threshold (30 µg/L)',data:new Array(pts).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+        {label:'Ferritin (historic)',data:data,spanGaps:true,borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,0.08)',fill:true,tension:.3,pointRadius:pts>20?3:5,pointBackgroundColor:'#64748b',borderWidth:1.5},
+        {label:'Recommended minimum (50 µg/L)',data:new Array(allDates.length).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'Depleted stores threshold (30 µg/L)',data:new Array(allDates.length).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?c.raw+' µg/L':'n/a');}}}},
       scales:{
-        y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        y:{min:yMin,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
         x:{ticks:{font:{size:10},autoSkip:true,maxTicksLimit:12,maxRotation:45}}
       }
-    }
+    },
+    plugins:[{
+      id:'infusion-markers',
+      afterDraw:function(chart){
+        if(!historicInfusions||!historicInfusions.length)return;
+        var ctx2=chart.ctx;
+        ctx2.save();
+        historicInfusions.forEach(function(inf){
+          if(!inf.date)return;
+          var idx=labels.indexOf(inf.date);
+          if(idx<0)return;
+          var xPos=chart.scales.x.getPixelForValue(idx);
+          var yTop=chart.chartArea.top;
+          var yBot=chart.chartArea.bottom;
+          ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
+          ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
+          ctx2.fillText(inf.dose+'mg IV',xPos,yTop+10);
+        });
+        ctx2.restore();
+      }
+    }]
   });
   document.getElementById('historicLegend').innerHTML=
     li('#64748b','Grey — Historic ferritin readings')+
     li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
-    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true);
+    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true)+
+    (historicInfusions.length?li('#f59e0b','Amber dashed — IV infusion event',true):'');
+}
+
+function addHistoricInfusion(){historicInfusions.push({date:'',dose:1000});renderHistoricChartFromCalc();autoSave();}
+function removeHistoricInfusion(i){historicInfusions.splice(i,1);renderHistoricChartFromCalc();autoSave();}
+function renderHistoricInfusionList(){
+  var el=document.getElementById('historicInfusionList');
+  if(!el)return;
+  el.innerHTML='';
+  historicInfusions.forEach(function(inf,i){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:6px';
+    row.innerHTML='<input type="date" value="'+(inf.date||'')+'" onchange="historicInfusions['+i+'].date=this.value;renderHistoricChartFromCalc();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;flex:1">'+
+      '<select onchange="historicInfusions['+i+'].dose=+this.value;renderHistoricChartFromCalc();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+
+      [500,750,1000,1500,2000].map(function(d){return '<option value="'+d+'"'+(inf.dose===d?' selected':'')+'>'+d+' mg</option>';}).join('')+
+      '</select>'+
+      '<button onclick="removeHistoricInfusion('+i+')" style="font-size:11px;color:#dc2626;background:none;border:none;cursor:pointer;padding:0 4px">×</button>';
+    el.appendChild(row);
+  });
+}
+function renderHistoricChartFromCalc(){
+  var split=splitActuals();
+  renderHistoricChart(split.historic);
 }
 
 function calcDerived(){
@@ -3223,6 +3286,7 @@ function buildSessionData(name){
     tolState:Object.assign({},tolState),
     tipsInflamOn:tipsInflamOn,
     infusions:JSON.parse(JSON.stringify(infusions)),
+    historicInfusions:JSON.parse(JSON.stringify(historicInfusions)),
     actuals:JSON.parse(JSON.stringify(actuals)),
     sliders:sliders.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{}),
     selects:selects.reduce(function(o,id){var el=document.getElementById(id);if(el)o[id]=el.value;return o;},{})};
@@ -3236,6 +3300,7 @@ function applySessionData(d){
   conds=Object.assign({endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false},d.conds||{});
   Object.keys(conds).forEach(function(k){document.getElementById('tog-'+k).classList.toggle('on',conds[k]);});
   infusions=d.infusions||[{month:0,dose:1000}];
+  historicInfusions=d.historicInfusions||[];
   actuals=d.actuals||[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
   if(d.tipsDietState) tipsDietState=Object.assign({},d.tipsDietState);
   if(d.tolState) tolState=Object.assign({},d.tolState);
@@ -3781,8 +3846,8 @@ function calcStrategy(){
       // No oral iron — ferritin declines at diet-only rate
       maintenanceRate=mg2f(dietNet2-basalLoss);
     } else if(ointolOption==='spatone'){
-      // Spatone: 1–2 sachets absorbed per month
-      var sachetsPerDay2=Math.max(1,Math.ceil(deficitAfterDiet/spatoneAbsPerSachet2));
+      // spatoneAbsPerSachet2 is per sachet; multiply by 30 to get monthly absorption per sachet/day
+      var sachetsPerDay2=Math.max(1,Math.min(4,Math.ceil(deficitAfterDiet/(spatoneAbsPerSachet2*30))));
       var spatoneMonthlyAbs=sachetsPerDay2*spatoneAbsPerSachet2*30;
       maintenanceRate=mg2f(dietNet2+spatoneMonthlyAbs-basalLoss);
     } else if(ointolOption==='bisglycinate'){
@@ -3795,13 +3860,19 @@ function calcStrategy(){
   var reachedTarget=startFerr>=target;
   for(var sm=1;sm<scenMonths;sm++){
     var prev=scenLine[sm-1];
-    var boost=(sm===1&&!reachedTarget)?scenIVBoost:0;
     var next;
-    if(!reachedTarget){
-      next=prev+boost+recoveryRate;
-      if(next>=target){reachedTarget=true;next=target;}
+    if(conds['oral-intol']){
+      // No ongoing oral supplement: IV spike at month 1, then maintenance rate (Spatone/bisglycinate/none)
+      var oiBoost=(sm===1&&ivDose>0)?scenIVBoost:0;
+      next=prev+oiBoost+maintenanceRate;
     } else {
-      next=prev+maintenanceRate;
+      var boost=(sm===1&&!reachedTarget)?scenIVBoost:0;
+      if(!reachedTarget){
+        next=prev+boost+recoveryRate;
+        if(next>=target){reachedTarget=true;next=target;}
+      } else {
+        next=prev+maintenanceRate;
+      }
     }
     scenLine.push(Math.max(0,+next.toFixed(1)));
   }
