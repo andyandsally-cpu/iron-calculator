@@ -75,6 +75,8 @@ button:hover{background:#f1f5f9}
 .analysis-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.6;display:none}
 .analysis-box.warn{background:#fefce8;border-color:#fde047}
 .analysis-box.danger-box{background:#fef2f2;border-color:#fecaca}
+.analysis-box.balanced{background:#f0fdf4;border-color:#86efac}
+.analysis-box.positive{background:#eff6ff;border-color:#bfdbfe}
 .analysis-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 @media(max-width:520px){.row{grid-template-columns:130px 1fr 85px 20px}.grid3{grid-template-columns:1fr 1fr}.eg{grid-template-columns:1fr 1fr}}
 @media print{
@@ -524,14 +526,14 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <!-- CYCLE LENGTH — greyed out for non-natural patterns -->
   <div class="row" id="rowCycleLen">
     <label id="lblCycleLen">Cycle length</label>
-    <div class="sw"><div class="rb" id="rb-cycleLen"></div><input type="range" id="cycleLen" min="21" max="365" value="28" step="1" oninput="calc()"></div>
+    <div class="sw"><div class="rb" id="rb-cycleLen"></div><input type="range" id="cycleLen" min="21" max="120" value="28" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="cycleLenV" style="font-size:13px;font-weight:500">28d</span><span class="badge" id="bcy"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 28 days (UK average menstrual cycle)</div><div class="tt-n">Normal: 21–35 days. Extended cycling (e.g. 63-day tricycling) can be entered here.</div><div class="tt-s">Source: NICE CG44. For pill users, this is set automatically based on your pill pattern — it represents the average interval between bleeds. PCOS toggle extends to 35 days.</div></div></div>
   </div>
 
   <div class="row">
     <label>Bleeding days <span id="bleedDaysContextLabel" style="font-size:11px;color:#94a3b8">per cycle</span></label>
-    <div class="sw"><div class="rb" id="rb-bleedDays"></div><input type="range" id="bleedDays" min="0" max="40" value="5" step="1" oninput="calc()"></div>
+    <div class="sw"><div class="rb" id="rb-bleedDays"></div><input type="range" id="bleedDays" min="0" max="30" value="5" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="bleedDaysV" style="font-size:13px;font-weight:500">5d</span><span class="badge" id="bbd"></span></div>
     <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">How many days of actual bleeding per cycle / per bleed episode.</div><div class="tt-n">Normal: 3–7 days per cycle. For pill users this refers to the withdrawal bleed duration.</div><div class="tt-s">Source: NICE CG44. HMB is defined as >7 days duration or >80ml per cycle. Prolonged bleeding is the primary driver of iron depletion.</div></div></div>
   </div>
@@ -1296,8 +1298,8 @@ var lc={};
 window._ctipData={};
 
 var sdefs={
-  cycleLen:{lo:21,hi:35,min:21,max:90},
-  bleedDays:{lo:3,hi:7,min:0,max:40},
+  cycleLen:{lo:21,hi:63,min:21,max:120},
+  bleedDays:{lo:3,hi:7,min:0,max:30},
   flowInt:{lo:1,hi:3,min:1,max:5},
   dietQ:{lo:3,hi:5,min:1,max:5},
   suppDose:{lo:0,hi:195,min:0,max:390},
@@ -1334,7 +1336,7 @@ var PERIOD_MGMT_DEFAULTS={
              cycleLabel:'No periods'}
 };
 
-function applyPeriodMgmt(fromUserPillChange){
+function applyPeriodMgmtUI(){
   var sel=document.getElementById('periodMgmt');
   if(!sel)return;
   var v=sel.value||'natural';
@@ -1345,41 +1347,22 @@ function applyPeriodMgmt(fromUserPillChange){
   var cycleLenLbl=document.getElementById('lblCycleLen');
   var bleedLbl=document.getElementById('bleedDaysContextLabel');
 
-  // Show/hide continuous inputs
   if(contEl) contEl.style.display=d.showCont?'':'none';
 
-  // For continuous, derive cycleLen from interval dropdown
-  if(v==='pillcont'){
-    var intEl=document.getElementById('pillContInterval');
-    var bdEl=document.getElementById('pillContBleedDays');
-    if(intEl) d.cycleLen=+(intEl.value)||105;
-    if(bdEl)  d.bleedDays=+(bdEl.value)||7;
-  }
+  var cycleEl=document.getElementById('cycleLen');
+  var cycleRb=document.getElementById('rb-cycleLen');
+  if(cycleEl){cycleEl.disabled=d.disableCycle;cycleEl.style.opacity=d.disableCycle?'0.35':'1';}
+  if(cycleRb) cycleRb.style.opacity=d.disableCycle?'0.35':'1';
 
-  // Set slider values — flowInt only when user explicitly changes pill type, not on session restore
-  sv('cycleLen', d.cycleLen<365?d.cycleLen:365);
-  sv('bleedDays', d.bleedDays);
-  if(fromUserPillChange) sv('flowInt', d.flowInt);
+  var bleedEl=document.getElementById('bleedDays');
+  var bleedRb=document.getElementById('rb-bleedDays');
+  var bleedDisabled=d.disableBleed&&v!=='pillcont';
+  if(bleedEl){bleedEl.disabled=bleedDisabled;bleedEl.style.opacity=bleedDisabled?'0.35':'1';}
+  if(bleedRb) bleedRb.style.opacity=bleedDisabled?'0.35':'1';
 
-  // Grey out / enable sliders
-  ['cycleLen'].forEach(function(id){
-    var el=document.getElementById(id);
-    var rb=document.getElementById('rb-'+id);
-    if(el){el.disabled=d.disableCycle;el.style.opacity=d.disableCycle?'0.35':'1';}
-    if(rb) rb.style.opacity=d.disableCycle?'0.35':'1';
-  });
-  ['bleedDays'].forEach(function(id){
-    var el=document.getElementById(id);
-    var rb=document.getElementById('rb-'+id);
-    if(el){el.disabled=(d.disableBleed&&v!=='pillcont');el.style.opacity=(d.disableBleed&&v!=='pillcont')?'0.35':'1';}
-    if(rb) rb.style.opacity=(d.disableBleed&&v!=='pillcont')?'0.35':'1';
-  });
-
-  // Update label for cycle row
   if(cycleLenRow) cycleLenRow.style.display=v==='none'?'none':'';
   if(cycleLenLbl) cycleLenLbl.textContent=d.cycleLabel||'Cycle length';
 
-  // Update bleed days context label
   if(bleedLbl){
     if(v==='pillcont') bleedLbl.textContent='withdrawal bleed duration — set above';
     else if(v==='pill21'||v==='pill63') bleedLbl.textContent='withdrawal bleed days per cycle';
@@ -1387,15 +1370,32 @@ function applyPeriodMgmt(fromUserPillChange){
     else bleedLbl.textContent='per cycle';
   }
 
-  // Show/hide info note
   if(noteEl){
     noteEl.style.display='';
     noteEl.innerHTML=PERIOD_MGMT_NOTES[v]||'';
-    // Colour coding
     noteEl.style.background=v==='natural'?'#f8fafc':v==='none'?'#f0fdf4':'#f0f9ff';
     noteEl.style.borderColor=v==='natural'?'#e2e8f0':v==='none'?'#86efac':'#bae6fd';
   }
+}
 
+function applyPeriodMgmt(fromUserPillChange){
+  var sel=document.getElementById('periodMgmt');
+  if(!sel)return;
+  var v=sel.value||'natural';
+  var d=PERIOD_MGMT_DEFAULTS[v];
+
+  if(v==='pillcont'){
+    var intEl=document.getElementById('pillContInterval');
+    var bdEl=document.getElementById('pillContBleedDays');
+    if(intEl) d.cycleLen=+(intEl.value)||105;
+    if(bdEl)  d.bleedDays=+(bdEl.value)||7;
+  }
+
+  sv('cycleLen', d.cycleLen<365?d.cycleLen:365);
+  sv('bleedDays', d.bleedDays);
+  if(fromUserPillChange) sv('flowInt', d.flowInt);
+
+  applyPeriodMgmtUI();
   calc();
 }
 
@@ -1539,6 +1539,13 @@ function calcModifiers(suppDoseParam){
   return multiplier;
 }
 
+function calcMaintTabsPerWeek(deficitMgMonth,absRate,elemPerTab){
+  var elemPerMonthNeeded=deficitMgMonth/absRate;
+  var tabsPerMonth=elemPerMonthNeeded/elemPerTab;
+  var tabsPerWeek=tabsPerMonth/4.3;
+  return Math.max(1,Math.round(tabsPerWeek));
+}
+
 function updateAbsPanel(mgAbsMonth,dietNetMonth,suppDose,totalLossMonth,netMonth){
   var el=document.getElementById('absMetrics');
   if(!el)return;
@@ -1581,7 +1588,7 @@ function calc(){
   var rawCycleLen=gv('cycleLen')||28;
   // Cap cycleLen at 365 for monthly loss calculation — 999 means no periods
   var cycleLen=rawCycleLen>364?365:rawCycleLen;
-  var bleedDays=noPeriods?0:gv('bleedDays');
+  var bleedDays=noPeriods?0:Math.min(gv('bleedDays'),cycleLen-1);
   var flowIdx=Math.max(0,(gv('flowInt')||1)-1);
   var dietQIdx=gv('dietQ')||3;
   var dietQLabels=['','Poor','Low','Average','Good','Excellent'];
@@ -1624,6 +1631,28 @@ function calc(){
   }
   // Use formulation-adjusted elemental for all calcs below
   var suppDoseElem=suppDose>0?numTabs*fm.elemPerTab:0;
+  (function(){
+    var hasSupp=suppDoseElem>0;
+    ['modVitC','modTiming','modTea','modCa','modAntacid'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el)return;
+      el.disabled=!hasSupp;
+      el.style.opacity=hasSupp?'':'0.35';
+      el.style.cursor=hasSupp?'':'not-allowed';
+    });
+    var habitSection=document.getElementById('modVitC').parentElement.parentElement.parentElement;
+    var habitHeading=habitSection.firstElementChild;
+    habitHeading.style.opacity=hasSupp?'':'0.5';
+    var naNote=document.getElementById('_habitNANote');
+    if(!naNote){
+      naNote=document.createElement('div');
+      naNote.id='_habitNANote';
+      naNote.style.cssText='font-size:12px;color:#94a3b8;margin-bottom:8px;font-style:italic;';
+      naNote.textContent='N/A — these settings only apply when an oral supplement is entered above.';
+      habitHeading.insertAdjacentElement('afterend',naNote);
+    }
+    naNote.style.display=hasSupp?'none':'block';
+  })();
   var warnEl=document.getElementById('suppHighDoseWarn');
   // Warn above 3 tablets (195mg sulfate / 207mg fumarate)
   if(warnEl) warnEl.style.display=suppDoseElem>fm.elemPerTab*3?'block':'none';
@@ -1690,6 +1719,7 @@ function calc(){
   } else {
     bleedNoteText='Estimated blood loss: '+rnd(mlPerCycle)+' ml/cycle · '+rnd(mgLostCycle)+' mg iron/cycle · '+rnd(mgLostMonth)+' mg/month';
   }
+  if(!noPeriods&&bleedDays>cycleLen*0.5) bleedNoteText+=' ⚠️ Bleed days is more than half your cycle length — check this is correct.';
   document.getElementById('bleedNote').textContent=bleedNoteText;
 
   var lossClass=mgLostMonth>40?'danger':mgLostMonth>20?'warning':'ok';
@@ -1704,8 +1734,7 @@ function calc(){
 
   var months=13;var ferrLine=[startFerr];
   for(var m=1;m<months;m++){
-    var inf=0;infusions.forEach(function(iv){if(rnd(iv.month)===m)inf+=mg2f(iv.dose);});
-    ferrLine.push(Math.max(FERRITIN_FLOOR,+(ferrLine[m-1]+ferrChangePM+inf).toFixed(1)));
+    ferrLine.push(Math.max(FERRITIN_FLOOR,+(ferrLine[m-1]+ferrChangePM).toFixed(1)));
   }
 
   var startDateVal2=document.getElementById('startDate').value;
@@ -1839,8 +1868,7 @@ function calc(){
     var parts=[];
     if(hasStrategy){
       var sc=window.strategyScenario;
-      var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an estimated immediate boost (actual ferritin response varies widely — ±50% or more — depending on inflammation and iron utilisation).':'';
-      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
+      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong> Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
       if(stopLine){
         var postStopDescr=postStopRate<-0.5?'falls — net monthly deficit '+rnd(Math.abs(postStopRate)*8)+' mg/month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
         var stopBreakdown='';
@@ -1910,13 +1938,15 @@ function updateAnalysis(){
       if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion may be considered where oral supplementation is insufficient or not tolerated (BSH 2021 guideline; discuss with GP). A typical 1000 mg infusion (Ferinject) raises ferritin by approximately 60–125 µg/L in non-anaemic patients — response is lower when anaemia is present, as iron is diverted to haemoglobin correction; actual response varies widely (±50% or more). See the Infusion Planner tab for a personalised estimate.');}
       lines.push('Addressing the underlying bleeding cause (e.g. gynaecological investigation, hormonal management) is the most effective long-term approach to stabilising iron stores.');
       severity='danger';
-    } else if(c.netMonth<0){
+    } else if(c.netMonth<-3){
       lines.push('Small monthly deficit ('+Math.abs(c.netMonth)+' mg/month). Stores are slowly depleting. Optimising diet and absorption — vitamin C with meals, reducing tea/coffee at mealtimes — may be sufficient. Monitor ferritin at 3-month intervals.');
       severity='warn';
-    } else if(c.netMonth<5){
-      lines.push('Iron balance is marginally positive. Stores should stabilise. Monitor ferritin at 3–6 month intervals to confirm trend.');
+    } else if(c.netMonth<3){
+      lines.push('✅ Iron intake and losses are approximately balanced (net '+sign(c.netMonth)+c.netMonth+' mg/month). Ferritin should remain stable. Monitor at 6-month intervals.');
+      severity='balanced';
     } else {
-      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately <span data-ctip="ctip-m12ferr">'+rnd(c.m12ferr)+'</span> µg/L (~'+fwsMg(rnd(c.m12ferr))+' mg estimated stored iron) by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
+      lines.push('↑ Iron intake exceeds losses by '+c.netMonth+' mg/month. Ferritin is projected to reach approximately <span data-ctip="ctip-m12ferr">'+rnd(c.m12ferr)+'</span> µg/L (~'+fwsMg(rnd(c.m12ferr))+' mg estimated stored iron) by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
+      severity='positive';
     }
 
     if(c.startFerr<15){lines.push('⚠️ Critically depleted ferritin ('+fws(c.startFerr)+'). Below 15 µg/L (~120 mg estimated stored iron) is consistent with absent iron stores (BSH/WHO diagnostic threshold). Urgent clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause and agree on the appropriate treatment approach.');}
@@ -1925,8 +1955,8 @@ function updateAnalysis(){
   }
 
   box.style.display='block';
-  box.className='analysis-box'+(severity==='danger'?' danger-box':severity==='warn'?' warn':'');
-  title.textContent=severity==='danger'?'Clinical analysis — action recommended':severity==='warn'?'Clinical analysis — monitor closely':'Clinical analysis — stable';
+  box.className='analysis-box'+(severity==='danger'?' danger-box':severity==='warn'?' warn':severity==='balanced'?' balanced':severity==='positive'?' positive':'');
+  title.textContent=severity==='danger'?'Clinical analysis — action recommended':severity==='warn'?'Clinical analysis — monitor closely':severity==='balanced'?'✅ Clinical analysis — balanced':'↑ Clinical analysis — iron stores rising';
   text.innerHTML=lines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
 }
 
@@ -3137,10 +3167,10 @@ function buildGPLetter(){
   var dietNet=c.dietNetMonth||0;
   var deficitAfterDiet=Math.max(0,totalLossMonth-dietNet);
   var maintAbsRateL=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
-  var maintDailyMg=deficitAfterDiet>0?Math.ceil(deficitAfterDiet/(maintAbsRateL*30)/5)*5:0;
+  var maintDailyMg=deficitAfterDiet>0?1:0; // used as boolean: is there a maintenance need
   var fmL=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate',otc:false};
-  var maintTabsPerWeek=maintDailyMg>0?Math.ceil(maintDailyMg/fmL.elemPerTab*30/4.3):0;
-  var maintFsTabsPerWeek=maintTabsPerWeek; // keep alias for existing references
+  var maintTabsPerWeek=deficitAfterDiet>0?calcMaintTabsPerWeek(deficitAfterDiet,maintAbsRateL,fmL.elemPerTab):0;
+  var maintFsTabsPerWeek=maintTabsPerWeek;
 
   // Flow description
   var flowDesc=['very light','light','moderate','heavy','very heavy'][Math.min(c.flowIdx||2,4)];
@@ -3578,7 +3608,7 @@ function applySessionData(d){
   if(d.periodMgmt){var pmEl=document.getElementById('periodMgmt');if(pmEl)pmEl.value=d.periodMgmt;}
   if(d.pillContInterval){var pciEl=document.getElementById('pillContInterval');if(pciEl)pciEl.value=d.pillContInterval;}
   if(d.pillContBleedDays){var pcbEl=document.getElementById('pillContBleedDays');if(pcbEl)pcbEl.value=d.pillContBleedDays;}
-  applyPeriodMgmt();
+  applyPeriodMgmtUI(); // UI state only — slider values already restored from saved session above
   renderInfusions();renderActuals();updateCondNote();updateAdherenceLabel();calc();
 }
 
@@ -3642,8 +3672,22 @@ function saveSession(){
   }catch(e){alert('Could not save — browser storage may be disabled.');}
 }
 
+function resetForNewPatient(){
+  actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
+  infusions=[];
+  historicInfusions=[];
+  window.derivedFerrPM=null;
+  window.strategyScenario=null;
+  window.revisedScenario=null;
+  renderActuals();
+  renderInfusions();
+  if(typeof renderHistoricInfusionList==='function') renderHistoricInfusionList();
+  calcDerived();
+  calc();
+}
+
 function loadSession(name){
-  if(!name)return;
+  if(!name){resetForNewPatient();return;}
   try{
     var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');var d=s[name];if(!d)return;
     applySessionData(d);
@@ -3653,7 +3697,7 @@ function loadSession(name){
 function deleteSession(){
   var name=document.getElementById('sessionSelect').value;if(!name)return;
   if(!confirm('Delete session "'+name+'"?'))return;
-  try{var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');delete s[name];localStorage.setItem('ironSessions',JSON.stringify(s));refreshList('');}catch(e){}
+  try{var s=JSON.parse(localStorage.getItem('ironSessions')||'{}');delete s[name];localStorage.setItem('ironSessions',JSON.stringify(s));refreshList('');resetForNewPatient();}catch(e){}
 }
 var ivChartInst=null;
 var infusionAnalysisChartInsts=[];
@@ -4824,8 +4868,8 @@ function calcStrategy(){
   // ── FORMULATION COMPARISON + DIET COMMENTARY ──
   if(!conds['oral-intol']&&deficitAfterDiet>0){
     var maintNeedMg=deficitAfterDiet;
-    var sulfMonthly=65*0.08*30,fumMonthly=69*0.08*30;
-    var sulfPW=Math.ceil(maintNeedMg/(65*0.08*4.3)),fumPW=Math.ceil(maintNeedMg/(69*0.08*4.3));
+    var sulfMonthly=65*maintAbsRate*30,fumMonthly=69*maintAbsRate*30;
+    var sulfPW=calcMaintTabsPerWeek(maintNeedMg,maintAbsRate,65),fumPW=calcMaintTabsPerWeek(maintNeedMg,maintAbsRate,69);
     var sulfD=maintNeedMg>=sulfMonthly,fumD=maintNeedMg>=fumMonthly;
     var sulfDose=sulfD?Math.ceil(maintNeedMg/sulfMonthly)+' tablet'+(Math.ceil(maintNeedMg/sulfMonthly)===1?'':'s')+'/day':sulfPW+' tablet'+(sulfPW===1?'':'s')+'/week';
     var fumDose=fumD?Math.ceil(maintNeedMg/fumMonthly)+' tablet'+(Math.ceil(maintNeedMg/fumMonthly)===1?'':'s')+'/day':fumPW+' tablet'+(fumPW===1?'':'s')+'/week';
@@ -5202,7 +5246,7 @@ function showTab(t){
   if(t==='tips')calcTips();
   if(t==='tolerability')calcTolerability();
 }
-refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmt();calc();checkDraft();showTab('about');
+refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceLabel();applyPeriodMgmtUI();calc();checkDraft();showTab('about');
 
 // ── CALCULATED-VALUE TOOLTIPS ─────────────────────────────────────────────
 (function(){
