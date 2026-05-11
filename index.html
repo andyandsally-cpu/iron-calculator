@@ -5810,7 +5810,7 @@ function clearNHSImport(){
 </div>
 
 <script>
-var BYPASS_HASH='b74e142af73becb1f2f07aa2c44c8a24c7e0e31cc086e60c253d547840dac261';
+var BYPASS_HASH='58db5ee85ee62fc9ff9ef735af7a7c18dfc6350a25c233e64db4884675a99be1';
 // SHA-256 hashes of valid promo codes — add/remove entries here
 var PROMO_HASHES=[
   'baf4e5c263f3226f288a86e2955658f3dcef052e66250e3fbc1675b66a7c4262', // RUSTLEAF
@@ -5852,14 +5852,13 @@ function restoreAccess(){
   }
 }
 function checkBypassCode(){
-  var p=new URLSearchParams(window.location.search),c=p.get('code');
+  var c=window.location.hash.replace('#','').trim();
   if(!c)return;
   crypto.subtle.digest('SHA-256',new TextEncoder().encode(c.toLowerCase().trim())).then(function(buf){
     var hex=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
     if(hex===BYPASS_HASH){
       localStorage.setItem('ironToolUnlocked','true');
-      var u=new URL(window.location.href);u.searchParams.delete('code');
-      window.history.replaceState({},'',u.toString());
+      window.history.replaceState({},'',window.location.pathname);
     }
   });
 }
