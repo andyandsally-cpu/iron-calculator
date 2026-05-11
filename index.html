@@ -370,15 +370,15 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
     </div>
     <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa">
       <div style="font-size:20px;font-weight:800;color:#ea580c;min-width:60px;text-align:center">15–30</div>
-      <div><div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:2px">Depleted stores — symptoms likely</div><div style="font-size:11px;color:#475569;line-height:1.5">Below BSH depleted stores threshold. Iron deficiency is present even if haemoglobin is normal. Supplementation and monitoring indicated.</div></div>
+      <div><div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:2px">Depleted stores — treatment indicated in symptomatic patients</div><div style="font-size:11px;color:#475569;line-height:1.5">Below the BSH 2021 depleted stores threshold. Iron deficiency is present even if haemoglobin is normal. Treatment and monitoring indicated.</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#fefce8;border:1px solid #fde047">
       <div style="font-size:20px;font-weight:800;color:#ca8a04;min-width:60px;text-align:center">30–50</div>
-      <div><div style="font-size:12px;font-weight:700;color:#a16207;margin-bottom:2px">Below optimal — symptoms may persist</div><div style="font-size:11px;color:#475569;line-height:1.5">Some iron reserve present but below the level at which most people feel well. Symptoms of fatigue, brain fog and hair loss commonly persist in this range.</div></div>
+      <div><div style="font-size:12px;font-weight:700;color:#a16207;margin-bottom:2px">Below sufficient — symptoms may persist</div><div style="font-size:11px;color:#475569;line-height:1.5">Some iron reserve present but below the level at which most people feel well. Symptoms of fatigue, brain fog and hair loss commonly persist in this range.</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#f0fdf4;border:1px solid #86efac">
       <div style="font-size:20px;font-weight:800;color:#15803d;min-width:60px;text-align:center">50–100</div>
-      <div><div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:2px">Recommended minimum — most symptoms resolve</div><div style="font-size:11px;color:#475569;line-height:1.5">BSH recommended minimum for menstruating women. At this level tissues receive adequate iron. Most people notice meaningful improvement in energy, cognition and mood.</div></div>
+      <div><div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:2px">Sufficiency threshold — symptoms unlikely above this level</div><div style="font-size:11px;color:#475569;line-height:1.5">At this level tissues receive adequate iron. Most people notice meaningful improvement in energy, cognition and mood.</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:#f0f9ff;border:1px solid #bae6fd">
       <div style="font-size:20px;font-weight:800;color:#0369a1;min-width:60px;text-align:center">100+</div>
@@ -408,6 +408,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
     <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">30 mg/month — basal iron loss</strong><p style="margin:4px 0 0">The average person loses approximately 1 mg of iron per day through skin cell shedding, gut lining renewal, and sweat. This is a fixed baseline used in clinical iron balance models.</p></div>
     <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">4% — dietary absorption baseline</strong><p style="margin:4px 0 0">The average absorption rate for non-haem iron from a typical Western diet. Haem iron (meat) absorbs at 15–35%; non-haem at 1–10% depending on diet and gut health. 4% is the standard clinical estimate for a mixed diet.</p></div>
   </div>
+  <p style="font-size:11px;color:#94a3b8;margin:10px 0 0;line-height:1.5">Ferritin is reported by blood tests in µg/L. The mg figure shown in brackets throughout this tool is an approximate modelled estimate of stored iron — not a separate blood test result.</p>
 </details>
 <div class="section">
 <div class="st">Session</div>
@@ -654,21 +655,17 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 <div class="section">
-<div class="st">Starting ferritin &amp; IV infusions</div>
+<div class="st">Starting ferritin</div>
 <div class="card">
   <div class="row">
     <label>Starting ferritin (µg/L)</label>
     <div class="sw"><div class="rb" id="rb-startFerr"></div><input type="range" id="startFerr" min="5" max="300" value="25" step="1" oninput="calc()"></div>
     <div style="display:flex;align-items:center;gap:3px"><span id="startFerrV" style="font-size:13px;font-weight:500">25</span><span class="badge" id="bsf"></span></div>
-    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 25 µg/L. Set to the patient's most recent measured ferritin result.</div><div class="tt-n">Optimal for menstruating women: 50–150 µg/L</div><div class="tt-s">Source: BSH/NICE. Lab lower limit ≈13 µg/L. Symptoms (fatigue, brain fog, poor exercise tolerance) typically appear below 30–50 µg/L even without anaemia. Post-IV infusion ferritin typically rises to 150–250 µg/L. Model uses 1 µg/L ≈ 8 mg stored iron.</div></div></div>
+    <div class="ib" tabindex="0">?<div class="tt"><div class="tt-d">Default: 25 µg/L. Set to the patient's most recent measured ferritin result.</div><div class="tt-n">Sufficiency threshold: 50 µg/L — symptoms unlikely above this level</div><div class="tt-s">Lab lower limit ≈13 µg/L. Symptoms (fatigue, brain fog, poor exercise tolerance) typically appear below 30–50 µg/L even without anaemia. Ferritin × 8 = estimated stored iron (mg) — population average, not exact.</div></div></div>
   </div>
   <div id="startFerrCritNote" style="display:none;margin:4px 0 8px 0;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#b91c1c;line-height:1.5">
     ⚠️ <strong>Ferritin below 15 µg/L — critically depleted stores.</strong> At this level, absent iron stores are likely (BSH/WHO threshold). Clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause requiring investigation.
   </div>
-  <div style="font-size:12px;color:#64748b;margin-bottom:6px">IV infusions — month from start, dose in mg:</div>
-  <div id="infusionList"></div>
-  <button onclick="addInfusion()">+ Add infusion</button>
-  <p class="note">Typical NHS infusion: 500–1000 mg (Ferinject / ferric carboxymaltose, or iron isomaltoside). Raises ferritin by approx 60–125 µg/L per 1000 mg in absence of ongoing significant loss — actual response varies widely (±50% or more) depending on inflammation and iron utilisation. Source: Ferinject SPC / BSH 2021 guideline on management of iron deficiency in adults.</p>
 </div>
 </div>
 
@@ -693,12 +690,6 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
 <div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
-<div style="margin-top:10px;border-top:1px solid #e2e8f0;padding-top:8px">
-  <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:3px">Past infusion events</div>
-  <div style="font-size:11px;color:#64748b;margin-bottom:6px">Mark any IV iron infusions you received — they appear as amber lines on the chart, helping you see the post-infusion decline rate.</div>
-  <div id="historicInfusionList"></div>
-  <button onclick="addHistoricInfusion()" style="font-size:11px;color:#0369a1;background:none;border:1px solid #bae6fd;border-radius:6px;padding:4px 10px;cursor:pointer">+ Add infusion event</button>
-</div>
 </div>
 <div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('actual')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Add my actual results →</button></div>
 </div>
@@ -793,26 +784,24 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 <div id="tab-infusion" style="display:none">
+<div class="section">
+<div class="st">Past infusions</div>
+<p style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.5">Enter any past IV iron infusions you have received. Once you have actual ferritin results entered on the Results tab, the model will compare what was expected after each infusion against what actually happened — helping identify whether your iron loss rate is higher or lower than the model estimates.</p>
+<div id="historicInfusionList"></div>
+<button onclick="addHistoricInfusion()" style="font-size:12px;color:#0369a1;background:none;border:1px solid #bae6fd;border-radius:6px;padding:6px 14px;cursor:pointer;margin-top:6px">+ Add past infusion</button>
+</div>
 <div class="section" id="infusionAnalysisSection" style="display:none"></div>
 <div class="section">
 <div class="st">IV infusion schedule planner</div>
 <div class="card">
   <p style="font-size:12px;color:#64748b;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:9px 12px;margin-bottom:12px">&#9888;&#65039; <strong>Illustration only.</strong> This models what a maintenance infusion schedule would look like based on your current iron loss settings, assuming oral supplementation is not used. Not a treatment plan — for clinical discussion only.</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
     <div class="pf"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Infusion dose (mg)</label>
       <select id="ivDose" onchange="calcIV()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff">
         <option value="500">500 mg</option>
         <option value="1000" selected>1000 mg (typical NHS)</option>
         <option value="1500">1500 mg</option>
         <option value="2000">2000 mg</option>
-      </select>
-    </div>
-    <div class="pf"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Ferritin floor target (&#956;g/L)</label>
-      <select id="ivFloor" onchange="calcIV()" style="width:100%;font-size:13px;padding:6px 9px;border:1px solid #e2e8f0;border-radius:7px;background:#fff">
-        <option value="20">20 &#956;g/L (lab minimum)</option>
-        <option value="30" selected>30 &#956;g/L (depleted threshold)</option>
-        <option value="40">40 &#956;g/L (symptomatic threshold)</option>
-        <option value="50">50 &#956;g/L (optimal minimum)</option>
       </select>
     </div>
     <div class="pf"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">Plan horizon</label>
@@ -827,6 +816,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <div id="ivSchedule"></div>
   <div style="position:relative;width:100%;height:250px;margin-top:14px"><canvas id="ivChart"></canvas></div>
   <div id="ivLegend" style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap"></div>
+  <div id="ivCommentary" style="margin-top:10px;font-size:12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:10px 12px;line-height:1.6;display:none"></div>
 </div>
 </div>
 </div>
@@ -912,11 +902,14 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <div style="margin-top:12px;padding-top:10px;border-top:1px solid #1e3a5f;font-size:11px;color:#64748b;line-height:1.5">⚠️ This is a modelled plan for discussion with your GP — not a prescription. Do not start or change doses without clinical review.</div>
 </div>
 
+<div id="stratBloodTestSchedule"></div>
+
 <div class="section" style="margin-top:.25rem">
 <div class="st">Ferritin trajectory</div>
 <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections based on your balance model settings — actual results will vary.</div>
 <div style="position:relative;width:100%;height:270px"><canvas id="stratFerritinChart" role="img" aria-label="Projected ferritin trajectory for planned strategy"></canvas></div>
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="stratChartLegend"></div>
+<div id="stratChartCommentary" style="margin-top:10px;font-size:12px;color:#475569;background:#f0fdfa;border:1px solid #99f6e4;border-radius:7px;padding:10px 12px;line-height:1.6;display:none"></div>
 </div>
 </div>
 <div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('tolerability')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Check tolerability and side effects →</button></div>
@@ -1267,6 +1260,17 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <div class="st">Letter preview</div>
 <div id="letterPreview" style="font-size:13px;line-height:1.75;color:#1e293b;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;white-space:pre-wrap;font-family:Georgia,serif"></div>
 </div>
+<div class="section">
+<div class="st">NHS App / GP enquiry helper</div>
+<div class="card">
+  <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Suggested wording for online GP forms, based on your current app data. Edit before sending — this is a starting point only.</p>
+  <div id="nhsHelperContent"><p style="font-size:12px;color:#94a3b8;text-align:center;padding:16px 0">Complete the balance model inputs to generate suggested wording.</p></div>
+  <div style="margin-top:14px;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:9px 12px;font-size:11px;color:#b91c1c;line-height:1.5">
+    <strong>Important:</strong> If symptoms include fainting, chest pain, breathlessness at rest, very heavy bleeding (soaking a pad every hour), pregnancy-related bleeding, severe one-sided pelvic pain, or feeling acutely unwell — use urgent NHS 111, A&amp;E, or 999 rather than a routine online enquiry.
+  </div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -1275,7 +1279,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-var infusions=[{month:0,dose:1000}];
+var infusions=[];
 var historicInfusions=[];
 window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
@@ -1468,7 +1472,7 @@ function updateBands(){
 function addInfusion(){infusions.push({month:1,dose:1000});renderInfusions();calc();}
 function removeInfusion(i){infusions.splice(i,1);renderInfusions();calc();}
 function renderInfusions(){
-  var el=document.getElementById('infusionList');el.innerHTML='';
+  var el=document.getElementById('infusionList');if(!el)return;
   infusions.forEach(function(inf,i){
     el.innerHTML+='<div class="ir">'+
       '<span style="font-size:12px;color:#64748b">Month</span>'+
@@ -1495,6 +1499,9 @@ function f2mg(f){return f*8;}
 function mg2f(m){return m/8;}
 function rnd(n){return Math.round(n);}
 function sign(n){return n>=0?'+':'';}
+function fwsMg(v){var m=v*8;return m>=500?Math.round(m/50)*50:m>=100?Math.round(m/10)*10:m>=50?Math.round(m/5)*5:Math.round(m);}
+function fws(v){return v+' µg/L (~'+fwsMg(v)+' mg estimated stored iron)';}
+var FERRITIN_FLOOR=8; // body maintains minimal iron stores — projections floor here rather than reaching zero
 
 function calcModifiers(suppDoseParam){
   if(!suppDoseParam||suppDoseParam===0) return 1;
@@ -1593,7 +1600,7 @@ function calc(){
   // Hallberg et al; Moretti et al; BSH 2021 guideline
   // <15: ~12%, 15-30: ~8%, 30-50: ~5%, >50: ~4%
   var tieredAbsRate=startFerr<15?0.12:startFerr<30?0.08:startFerr<50?0.05:0.04;
-  var tieredAbsLabel=startFerr<15?'~12% (stores critically low — body absorbs more when very depleted)':startFerr<30?'~8% (stores depleted — body absorbs more when low)':startFerr<50?'~5% (below optimal)':'~4% (standard rate when stores adequate)';
+  var tieredAbsLabel=startFerr<15?'~12% (stores critically low — body absorbs more when very depleted)':startFerr<30?'~8% (stores depleted — body absorbs more when low)':startFerr<50?'~5% (below sufficiency level)':'~4% (standard rate when stores adequate)';
 
   var cycleLenDisplay=noPeriods?'N/A':pmgmt==='pill21'?'28d (fixed)':pmgmt==='pill63'?'63d (fixed)':pmgmt==='pillcont'?rawCycleLen+'d avg':pmgmt==='mini'?rawCycleLen+'d (approx)':cycleLen+'d';
   document.getElementById('cycleLenV').textContent=cycleLenDisplay;
@@ -1624,7 +1631,12 @@ function calc(){
   var critEl=document.getElementById('startFerrCritNote');
   if(critEl) critEl.style.display=startFerr<15?'block':'none';
 
-  updateBadge('bcy',cycleLen,21,35);
+  (function(){var b=document.getElementById('bcy');if(!b)return;
+    if(noPeriods){b.className='badge';b.textContent='';}
+    else if(pmgmt==='pill63'){b.className='badge bok';b.textContent='std for tricycle';}
+    else if(pmgmt==='pill21'){b.className='badge bok';b.textContent='fixed — 28d';}
+    else if(pmgmt==='pillcont'||pmgmt==='mini'){b.className='badge';b.textContent='';}
+    else{updateBadge('bcy',cycleLen,21,35);}})();
   updateBadge('bbd',bleedDays,3,7);
   updateBadge('bfi',gv('flowInt'),1,3);
   updateBadge('bdq',dietQIdx,3,5);
@@ -1693,7 +1705,7 @@ function calc(){
   var months=13;var ferrLine=[startFerr];
   for(var m=1;m<months;m++){
     var inf=0;infusions.forEach(function(iv){if(rnd(iv.month)===m)inf+=mg2f(iv.dose);});
-    ferrLine.push(Math.max(0,+(ferrLine[m-1]+ferrChangePM+inf).toFixed(1)));
+    ferrLine.push(Math.max(FERRITIN_FLOOR,+(ferrLine[m-1]+ferrChangePM+inf).toFixed(1)));
   }
 
   var startDateVal2=document.getElementById('startDate').value;
@@ -1736,8 +1748,7 @@ function calc(){
   var stopLine=null;
   if(hasStrategy&&lc){
     var sc2=window.strategyScenario;
-    var suppFerrPM2=lc.suppDose>0?(Math.min(lc.suppDose*(lc.tieredAbsRate||0.04),4.0)*30)/8:0;
-    var postStopRate=(lc.ferrChangePM||0)-suppFerrPM2;
+    var postStopRate=(lc.dietNetMonth-lc.totalLossMonth)/8;
     var ivBoost2=sc2.ivDose>0?mg2f(sc2.ivDose):0;
     var stopArr=[startFerr];
     var stReached=startFerr>=sc2.target;
@@ -1747,15 +1758,11 @@ function calc(){
       var sNext;
       if(!stReached){sNext=sPrev+sBoost+(lc.ferrChangePM||0);if(sNext>=sc2.target){stReached=true;sNext=sc2.target;}}
       else{sNext=sPrev+postStopRate;}
-      stopArr.push(Math.max(0,+sNext.toFixed(1)));
+      stopArr.push(Math.max(FERRITIN_FLOOR,+sNext.toFixed(1)));
     }
     stopLine=stopArr;
     ds.push({label:'If supplementation stops after reaching target',data:stopLine,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
   }
-
-  // Reference lines
-  ds.push({label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false});
-  ds.push({label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false});
 
   // PURPLE dashed = revised projection from last actual
   if(hasRevised){
@@ -1776,21 +1783,26 @@ function calc(){
     ds.push({label:'Your actual blood test results',data:ad,borderColor:'#ea580c',borderWidth:0,pointRadius:7,showLine:false,fill:false});
   }
 
-  // Autoscale
-  var allValues=ferrLine.concat(va.map(function(a){return a.ferritin||0;}));
-  if(hasStrategy) allValues=allValues.concat(window.strategyScenario.ferrLine);
-  if(stopLine) allValues=allValues.concat(stopLine);
-  if(hasRevised) allValues=allValues.concat(window.revisedScenario.ferrLine.filter(function(v){return v!==null;}));
-  var allPos=allValues.filter(function(v){return v>0;});
-  var yMax=allPos.length?Math.ceil(Math.max.apply(null,allPos)*1.2/10)*10:150;
-
   if(chartInst)chartInst.destroy();
   chartInst=new Chart(document.getElementById('ferrChart'),{
     type:'line',data:{labels,datasets:ds},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
-      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
-        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}
+      scales:{y:{min:0,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}},
+    plugins:[{afterDraw:function(ch){
+      var cx=ch.ctx,yS=ch.scales.y,xL=ch.chartArea.left,xR=ch.chartArea.right,yT=ch.chartArea.top,yB=ch.chartArea.bottom;
+      function thr(val,color,dash,lbl){
+        var yPx=yS.getPixelForValue(val);if(yPx<yT||yPx>yB)return;
+        cx.save();cx.strokeStyle=color;cx.setLineDash(dash);cx.lineWidth=1.5;
+        cx.beginPath();cx.moveTo(xL,yPx);cx.lineTo(xR,yPx);cx.stroke();
+        cx.fillStyle=color;cx.font='bold 9px sans-serif';cx.textAlign='left';
+        cx.fillText(lbl,xL+4,yPx-3);cx.restore();
+      }
+      thr(50,'#16a34a',[6,3],'50 µg/L — sufficiency threshold');
+      thr(30,'#dc2626',[4,2],'30 µg/L — depleted stores (BSH 2021)');
+      thr(FERRITIN_FLOOR,'#94a3b8',[2,3],'~'+FERRITIN_FLOOR+' µg/L — physiological floor');
+    }}]
   });
 
   // End-of-line labels
@@ -1830,9 +1842,9 @@ function calc(){
       var ivNote=sc.ivDose>0?' An infusion of '+sc.ivDose+' mg is included at the start, giving an estimated immediate boost (actual ferritin response varies widely — ±50% or more — depending on inflammation and iron utilisation).':'';
       parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong>'+ivNote+' Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
       if(stopLine){
-        var postStopDescr=postStopRate<-0.5?'falls at '+rnd(Math.abs(postStopRate)*10)/10+' µg/L per month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
+        var postStopDescr=postStopRate<-0.5?'falls — net monthly deficit '+rnd(Math.abs(postStopRate)*8)+' mg/month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
         var stopBreakdown='';
-        if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span data-ctip="ctip-stop-rate" style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit ≈ '+rnd(Math.abs(postStopRate)*10)/10+' µg/L/month)</span>';}
+        if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span data-ctip="ctip-stop-rate" style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit)</span>';}
         var stopConclusion=postStopRate<0?' Diet alone cannot replace losses — stores would deplete again without ongoing maintenance supplementation. This is why Phase 2 matters.':' In your case, diet appears to cover losses — stopping supplements after the target may be sustainable, though monitoring is still advisable.';
         parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+stopBreakdown+'.'+stopConclusion);
       }
@@ -1854,7 +1866,7 @@ function calc(){
       parts.push('<strong style="color:#7c3aed">- - Purple dashed — Revised projection:</strong> Starts from your last blood test ('+rv.lastFerritin+' µg/L), using '+rSrc+'.'+gapNote);
     }
     if(va.length) parts.push('<strong style="color:#ea580c">&#9679; Orange dots — Actual blood test results:</strong> Results dated on or after the plan start date, plotted at their test date.');
-    parts.push('<span style="color:#94a3b8">Green dashed: recommended minimum (50 µg/L). Red dashed: depleted stores threshold (30 µg/L). 💡 For consistent results, test at the same point in your cycle each time — ideally mid-cycle, away from bleeding.</span>');
+    parts.push('<span style="color:#94a3b8">Thresholds labelled on chart: 50 µg/L (green, sufficiency threshold), 30 µg/L (red, depleted stores — BSH 2021), ~'+FERRITIN_FLOOR+' µg/L (grey, physiological floor — projections do not fall below this as the body maintains minimal stores). 💡 For consistent results, test at the same point in your cycle each time — ideally mid-cycle, away from bleeding.</span>');
     explainer.innerHTML=parts.map(function(p,i){return '<p style="margin:0'+(i<parts.length-1?';margin-bottom:5px':'')+'">'+p+'</p>';}).join('');
   }
 
@@ -1862,8 +1874,6 @@ function calc(){
     (hasStrategy?li('#3b82f6','Blue — Treatment plan (Phase 1: recovery · Phase 2: maintenance)'):'')+
     (stopLine?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
     (hasRevised?li('#7c3aed','Purple dashed — Revised projection from last blood test',true):'')+
-    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
-    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true)+
     (va.length?li('#ea580c','Orange dots — Actual blood test results'):'');
   if(!window._inCalcDerived) calcDerived();
   if(!window._inCalcStrategy){
@@ -1897,7 +1907,7 @@ function updateAnalysis(){
     if(c.netMonth<-10){
       lines.push('Monthly deficit of '+Math.abs(c.netMonth)+' mg means current intake cannot keep pace with losses. Ferritin is projected to '+rnd(c.m12ferr)+' µg/L by '+c.fmtMonth(12)+'.');
       if(c.suppDose===0&&!conds['oral-intol']){lines.push('Consider: oral iron supplementation (alternate-day dosing may improve absorption and tolerability in some patients — Moretti et al, Lancet Haematology 2015; BSH 2021 guideline on management of iron deficiency in adults).');}
-      if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion may be considered where oral supplementation is insufficient or not tolerated (BSH 2021 guideline; discuss with GP). A typical 1000 mg infusion (Ferinject) would be expected to raise ferritin by approximately '+rnd(mg2f(1000))+' µg/L in the absence of ongoing loss — actual response varies widely (±50% or more).');}
+      if(conds['oral-intol']||c.suppDose===0){lines.push('If oral iron is not tolerated: IV iron infusion may be considered where oral supplementation is insufficient or not tolerated (BSH 2021 guideline; discuss with GP). A typical 1000 mg infusion (Ferinject) raises ferritin by approximately 60–125 µg/L in non-anaemic patients — response is lower when anaemia is present, as iron is diverted to haemoglobin correction; actual response varies widely (±50% or more). See the Infusion Planner tab for a personalised estimate.');}
       lines.push('Addressing the underlying bleeding cause (e.g. gynaecological investigation, hormonal management) is the most effective long-term approach to stabilising iron stores.');
       severity='danger';
     } else if(c.netMonth<0){
@@ -1906,12 +1916,12 @@ function updateAnalysis(){
     } else if(c.netMonth<5){
       lines.push('Iron balance is marginally positive. Stores should stabilise. Monitor ferritin at 3–6 month intervals to confirm trend.');
     } else {
-      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately <span data-ctip="ctip-m12ferr">'+rnd(c.m12ferr)+'</span> µg/L by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
+      lines.push('Positive iron balance ('+c.netMonth+' mg/month). Ferritin is projected to reach approximately <span data-ctip="ctip-m12ferr">'+rnd(c.m12ferr)+'</span> µg/L (~'+fwsMg(rnd(c.m12ferr))+' mg estimated stored iron) by '+c.fmtMonth(12)+'. Recheck ferritin at '+c.fmtMonth(3)+' to confirm recovery.');
     }
 
-    if(c.startFerr<15){lines.push('⚠️ Critically depleted ferritin ('+c.startFerr+' µg/L). Below 15 µg/L is consistent with absent iron stores (BSH/WHO diagnostic threshold). Urgent clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause and agree on the appropriate treatment approach.');}
-    else if(c.startFerr<30){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 30 µg/L threshold for depleted stores (BSH/NICE). Symptoms of iron deficiency (fatigue, brain fog, poor exercise tolerance) are likely even without anaemia.');}
-    else if(c.startFerr<50){lines.push('Current ferritin ('+c.startFerr+' µg/L) is below the 50 µg/L level associated with optimal function in menstruating women.');}
+    if(c.startFerr<15){lines.push('⚠️ Critically depleted ferritin ('+fws(c.startFerr)+'). Below 15 µg/L (~120 mg estimated stored iron) is consistent with absent iron stores (BSH/WHO diagnostic threshold). Urgent clinical review is recommended before starting self-managed supplementation — a clinician should confirm there is no underlying cause and agree on the appropriate treatment approach.');}
+    else if(c.startFerr<30){lines.push('Current ferritin ('+fws(c.startFerr)+') is below the 30 µg/L (~240 mg estimated stored iron) depleted stores threshold — treatment indicated in symptomatic patients (BSH 2021). Symptoms of iron deficiency (fatigue, brain fog, poor exercise tolerance) are likely even without anaemia.');}
+    else if(c.startFerr<50){lines.push('Current ferritin ('+fws(c.startFerr)+') is below the 50 µg/L (~400 mg estimated stored iron) sufficiency level — symptoms may still persist below this threshold.');}
   }
 
   box.style.display='block';
@@ -1932,10 +1942,25 @@ function li(color,label,dashed){
 
 function parseDate(s){
   if(!s)return null;
+  var MMAP={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  // "D Month YYYY" or "D Mmm YYYY" (space-separated)
+  var pm=s.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
+  if(pm){var mo=MMAP[pm[2].toLowerCase().slice(0,3)];if(mo!==undefined)return new Date(+pm[3],mo,+pm[1]);}
+  // "DD-Mmm-YYYY" (dash-separated with abbreviated month)
+  var pd=s.match(/^(\d{1,2})-([A-Za-z]{3,})-(\d{4})$/);
+  if(pd){var mo=MMAP[pd[2].toLowerCase().slice(0,3)];if(mo!==undefined)return new Date(+pd[3],mo,+pd[1]);}
+  // YYYY-MM-DD (ISO — native Date handles this, but force UTC-safe parse)
+  var pi=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(pi)return new Date(+pi[1],+pi[2]-1,+pi[3]);
+  // YYYYMMDD
+  var py=s.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if(py)return new Date(+py[1],+py[2]-1,+py[3]);
+  // DD/MM/YYYY or DD-MM-YYYY (UK default)
+  var p=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(p)return new Date(+p[3],+p[2]-1,+p[1]);
+  // Fallback to native (handles ISO strings with time etc.)
   var d=new Date(s);
   if(!isNaN(d))return d;
-  var p=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
-  if(p)return new Date(p[3],p[2]-1,p[1]);
   return null;
 }
 
@@ -1991,7 +2016,7 @@ function calcPlanVsActual(ferrPM, months, firstFerr, lastFerr, impliedAbsPM, ivD
   // Opening: state the facts plainly
   var dirActual=actualTotalChange>=0?'risen':'fallen';
   var dirExpected=expectedTotalChange>=0?'rise':'fall';
-  lines.push('Over the '+rnd(months*10)/10+' months covered by your results, ferritin has '+dirActual+' from '+firstFerr+' to '+lastFerr+' µg/L — a change of '+(actualTotalChange>=0?'+':'')+rnd(actualTotalChange)+' µg/L ('+rnd(ferrPM*10)/10+' µg/L per month).');
+  lines.push('Over the '+rnd(months*10)/10+' months covered by your results, ferritin has '+dirActual+' from '+firstFerr+' µg/L to '+fws(lastFerr)+' — a change of '+(actualTotalChange>=0?'+':'')+rnd(actualTotalChange)+' µg/L ('+rnd(ferrPM*10)/10+' µg/L per month).');
 
   // What was expected at stated adherence
   lines.push('At '+rnd(adherence*100)+'% plan adherence, the expected change over this period was '+(expectedTotalChange>=0?'+':'')+rnd(expectedTotalChange)+' µg/L (<span data-ctip="ctip-expected-adh">'+rnd(expectedFerrPM*10)/10+'</span> µg/L per month). '+(gap>=0?'Actual results are ahead of this expectation by <span data-ctip="ctip-gap-sig">'+rnd(Math.abs(gap))+'</span> µg/L.':'Actual results are behind this expectation by <span data-ctip="ctip-gap-sig">'+rnd(Math.abs(gap))+'</span> µg/L.'));
@@ -2378,8 +2403,8 @@ function renderTipsChart(baseLine,dietLine,hormoneLine,inflammLine,combinedLine,
   // Datasets
   var ds=[
     {label:'Current trajectory (no changes)',data:baseLine,borderColor:'#94a3b8',borderDash:[4,3],borderWidth:1.5,pointRadius:0,fill:false,tension:.3},
-    {label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
-    {label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+    {label:'Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false},
   ];
 
   if(anyDietOn){
@@ -2726,6 +2751,14 @@ function renderHistoricChart(historicResults){
   historicInfusions.forEach(function(inf){if(inf.date&&!ferritinByDate.hasOwnProperty(inf.date))allDates.push(inf.date);});
   allDates.sort();
 
+  // Insert today into the label axis (null data) so the afterDraw marker can be positioned exactly
+  var todayStr=new Date().toISOString().slice(0,10);
+  var showToday=allDates.length>0&&todayStr>=allDates[0];
+  if(showToday&&!ferritinByDate.hasOwnProperty(todayStr)){
+    var ti=0;while(ti<allDates.length&&allDates[ti]<todayStr)ti++;
+    allDates.splice(ti,0,todayStr);
+  }
+
   var labels=allDates;
   var data=allDates.map(function(d){return ferritinByDate.hasOwnProperty(d)?ferritinByDate[d]:null;});
   var nonNull=data.filter(function(v){return v!=null;});
@@ -2742,8 +2775,8 @@ function renderHistoricChart(historicResults){
       labels:labels,
       datasets:[
         {label:'Ferritin (historic)',data:data,spanGaps:true,borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,0.08)',fill:true,tension:.3,pointRadius:pts>20?3:5,pointBackgroundColor:'#64748b',borderWidth:1.5},
-        {label:'Recommended minimum (50 µg/L)',data:new Array(allDates.length).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
-        {label:'Depleted stores threshold (30 µg/L)',data:new Array(allDates.length).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+        {label:'Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',data:new Array(allDates.length).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',data:new Array(allDates.length).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
@@ -2757,35 +2790,47 @@ function renderHistoricChart(historicResults){
     plugins:[{
       id:'infusion-markers',
       afterDraw:function(chart){
-        if(!historicInfusions||!historicInfusions.length)return;
         var ctx2=chart.ctx;
         ctx2.save();
+        var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
+        // Infusion markers (amber)
         historicInfusions.forEach(function(inf){
           if(!inf.date)return;
           var idx=labels.indexOf(inf.date);
           if(idx<0)return;
           var xPos=chart.scales.x.getPixelForValue(idx);
-          var yTop=chart.chartArea.top;
-          var yBot=chart.chartArea.bottom;
           ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
           ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
           ctx2.setLineDash([]);
           ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
           ctx2.fillText(inf.dose+'mg IV',xPos,yTop+10);
         });
+        // Today marker (blue)
+        if(showToday){
+          var tIdx=labels.indexOf(todayStr);
+          if(tIdx>=0){
+            var xPos=chart.scales.x.getPixelForValue(tIdx);
+            ctx2.strokeStyle='#0369a1';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
+            ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
+            ctx2.setLineDash([]);
+            ctx2.fillStyle='#0369a1';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
+            ctx2.fillText('Today',xPos,yBot-6);
+          }
+        }
         ctx2.restore();
       }
     }]
   });
   document.getElementById('historicLegend').innerHTML=
     li('#64748b','Grey — Historic ferritin readings')+
-    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
-    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true)+
-    (historicInfusions.length?li('#f59e0b','Amber dashed — IV infusion event',true):'');
+    li('#16a34a','Green dashed — Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',true)+
+    li('#dc2626','Red dashed — Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',true)+
+    (historicInfusions.length?li('#f59e0b','Amber dashed — IV infusion event',true):'')+
+    (showToday?li('#0369a1','Blue dashed — Today',true):'');
 }
 
-function addHistoricInfusion(){historicInfusions.push({date:'',dose:1000});renderHistoricChartFromCalc();autoSave();}
-function removeHistoricInfusion(i){historicInfusions.splice(i,1);renderHistoricChartFromCalc();autoSave();}
+function addHistoricInfusion(){historicInfusions.push({date:'',dose:1000});renderHistoricChartFromCalc();renderInfusionAnalysis();autoSave();}
+function removeHistoricInfusion(i){historicInfusions.splice(i,1);renderHistoricChartFromCalc();renderInfusionAnalysis();autoSave();}
 function renderHistoricInfusionList(){
   var el=document.getElementById('historicInfusionList');
   if(!el)return;
@@ -2793,8 +2838,8 @@ function renderHistoricInfusionList(){
   historicInfusions.forEach(function(inf,i){
     var row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:6px';
-    row.innerHTML='<input type="date" value="'+(inf.date||'')+'" onchange="historicInfusions['+i+'].date=this.value;renderHistoricChartFromCalc();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;flex:1">'+
-      '<select onchange="historicInfusions['+i+'].dose=+this.value;renderHistoricChartFromCalc();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+
+    row.innerHTML='<input type="date" value="'+(inf.date||'')+'" onchange="historicInfusions['+i+'].date=this.value;renderHistoricChartFromCalc();renderInfusionAnalysis();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;flex:1">'+
+      '<select onchange="historicInfusions['+i+'].dose=+this.value;renderHistoricChartFromCalc();renderInfusionAnalysis();autoSave()" style="font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+
       [500,750,1000,1500,2000].map(function(d){return '<option value="'+d+'"'+(inf.dose===d?' selected':'')+'>'+d+' mg</option>';}).join('')+
       '</select>'+
       '<button onclick="removeHistoricInfusion('+i+')" style="font-size:11px;color:#dc2626;background:none;border:none;cursor:pointer;padding:0 4px">×</button>';
@@ -3026,7 +3071,7 @@ function calcDerived(){
     } else {
       nextRevFerr=revFerr; // flat at maintenance
     }
-    revFerr=Math.max(0,nextRevFerr);
+    revFerr=Math.max(FERRITIN_FLOOR,nextRevFerr);
   }
 
   // Store date label for explainer text
@@ -3132,18 +3177,18 @@ function buildGPLetter(){
   // Opening — personal, direct
   L.push('I am writing to ask for your help with my iron deficiency, which has been an ongoing problem for me for some time. I would like to request a prescription for iron supplementation and, if possible, pre-approval for a small number of follow-up blood tests so I can monitor my progress without needing to go through the triage system each time.');
   L.push('');
-  L.push('I have been using an iron balance planning tool to help me understand my ferritin levels and prepare for this conversation — the figures and proposed schedule in this letter come from that. I wanted to be transparent about this so you can see where the numbers are coming from.');
+  L.push('I have been tracking my results carefully and researching the relevant guidance — the figures and proposed schedule in this letter are based on my own blood test history and reading.');
   L.push('');
 
   // Background — personal history, no raw numbers dump
   L.push('My background');
   L.push('');
   if(histAll.length>=2&&histYears>=1){
-    L.push('I have had my ferritin tested a number of times over the past '+histYears+' year'+(histYears===1?'':'s')+' and it has consistently come back low, ranging from '+histMin+' to '+histMax+' µg/L. My most recent result was '+baselineFerr+' µg/L'+(mostRecentDate?' on '+baselineDateStr:'')+'.'+(baselineFerr<30?' I understand that anything below 30 µg/L is considered depleted stores, and I have been experiencing symptoms consistent with this.':baselineFerr<50?' I understand the recommended minimum is around 50 µg/L and that symptoms often persist below this level.':''));
+    L.push('I have had my ferritin tested a number of times over the past '+histYears+' year'+(histYears===1?'':'s')+' and it has consistently come back low, ranging from '+histMin+' to '+histMax+' µg/L. My most recent result was '+fws(baselineFerr)+(mostRecentDate?' on '+baselineDateStr:'')+'.'+(baselineFerr<30?' I understand that anything below 30 µg/L is considered depleted stores, and I have been experiencing symptoms consistent with this.':baselineFerr<50?' I understand the sufficiency threshold is around 50 µg/L and that symptoms often persist below this level.':''));
     L.push('');
     L.push('This has not been a one-off result — it is a pattern, and I think it needs a more structured approach than I have managed so far.');
   } else {
-    L.push('My most recent ferritin result was '+baselineFerr+' µg/L'+(mostRecentDate?' ('+baselineDateStr+')':'')+'.'+(baselineFerr<30?' This is below the depleted stores threshold of 30 µg/L and I am experiencing symptoms I believe are related.':baselineFerr<50?' This is below the recommended minimum of 50 µg/L.':''));
+    L.push('My most recent ferritin result was '+fws(baselineFerr)+(mostRecentDate?' ('+baselineDateStr+')':'')+'.'+(baselineFerr<30?' This is below the depleted stores threshold of 30 µg/L (BSH 2021) and I am experiencing symptoms I believe are related.':baselineFerr<50?' This is below the sufficiency threshold of 50 µg/L — symptoms can persist below this level.':''));
   }
   L.push('');
 
@@ -3206,16 +3251,25 @@ function buildGPLetter(){
     L.push('My most recent ferritin test was '+baselineDateStr+(mostRecentDate?', which is now over 6 weeks ago':'')+'. I would like to ask whether it would be possible to have a fresh baseline test before starting treatment, so we have a clear starting point.');
     L.push('');
   } else {
-    L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+baselineFerr+' µg/L), which I think is recent enough to use as a starting point.');
+    L.push('My ferritin was last tested on '+baselineDateStr+' (result: '+fws(baselineFerr)+'), which I think is recent enough to use as a starting point.');
     L.push('');
   }
   L.push('I would like to ask whether it would be possible to pre-authorise a short series of follow-up ferritin tests, so I can book them directly with the phlebotomy clinic without needing to go through triage each time. I understand this kind of arrangement can sometimes be agreed in advance for ongoing conditions, and it would make it much easier to stay on top of monitoring without taking up unnecessary GP appointments.');
   L.push('');
-  L.push('The schedule I am proposing is:');
+  L.push('The monitoring schedule I would like to propose is:');
   L.push('');
-  L.push('  1.  Around '+fmt(t3)+' — to check my ferritin is rising as expected after 3 months of treatment.');
-  L.push('  2.  Around '+fmt(t5)+' — a stability check to see whether my levels are holding once I reduce to the maintenance dose.');
-  L.push('  3.  Around '+fmt(t9)+' — a longer-term follow-up to confirm things are stable and that the maintenance approach is working.');
+  if(plannedIV>0||oralIntol){
+    L.push('  1.  4 weeks after the infusion — ferritin and FBC. This confirms that ferritin has responded and haemoglobin has corrected, and gives a stable reference point for all future monitoring.');
+    L.push('  2.  3 months after the infusion — ferritin. First check of my personal decline rate on current management.');
+    L.push('  3.  6 months after the infusion — ferritin and FBC. By this point I will have enough results to confirm my actual decline rate and whether the current management plan needs adjusting.');
+    L.push('  4.  Every 3 months thereafter — ferritin, ongoing.');
+  } else {
+    L.push('  1.  6–8 weeks after starting — ferritin. Early confirmation that absorption is working.');
+    L.push('  2.  Around '+fmt(t3)+' (3 months) — ferritin. Confirms recovery is on track.');
+    L.push('  3.  On reaching the '+planTarget+' µg/L target — ferritin and FBC. Confirms target reached before reducing to maintenance dose.');
+    L.push('  4.  6 weeks after moving to maintenance dose — ferritin. Confirms ferritin is holding on the lower dose.');
+    L.push('  5.  Every 3–4 months ongoing — ferritin.');
+  }
   L.push('');
   L.push('I think this is a proportionate plan given my history, and it would save us both time by not needing a GP appointment every time I need a routine blood test.');
   L.push('');
@@ -3239,6 +3293,7 @@ function updateLetterPreview(){
     var letter=buildGPLetter();
     el.textContent=letter.body;
   }catch(e){el.textContent='Complete the balance model inputs to generate the letter.';}
+  generateNHSHelperText();
 }
 
 function copyGPLetter(){
@@ -3253,6 +3308,215 @@ function printLetter(){
   showTab('export');
   updateLetterPreview();
   setTimeout(function(){window.print();},300);
+}
+
+function generateNHSHelperText(){
+  var el=document.getElementById('nhsHelperContent');
+  if(!el)return;
+  var c=lc;
+  if(!c||!c.startFerr){
+    el.innerHTML='<p style="font-size:12px;color:#94a3b8;text-align:center;padding:16px 0">Complete the balance model inputs to generate suggested wording.</p>';
+    return;
+  }
+  var today=new Date();
+  var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtD(d){return MN[d.getMonth()]+' '+d.getFullYear();}
+
+  // Actuals — sorted newest first
+  var allAct=actuals.filter(function(a){return a.ferritin>0&&a.date;});
+  allAct.sort(function(a,b){var da=parseDate(a.date),db=parseDate(b.date);return db-da;});
+  var latest=allAct[0]||null;
+  var latestFerr=latest?latest.ferritin:rnd(c.startFerr||25);
+  var latestDate=latest?parseDate(latest.date):null;
+  var testStr=latestDate?fmtD(latestDate):null;
+  var testRef=testStr?' (last test '+testStr+': '+fws(latestFerr)+')':'';
+
+  // Trend from actuals or model
+  var trendRising=false,trendFalling=false;
+  if(allAct.length>=2){
+    var td=allAct[0].ferritin-allAct[1].ferritin;
+    trendRising=td>4;trendFalling=td<-4;
+  } else {
+    trendRising=(c.ferrChangePM||0)>0.5;trendFalling=(c.ferrChangePM||0)<-0.5;
+  }
+
+  // Infusions — most recent first
+  var sInf=(historicInfusions||[]).filter(function(h){return h.date;}).slice().sort(function(a,b){
+    var da=parseDate(a.date),db=parseDate(b.date);return db-da;
+  });
+  var lastInf=sInf[0]||null;
+  var moSinceInf=null,infDoseV=null,infDateS=null;
+  if(lastInf){var iD=parseDate(lastInf.date);if(iD){moSinceInf=Math.round((today-iD)/86400000/30.44);infDoseV=lastInf.dose||1000;infDateS=fmtD(iD);}}
+
+  // Did ferritin fall back below 30 after infusion?
+  var ferrFellAfter=false;
+  if(lastInf&&lastInf.date){
+    var iDt=parseDate(lastInf.date);
+    if(iDt){
+      var pInf=allAct.filter(function(a){var d=parseDate(a.date);return d&&d>iDt;});
+      if(pInf.length) ferrFellAfter=Math.min.apply(null,pInf.map(function(a){return a.ferritin;}))<30;
+      if(latestFerr<30&&moSinceInf!==null&&moSinceInf<18) ferrFellAfter=true;
+    }
+  }
+
+  // Bleed pattern
+  var meno=document.getElementById('menopause')?document.getElementById('menopause').value:'pre';
+  var pmgmt=document.getElementById('periodMgmt')?document.getElementById('periodMgmt').value:'natural';
+  var noPer=meno==='post'||pmgmt==='none';
+  var bDays=noPer?0:(gv('bleedDays')||5);
+  var fIdx=Math.max(0,(gv('flowInt')||2)-1);
+  var fDesc=['very light','light','moderate','heavy','very heavy'][Math.min(fIdx,4)];
+  var abnBleed=bDays>=8||(conds.endo||conds.adeno);
+  var bleedDespiteSupp=pmgmt!=='natural'&&!noPer&&bDays>=7;
+
+  // Supplement / intolerance
+  var sD=c.suppDose||0;
+  var oIntol=conds['oral-intol'];
+
+  // Balance
+  var totalLossB=(c.basalLossMonth||30)+(c.mgLostMonth||0);
+  var dNetB=c.dietNetMonth||0;
+  var defNoSupp=Math.max(0,totalLossB-dNetB);
+  var isDeficit=defNoSupp>5;
+
+  // --- Scenario selection ---
+  var sc='CONCERN';
+  if(latestFerr>=50&&!trendFalling&&!ferrFellAfter&&!oIntol){
+    sc='STABLE';
+  } else if(latestFerr>=30&&trendRising&&!abnBleed&&!oIntol&&!ferrFellAfter){
+    sc='IMPROVING';
+  } else if(latestFerr>=25&&!trendFalling&&!abnBleed&&!oIntol&&!lastInf&&defNoSupp<25){
+    sc='MONITORING';
+  } else if(lastInf&&ferrFellAfter&&moSinceInf!==null&&moSinceInf<18){
+    sc='RECURRENCE';
+  } else if(abnBleed&&latestFerr<50){
+    sc='BLEEDING';
+  } else if(oIntol&&latestFerr<50){
+    sc='INTOLERANCE';
+  }
+  if(lastInf&&ferrFellAfter&&sc==='BLEEDING') sc='RECURRENCE';
+
+  // --- Generate text ---
+  var Q1,Q2,Q3,Q4,Q5;
+  var Q6='Please call any weekday during opening hours. If I miss the call, please leave a voicemail or send a message via NHS App if possible.';
+
+  if(sc==='STABLE'){
+    Q1='My ferritin has improved with treatment and is now around '+fws(latestFerr)+testRef+'. I would like advice on monitoring going forward and how long I should continue iron treatment before considering stopping.';
+    Q2='Levels have been improving with treatment and there is no current urgent concern. I want to make sure I continue for long enough and know when it would be safe to review or reduce treatment.';
+    Q3='I am taking iron supplements and have found them manageable. I have also focused on dietary iron sources. The current approach seems to be working well.';
+    Q4='My main concern is knowing when it is safe to reduce or stop treatment and what monitoring schedule would be appropriate to avoid levels dropping again.';
+    Q5='Please could I have advice on how often ferritin should be rechecked and at what level it would be appropriate to review reducing my iron treatment. A routine blood test at a convenient time would be helpful.';
+  } else if(sc==='IMPROVING'){
+    Q1='My ferritin is improving with treatment — my last result was '+fws(latestFerr)+testRef+' and I believe it is still rising. It is not yet at the recommended level (50 µg/L) and I would like advice on when to recheck and how long to continue.';
+    Q2='Levels have been rising since starting treatment, which is encouraging. Ferritin is still below 50 µg/L so I want to make sure I continue for long enough to reach and hold a healthy level.';
+    Q3='I am taking iron supplements and tolerating them reasonably well. I have also been focusing on dietary iron. The current approach seems to be working.';
+    Q4='I want to avoid stopping treatment too soon and ending up back at a low level. I would like guidance on when it is safe to reassess and what to aim for as a target.';
+    Q5='Please could I have a repeat ferritin blood test to check progress and advice on how long to continue supplementation before a further review.';
+  } else if(sc==='MONITORING'){
+    Q1='My ferritin has been low for some time'+testRef+'. I am not fully sure whether current management is working well enough and would like it checked again.';
+    Q2='Low ferritin has been an ongoing issue. Levels have been broadly stable but below the recommended level. I am not confident they are improving enough.';
+    Q3='I have been taking iron supplements and trying to improve my diet. I find oral iron manageable but am unsure if I am absorbing enough at the current dose.';
+    Q4='I would like to know whether ferritin is moving in the right direction and whether any adjustments are needed before the situation gets worse.';
+    Q5='Please could I have a repeat ferritin blood test and possibly a FBC, to check whether treatment is working and whether any changes are needed.';
+  } else if(sc==='RECURRENCE'){
+    Q1='My ferritin has fallen again after previous treatment — it is currently '+fws(latestFerr)+testRef+'. I had a '+infDoseV+'mg iron infusion in '+infDateS+' ('+moSinceInf+' months ago) but levels have dropped again relatively quickly.';
+    Q2=(function(){var t='This has been a recurring problem — iron improved after the infusion but has not stayed at a healthy level.';if(!noPer&&bDays>=6)t+=' Prolonged bleeding has continued throughout, which may be driving ongoing iron loss.';t+=' The problem keeps recurring despite treatment.';return t;})();
+    Q3='I have tried oral iron'+(oIntol?' but do not tolerate it well':'')+(sD>0?', and am currently taking supplements':'')+'. I had an infusion in '+infDateS+' which helped at first.'+(pmgmt!=='natural'?' Hormonal treatment is in place but has not fully resolved the bleeding.':'');
+    Q4='I am concerned there may be an underlying cause for the ongoing iron loss — possibly a gynaecological issue or higher-than-expected bleeding — even if haemoglobin appears normal. I would not want the recurrence to be dismissed as "not anaemic".';
+    Q5='Please could I have repeat blood tests (FBC, ferritin, iron studies/TSAT and CRP) to check current iron status, and a discussion about the cause of the recurring deficiency and what further steps might help.';
+  } else if(sc==='BLEEDING'){
+    Q1='I have prolonged, '+fDesc+' periods lasting '+bDays+' days per cycle'+(bleedDespiteSupp?', despite hormonal management,':',')+' which are driving my iron stores down. My latest ferritin is '+fws(latestFerr)+testRef+'.';
+    Q2='The prolonged bleeding has been ongoing for some time. Iron stores keep falling even with treatment. Bleeding has'+(bleedDespiteSupp?' continued despite hormonal treatment':' not been well controlled')+', so the underlying cause has not been resolved.';
+    Q3='I have tried'+(sD>0?' iron supplements':' dietary changes')+(oIntol?' but do not tolerate oral iron well':'')+( pmgmt!=='natural'?' alongside hormonal treatment to reduce bleeding, but the problem persists':'')+'. The bleeding remains the main driver of my iron loss.';
+    Q4='I am concerned there may be a gynaecological reason for the prolonged or heavy bleeding, particularly as it has persisted despite treatment. I would like this reviewed rather than just managing the iron deficiency.';
+    Q5='Please could I have blood tests (FBC, ferritin, iron studies/TSAT and CRP) and a review of the prolonged bleeding pattern. I would appreciate advice on whether referral for a gynaecological assessment is appropriate.';
+  } else if(sc==='INTOLERANCE'){
+    Q1='I have low iron stores (ferritin '+fws(latestFerr)+testRef+') and have not been able to manage this effectively with oral iron tablets due to side effects. I would like to discuss alternatives and whether IV iron infusion might be appropriate.';
+    Q2='Low ferritin has been an ongoing problem. I have tried oral iron but'+(oIntol?' do not tolerate it well — side effects have prevented consistent use':' find it difficult to take regularly due to side effects')+'. Levels have not improved enough.';
+    Q3='I have tried oral iron in different forms but have struggled with side effects. I have also tried to include more iron-rich foods in my diet. Despite this, iron levels remain low.';
+    Q4='I do not think I can manage this with oral tablets alone. I understand IV iron infusion can be an option when oral iron is not tolerated, and I would like to discuss whether I am eligible.';
+    Q5='Please could I have a repeat ferritin and FBC, and advice on whether IV iron infusion or another alternative to oral iron would be appropriate given my difficulty with standard treatment.';
+  } else {
+    var cq1='I am concerned my iron stores are not recovering as expected. My latest ferritin was '+fws(latestFerr)+testRef;
+    if(trendFalling) cq1+=' and levels appear to be falling';
+    if(isDeficit) cq1+=(trendFalling?', with':' — with')+' an ongoing iron deficit likely';
+    Q1=cq1+'. I would like blood tests to check current iron status.';
+    Q2=(function(){var t="Low ferritin has been an ongoing issue. I'm not confident current management is working well enough";if(trendFalling)t+=', as levels seem to be going down';t+='. I would like to understand whether anything more should be done.';return t;})();
+    Q3='I have tried'+(sD>0?' iron supplements':' dietary changes')+(lastInf?' and previously had an iron infusion ('+infDateS+')':'')+'. Despite this, iron stores remain lower than I would like.';
+    Q4="I am worried my iron stores are too low and may be affecting my energy and wellbeing. I would also be concerned if haemoglobin looked normal while ferritin was still significantly low — I don't want that to go unnoticed.";
+    Q5='Please could I have blood tests including FBC, ferritin and iron studies (TSAT and CRP) to check current status and whether my supplement dose or approach needs to change.';
+  }
+
+  function trim500(s){s=(s||'').trim().replace(/ {2,}/g,' ');if(s.length<=500)return s;var cut=s.lastIndexOf(' ',497);return s.slice(0,cut>0?cut:497)+'…';}
+
+  var texts=[
+    {q:'Describe the problem',t:trim500(Q1)},
+    {q:'How long has it been going on for? Is it getting better or worse?',t:trim500(Q2)},
+    {q:'Have you tried anything to help?',t:trim500(Q3)},
+    {q:"Is there anything you're particularly worried about?",t:trim500(Q4)},
+    {q:'How would you like us to help?',t:trim500(Q5)},
+    {q:'Best times to contact you',t:Q6}
+  ];
+
+  var html='';
+  texts.forEach(function(item,i){
+    html+='<div style="margin-bottom:14px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">';
+    html+='<label style="font-size:12px;font-weight:600;color:#1e293b">'+item.q+'</label>';
+    html+='<span style="font-size:11px" id="nhsCount'+i+'">0 / 500</span>';
+    html+='</div>';
+    html+='<textarea id="nhsField'+i+'" rows="4" style="width:100%;font-size:12px;padding:8px 10px;border:1px solid #e2e8f0;border-radius:7px;line-height:1.5;resize:vertical;box-sizing:border-box" oninput="nhsUpdateCount('+i+')"></textarea>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">';
+    html+='<span style="font-size:11px;color:#dc2626;visibility:hidden" id="nhsWarn'+i+'">⚠ Over 500 characters — please shorten</span>';
+    html+='<button onclick="nhsCopyField('+i+')" style="font-size:11px;padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;cursor:pointer;color:#475569">Copy</button>';
+    html+='</div>';
+    html+='</div>';
+  });
+  html+='<div style="display:flex;justify-content:flex-end;margin-top:6px">';
+  html+='<button onclick="nhsCopyAll()" style="font-size:12px;padding:6px 14px;background:#1e3a5f;color:#fff;border:none;border-radius:7px;cursor:pointer;font-weight:600">Copy all answers</button>';
+  html+='</div>';
+  html+='<div id="nhsCopyMsg" style="text-align:right;font-size:11px;color:#16a34a;margin-top:4px;display:none">✓ Copied to clipboard</div>';
+
+  el.innerHTML=html;
+  texts.forEach(function(item,i){var f=document.getElementById('nhsField'+i);if(f){f.value=item.t;nhsUpdateCount(i);}});
+}
+
+function nhsUpdateCount(i){
+  var f=document.getElementById('nhsField'+i);
+  var cnt=document.getElementById('nhsCount'+i);
+  var wrn=document.getElementById('nhsWarn'+i);
+  if(!f||!cnt)return;
+  var n=f.value.length;
+  cnt.textContent=n+' / 500';
+  cnt.style.color=n>500?'#dc2626':n>450?'#d97706':'#94a3b8';
+  if(wrn)wrn.style.visibility=n>500?'visible':'hidden';
+}
+
+function nhsCopyField(i){
+  var f=document.getElementById('nhsField'+i);if(!f)return;
+  var txt=f.value;
+  var msg=document.getElementById('nhsCopyMsg');
+  function ok(){if(msg){msg.style.display='';setTimeout(function(){msg.style.display='none';},2000);}}
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(ok).catch(function(){nhsFallbackCopy(txt,ok);});}
+  else{nhsFallbackCopy(txt,ok);}
+}
+
+function nhsCopyAll(){
+  var lbls=['Describe the problem','How long has it been going on for? Is it getting better or worse?','Have you tried anything to help?',"Is there anything you're particularly worried about?",'How would you like us to help?','Best times to contact you'];
+  var parts=[];
+  for(var i=0;i<6;i++){var f=document.getElementById('nhsField'+i);if(f&&f.value.trim())parts.push(lbls[i]+':\n'+f.value.trim());}
+  var txt=parts.join('\n\n');
+  var msg=document.getElementById('nhsCopyMsg');
+  function ok(){if(msg){msg.style.display='';setTimeout(function(){msg.style.display='none';},2000);}}
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(ok).catch(function(){nhsFallbackCopy(txt,ok);});}
+  else{nhsFallbackCopy(txt,ok);}
+}
+
+function nhsFallbackCopy(txt,cb){
+  var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');if(cb)cb();}catch(e){}
+  document.body.removeChild(ta);
 }
 
 function buildGPText(){return buildGPLetter().body;}
@@ -3271,7 +3535,7 @@ function doCopy(txt){
 
 function buildSessionData(name){
   var sliders=['cycleLen','bleedDays','flowInt','dietQ','suppDose','startFerr','modVitC','modTiming','modTea','modCa','modAntacid','stratTarget','adherenceSlider'];
-  var selects=['stratIVDose'];
+  var selects=['stratIVDose','ivDose','ivHorizon'];
   var formVal=document.querySelector('input[name="formulation"]:checked');
   var pmEl=document.getElementById('periodMgmt');
   var pillContIntEl=document.getElementById('pillContInterval');
@@ -3394,6 +3658,7 @@ function deleteSession(){
 var ivChartInst=null;
 var infusionAnalysisChartInsts=[];
 
+// Educational modelling floor used to prevent unrealistic negative ferritin projections.
 function renderInfusionAnalysis(){
   var section=document.getElementById('infusionAnalysisSection');
   if(!section)return;
@@ -3429,9 +3694,11 @@ function renderInfusionAnalysis(){
     var hFlowInt=+(inf.hFlowInt||2);
     var hFlowIdx=Math.max(0,hFlowInt-1);
     var hBleedDays=hNoPeriods?0:+(inf.hBleedDays||5);
-    var hCycleLen=Math.max(21,+(inf.hCycleLen||28));
+    var hCycleLenDefault={pill21:28,pill63:63,pillcont:105,mini:28,none:28}[hPmgmt]||28;
+    var hCycleLen=Math.max(21,+(inf.hCycleLen||hCycleLenDefault));
     var hSuppDose=+(inf.hSuppDose||0);
     var hDietQ=+(inf.hDietQ||3);
+    var hHb=+(inf.hHb||0);
 
     // Pre-infusion: nearest actual on or before infusion date (within 6 months)
     var preActuals=allActuals.filter(function(a){var d=parseDate(a.date);return d&&d<=infDate&&(infDate-d)<180*86400000;});
@@ -3443,19 +3710,94 @@ function renderInfusionAnalysis(){
     var postActuals=allActuals.filter(function(a){var d=parseDate(a.date);return d&&d>infDate&&(d-infDate)<548*86400000;});
 
     // Expected monthly net (mg/month → µg/L/month)
-    var hMlPerCycle=hNoPeriods?0:flowMl[hFlowIdx]*(hBleedDays/5);
-    var hMgLostMonth=(hMlPerCycle*0.5*(30/hCycleLen))+30;
-    var hSuppAbsMonth=hSuppDose>0?(hSuppDose*0.05*30):0; // ~5% absorption for post-infusion high ferritin
+    // Bleed days does not multiply blood volume — flow intensity category
+    // already represents total volume per cycle. Bleed days is duration only.
+    // A 25-day light bleed loses less iron than a 5-day very heavy bleed.
+    // Users entering high bleed days should check flow intensity reflects
+    // the actual heaviness, not just the duration.
+    var hMlPerCycle=hNoPeriods?0:flowMl[hFlowIdx];
+    var hMenstrualLossMonth=hNoPeriods?0:hMlPerCycle*0.5*(30/hCycleLen);
+    var hMgLostMonth=hMenstrualLossMonth+30;
+    var hSuppAbsMonth=hSuppDose>0?(hSuppDose*0.05*30):0;
     var hDietAbsMonth=DIET_MG[hDietQ]*0.04*30;
     var expectedDeclinePM=mg2f(hSuppAbsMonth+hDietAbsMonth-hMgLostMonth);
-    var estimatedPeak=preEstVal+mg2f(inf.dose);
 
-    // Actual post-infusion trend (if 2+ results span ≥1 month)
-    var actualDeclinePM=null;
+    // Tiered peak estimation based on Hb and anaemia severity.
+    // Research shows iron is prioritised for erythropoiesis when Hb is low,
+    // meaning a smaller fraction reaches ferritin stores acutely.
+    var ironToStoresFraction,peakConfidence,peakNote;
+    if(hHb>=120||hHb===0){
+      ironToStoresFraction=1.0;
+      peakConfidence=hHb===0?'medium':'high';
+      peakNote=hHb===0?'Enter pre-infusion haemoglobin above for a more accurate estimate.':'';
+    } else if(hHb>=110){
+      ironToStoresFraction=0.40;
+      peakConfidence='low';
+      peakNote='Moderate anaemia at time of infusion (Hb '+hHb+' g/L). A significant proportion of infused iron was used to correct haemoglobin rather than build stores. Peak estimate is uncertain — actual peak was likely in the range shown. A 4–6 week post-infusion blood test is the only way to confirm.';
+    } else {
+      ironToStoresFraction=0.20;
+      peakConfidence='very_low';
+      peakNote='Severe anaemia at time of infusion (Hb '+hHb+' g/L). Research shows ferritin may not rise significantly until haemoglobin normalises in severe iron deficiency anaemia. This estimate has a very wide uncertainty range. A 4–6 week post-infusion blood test is essential to establish the true peak.';
+    }
+    var ironForStores=inf.dose*ironToStoresFraction;
+    var estimatedPeak=preEstVal+(ironForStores/8);
+    var peakLow=Math.max(preEstVal+5,preEstVal+(inf.dose*(ironToStoresFraction-0.15)/8));
+    var peakHigh=preEstVal+(inf.dose*Math.min(ironToStoresFraction+0.20,0.90)/8);
+    var lowConf=(peakConfidence==='low'||peakConfidence==='very_low');
+
+    // Actual-to-actual rate between first and last confirmed post-infusion results
+    var firstPost=postActuals.length?postActuals[0]:null;
+    var monthsToFirst=null,actualRateFromPeak=null;
+    var actualToActualRate=null,actualToActualInfo=null;
     if(postActuals.length>=2){
-      var pa0=postActuals[0],paLast=postActuals[postActuals.length-1];
-      var mSpan=(parseDate(paLast.date)-parseDate(pa0.date))/(30.44*86400000);
-      if(mSpan>=1) actualDeclinePM=(paLast.ferritin-pa0.ferritin)/mSpan;
+      var _pa0=postActuals[0],_pa1=postActuals[postActuals.length-1];
+      var _pa0d=parseDate(_pa0.date),_pa1d=parseDate(_pa1.date);
+      if(_pa0d&&_pa1d&&_pa1d>_pa0d){
+        var _a2aMo=+((_pa1d-_pa0d)/(30.44*86400000)).toFixed(1);
+        if(_a2aMo>=1){
+          actualToActualRate=+((_pa0.ferritin-_pa1.ferritin)/_a2aMo).toFixed(2);
+          actualToActualInfo={from:_pa0,to:_pa1,months:_a2aMo};
+        }
+      }
+    }
+    if(firstPost){
+      var fp0d=parseDate(firstPost.date);
+      if(fp0d){
+        monthsToFirst=+(((fp0d-infDate)/(30.44*86400000)).toFixed(1));
+        // Peak-to-first rate only when confidence is high or medium
+        if(monthsToFirst>=0.5&&!lowConf){
+          var peakDrop=estimatedPeak-firstPost.ferritin;
+          actualRateFromPeak=+(peakDrop/monthsToFirst).toFixed(2);
+        }
+      }
+    }
+
+    // Decline rate between the last two post-infusion actuals (most recent trajectory)
+    var lastTwoRate=null;
+    if(postActuals.length>=2){
+      var _lt0=postActuals[postActuals.length-2],_lt1=postActuals[postActuals.length-1];
+      var _lt0d=parseDate(_lt0.date),_lt1d=parseDate(_lt1.date);
+      if(_lt0d&&_lt1d&&_lt1d>_lt0d){
+        var _ltMo=+((_lt1d-_lt0d)/(30.44*86400000)).toFixed(1);
+        if(_ltMo>=0.5) lastTwoRate=+((_lt0.ferritin-_lt1.ferritin)/_ltMo).toFixed(2);
+      }
+    }
+
+    // Back-projection: project confirmed actual-to-actual decline rate backwards from first actual
+    // to estimate a plausible post-infusion peak — useful when formula peak is unreliable (anaemia)
+    var drawBackProjection=actualToActualInfo!==null&&(lowConf||(peakConfidence==='medium'&&preEstVal<30));
+    var backProjPeak=null;
+    if(drawBackProjection&&actualToActualInfo){
+      var _bpAct1=actualToActualInfo.from;
+      var _bpAct1d=parseDate(_bpAct1.date);
+      if(_bpAct1d){
+        var _bpMo=(_bpAct1d-infDate)/(30.44*86400000);
+        var _bpRaw=_bpAct1.ferritin+(actualToActualRate*_bpMo);
+        var _bpFormula=preEstVal+(inf.dose/8);
+        _bpRaw=Math.min(_bpRaw,_bpFormula);
+        _bpRaw=Math.max(_bpRaw,_bpAct1.ferritin+5);
+        backProjPeak=rnd(_bpRaw);
+      }
     }
 
     // Build inputs HTML
@@ -3473,48 +3815,181 @@ function renderInfusionAnalysis(){
     if(!hNoPeriods){
       condHtml+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">';
       condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Cycle length (days)</label><input type="number" min="21" max="90" value="'+hCycleLen+'" onchange="historicInfusions['+oi+'].hCycleLen=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
-      condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Bleed days</label><input type="number" min="0" max="14" value="'+hBleedDays+'" onchange="historicInfusions['+oi+'].hBleedDays=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
+      var bleedWarnHtml='';
+      if(hBleedDays>15) bleedWarnHtml='<div style="font-size:10px;color:#dc2626;margin-top:3px;line-height:1.4">'+hBleedDays+' bleed days is clinically very unusual and may be producing unreliable estimates. Please verify this input.</div>';
+      else if(hBleedDays>10&&hPmgmt.startsWith('pill')) bleedWarnHtml='<div style="font-size:10px;color:#b45309;margin-top:3px;line-height:1.4">'+hBleedDays+' bleed days is unusually long for a withdrawal bleed — typical is 4–7 days. Please check this input. If bleeding is genuinely this prolonged, this warrants clinical review beyond iron management.</div>';
+      var bleedHelperNote='<div style="font-size:10px;color:#94a3b8;margin-top:3px;line-height:1.4">Flow intensity reflects how heavy each bleed is, not how long it lasts. A longer bleed at light flow loses less iron than a shorter very heavy bleed.</div>';
+      condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Bleed days</label><input type="number" min="0" max="'+hCycleLen+'" value="'+hBleedDays+'" onchange="historicInfusions['+oi+'].hBleedDays=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+bleedWarnHtml+bleedHelperNote+'</div>';
       condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Flow intensity</label><select onchange="historicInfusions['+oi+'].hFlowInt=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">'+selOpts(flowOpts,hFlowInt)+'</select></div>';
       condHtml+='</div>';
     }
     condHtml+='<div style="display:grid;grid-template-columns:1fr'+(preFromData?'':' 1fr')+';gap:8px">';
     condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Oral iron supplement at the time (elemental mg/day, 0 if none)</label><input type="number" min="0" max="390" value="'+hSuppDose+'" onchange="historicInfusions['+oi+'].hSuppDose=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
     if(!preFromData) condHtml+='<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Pre-infusion ferritin estimate (µg/L)</label><input type="number" min="1" max="300" value="'+(inf.preEstFerr||25)+'" onchange="historicInfusions['+oi+'].preEstFerr=+this.value;renderInfusionAnalysis();autoSave()" style="width:100%;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px"></div>';
-    condHtml+='</div></div>';
+    condHtml+='</div>';
+    condHtml+='<div style="margin-top:8px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:3px">Pre-infusion haemoglobin — <em>optional, improves peak estimate accuracy</em> (g/L)</label>';
+    condHtml+='<input type="number" min="70" max="170" placeholder="e.g. 111" value="'+(inf.hHb>0?inf.hHb:'')+'" onchange="historicInfusions['+oi+'].hHb=+this.value;renderInfusionAnalysis();autoSave()" style="width:120px;font-size:12px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px">';
+    condHtml+='<div style="font-size:10px;color:#94a3b8;margin-top:3px;line-height:1.4">If you had a full blood count at the same time as your ferritin test, enter the haemoglobin here. This helps the model account for iron being used to correct anaemia rather than building stores.</div></div>';
+    condHtml+='</div>';
 
-    // Commentary
+    // Store tooltip data for this infusion block
+    var iaKey='ia_'+idx;
+    window._ctipData[iaKey]={
+      dose:inf.dose,preEstVal:preEstVal,
+      estimatedPeak:rnd(estimatedPeak),peakLow:rnd(peakLow),peakHigh:rnd(peakHigh),peakConfidence:peakConfidence,
+      pmgmtLabel:PMGMT_LABELS[hPmgmt]||hPmgmt,
+      noPeriods:hNoPeriods,
+      flowLabel:FLOW_LABELS[hFlowInt-1]||hFlowInt,
+      bleedDays:hBleedDays,
+      cycleLen:hCycleLen,
+      suppDose:hSuppDose,
+      dietLabel:DIET_LABELS[hDietQ]||hDietQ,
+      flowMlCycle:rnd(hMlPerCycle),
+      menstrualLossMgMonth:rnd(hMenstrualLossMonth||0),
+      dietAbsMgMonth:rnd(hDietAbsMonth),
+      suppAbsMgMonth:rnd(hSuppAbsMonth),
+      totalLossMgMonth:rnd(hMgLostMonth),
+      netDeficitMgMonth:rnd(Math.max(0,hMgLostMonth-hSuppAbsMonth-hDietAbsMonth)),
+      expectedDeclinePM:+(Math.abs(expectedDeclinePM).toFixed(1))
+    };
+
     var commentParts=[];
-    commentParts.push('<strong>Pre-infusion ferritin:</strong> <strong>'+preEstVal+'</strong> µg/L '+(preFromData?'(from blood test '+fmtD(preResult.date)+')':'(estimated — no blood test found within 6 months before this date)')+'. Estimated ferritin immediately post-infusion: ~<strong>'+rnd(estimatedPeak)+'</strong> µg/L.');
-    var decDesc=expectedDeclinePM<-0.1?rnd(Math.abs(expectedDeclinePM)*10)/10+' µg/L/month decline':expectedDeclinePM>0.1?rnd(expectedDeclinePM*10)/10+' µg/L/month rise (intake exceeds losses)':'approximately stable';
-    commentParts.push('<strong>Expected post-infusion trend:</strong> '+decDesc+' based on the conditions above ('+rnd(hMgLostMonth)+' mg/month losses − '+rnd(hSuppAbsMonth+hDietAbsMonth)+' mg/month absorbed = '+rnd(hMgLostMonth-hSuppAbsMonth-hDietAbsMonth)+' mg/month net deficit).');
-    if(actualDeclinePM!==null){
-      var actAbs=Math.abs(actualDeclinePM);
-      var actDesc=(actualDeclinePM<0?rnd(actAbs*10)/10+' µg/L/month decline':'rising at '+rnd(actAbs*10)/10+' µg/L/month');
-      var compare='';
-      if(expectedDeclinePM<-0.1){
-        var expAbs=Math.abs(expectedDeclinePM);
-        var ratio=actualDeclinePM/expectedDeclinePM;
-        if(actualDeclinePM<0&&ratio>1.3) compare='<strong style="color:#dc2626">Faster than expected</strong> ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). This may indicate higher actual losses or lower absorption than estimated. The conditions above may underestimate blood loss during this period — worth reviewing with your GP, as it can inform how frequently repeat infusions may be needed.';
-        else if(actualDeclinePM<0&&ratio<0.75) compare='<strong style="color:#16a34a">Slower than expected</strong> ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). Ferritin held better than the model predicted — possible reasons include a supplement or dietary improvement during this period, or the model is overestimating blood loss.';
-        else if(actualDeclinePM>=0) compare='<strong style="color:#16a34a">Better than expected</strong> — ferritin was stable or rising, whereas the model predicted a decline. Iron intake appears to have exceeded losses during this period.';
-        else compare='Broadly as expected ('+rnd(actAbs*10)/10+' vs '+rnd(expAbs*10)/10+' µg/L/month). The model and actual data are consistent — the conditions entered above appear to be a reasonable estimate of your iron balance at that time.';
-      } else {
-        compare='Model predicted stable or rising ferritin; actual was: '+actDesc+'.';
-      }
-      commentParts.push('<strong>Actual post-infusion trend:</strong> '+actDesc+' (based on '+postActuals.length+' blood tests over '+rnd(((parseDate(postActuals[postActuals.length-1].date)-parseDate(postActuals[0].date))/(30.44*86400000))*10)/10+' months). '+compare);
-    } else if(postActuals.length===1){
-      var d1=parseDate(postActuals[0].date);
-      var mAfter=(d1-infDate)/(30.44*86400000);
-      var expAt=estimatedPeak+expectedDeclinePM*mAfter;
-      var diff=postActuals[0].ferritin-expAt;
-      var diffDesc=Math.abs(diff)<8?'broadly as expected':diff<-8?'<strong style="color:#b45309">'+rnd(Math.abs(diff))+' µg/L below expected</strong>':'<strong style="color:#16a34a">'+rnd(diff)+' µg/L above expected</strong>';
-      commentParts.push('<strong>Post-infusion check ('+rnd(mAfter*10)/10+' months later):</strong> '+postActuals[0].ferritin+' µg/L vs model estimate of '+rnd(expAt)+' µg/L — '+diffDesc+'. Add more blood test results on the Actual Results tab to derive a full trend rate.');
+    var preDesc=preFromData?'blood test '+fmtD(preResult.date):'estimated';
+
+    // Line 1 — pre-infusion ferritin + confidence-tiered peak statement
+    var line1='<strong>Pre-infusion ferritin:</strong> <strong>'+preEstVal+'</strong> µg/L (~'+fwsMg(preEstVal)+' mg estimated stored iron) ('+preDesc+'). ';
+    if(peakConfidence==='high'){
+      line1+='Estimated post-infusion peak: ~<strong><span data-ctip="ctip-ia-peak-'+idx+'">'+rnd(estimatedPeak)+'</span></strong> µg/L (~'+fwsMg(rnd(estimatedPeak))+' mg estimated stored iron).';
+    } else if(peakConfidence==='medium'){
+      line1+='Estimated post-infusion peak: ~<strong><span data-ctip="ctip-ia-peak-'+idx+'">'+rnd(estimatedPeak)+'</span></strong> µg/L (~'+fwsMg(rnd(estimatedPeak))+' mg estimated stored iron) <span style="color:#94a3b8;font-size:11px">(enter haemoglobin above for better accuracy)</span>.';
+    } else if(peakConfidence==='low'){
+      line1+='Estimated post-infusion peak: ~<strong><span data-ctip="ctip-ia-peak-'+idx+'">'+rnd(estimatedPeak)+'</span></strong> µg/L (~'+fwsMg(rnd(estimatedPeak))+' mg estimated stored iron) <span style="color:#b45309;font-size:11px">(range approximately <strong>'+rnd(peakLow)+'–'+rnd(peakHigh)+'</strong> µg/L — anaemia present, wide uncertainty)</span>.';
     } else {
-      commentParts.push('<span style="color:#94a3b8;font-style:italic">No blood test results found after this infusion date. Add ferritin results on the Actual Results tab to enable post-infusion analysis.</span>');
+      line1+='Estimated post-infusion peak: approximately <span data-ctip="ctip-ia-peak-'+idx+'"><strong>'+rnd(peakLow)+'–'+rnd(peakHigh)+'</strong></span> µg/L <span style="color:#dc2626;font-size:11px">(severe anaemia present — estimate unreliable, actual peak may be much lower than formula suggests)</span>.';
     }
+    commentParts.push(line1);
+    if(lowConf&&peakNote) commentParts.push('<span style="color:#94a3b8;font-size:11px;font-style:italic">'+peakNote+'</span>');
+    if(drawBackProjection&&backProjPeak!==null&&actualToActualRate!==null){
+      var _bpRate=+(Math.abs(actualToActualRate).toFixed(1));
+      commentParts.push('<span style="color:#94a3b8;font-size:11px;font-style:italic">Grey dotted line: using your confirmed decline rate of '+_bpRate+' µg/L/month between your actual results, the post-infusion peak may have been approximately '+backProjPeak+' µg/L — much closer to the first actual result than the formula estimate. This is speculative and varies widely between patients, particularly when anaemia was present at infusion.</span>');
+    }
+
+    var estTodayFerr=null;
+
+    if(firstPost){
+      var mStr=monthsToFirst!==null?monthsToFirst+' months later':'';
+      commentParts.push('<strong>Next result:</strong> <strong>'+firstPost.ferritin+'</strong> µg/L (~'+fwsMg(firstPost.ferritin)+' mg estimated stored iron) on '+fmtD(firstPost.date)+(mStr?' ('+mStr+')':'')+'.');
+
+      if(!lowConf){
+        // High/medium: use peak-to-first-actual rate
+        if(actualRateFromPeak!==null){
+          window._ctipData[iaKey].firstPostFerr=firstPost.ferritin;
+          window._ctipData[iaKey].monthsToFirst=monthsToFirst;
+          window._ctipData[iaKey].actualRateFromPeak=+(Math.abs(actualRateFromPeak).toFixed(1));
+          var actAbs=+(Math.abs(actualRateFromPeak).toFixed(1));
+          var expAbs=+(Math.abs(expectedDeclinePM).toFixed(1));
+          var verdict='';
+          if(expectedDeclinePM<-0.1){
+            var ratio=actualRateFromPeak>0?actualRateFromPeak/expAbs:0;
+            if(actualRateFromPeak<=0) verdict='✅ <strong style="color:#16a34a">Better than expected</strong> — ferritin was stable or rising.';
+            else if(ratio>1.3) verdict='🔴 <strong style="color:#dc2626">Faster than expected</strong> — losses may be higher than entered, or absorption lower than expected. Worth discussing with your GP.';
+            else if(ratio<0.7) verdict='🟢 <strong style="color:#16a34a">Slower than expected</strong> — levels holding better than conditions predict — a positive sign.';
+            else verdict='✅ <strong style="color:#16a34a">Within expected range</strong> — losses and absorption broadly consistent with entered conditions.';
+          } else if(expectedDeclinePM>0.1){
+            if(actualRateFromPeak>0) verdict='🔴 <strong style="color:#dc2626">Declined despite predicted rise</strong> — review supplement dose or absorption assumptions.';
+            else verdict='✅ <strong style="color:#16a34a">Stable or improving</strong> — consistent with model prediction.';
+          } else {
+            verdict='Actual decline: '+actAbs+' µg/L/month (model predicted approximately stable).';
+          }
+          commentParts.push('<strong>Decline rate:</strong> actual <strong><span data-ctip="ctip-ia-act-'+idx+'">'+actAbs+'</span></strong> µg/L/month vs model expected <strong><span data-ctip="ctip-ia-exp-'+idx+'">'+expAbs+'</span></strong> µg/L/month. '+verdict);
+          if(expectedDeclinePM<-0.1&&actualRateFromPeak>0){
+            var cRatio=actualRateFromPeak/expAbs;
+            var cLine='';
+            if(cRatio>=0.7&&cRatio<=1.3) cLine='The entered conditions appear to reflect this period well — the model and your results are telling the same story.';
+            else if(cRatio>1.3&&hBleedDays>15) cLine='Given the high bleed days entered, losses may genuinely be this high — if the actual decline correlates with your experience, your entered conditions may in fact be accurate.';
+            else if(cRatio>1.3) cLine='The entered conditions may underestimate actual losses — or absorption was lower than expected during this period.';
+            else cLine='Blood loss may be lower than entered, absorption better than assumed, or a positive change occurred during this period.';
+            commentParts.push('<span style="color:#64748b">'+cLine+'</span>');
+          }
+          if(actualRateFromPeak>0){
+            var _lp=postActuals[postActuals.length-1];
+            var _lpDate=parseDate(_lp.date);
+            var _todayNow=new Date();
+            if(_lpDate&&_lpDate<_todayNow){
+              var _mSince=+((_todayNow-_lpDate)/(30.44*86400000)).toFixed(1);
+              if(_mSince>=0.3){var _rawToday=+(_lp.ferritin-actualRateFromPeak*_mSince).toFixed(0);estTodayFerr=Math.max(FERRITIN_FLOOR,_rawToday);}
+            }
+          }
+          if(estTodayFerr!==null){
+            var _ec5=estTodayFerr<30?'#dc2626':estTodayFerr<50?'#b45309':'#16a34a';
+            var _action=estTodayFerr<30?' 🔴 A current blood test is strongly recommended.':estTodayFerr<50?' ⚠️ Below sufficiency threshold — consider booking a blood test.':' ✅ Still above sufficiency threshold.';
+            commentParts.push('<strong>Estimated ferritin today:</strong> ~<strong style="color:'+_ec5+'">'+estTodayFerr+'</strong> µg/L (~'+fwsMg(estTodayFerr)+' mg estimated stored iron).'+_action);
+          }
+          if(actualRateFromPeak>0&&estimatedPeak>15){
+            var _durRows=[[50,'sufficiency threshold'],[30,'depleted threshold'],[15,'critical zone']].filter(function(t){return estimatedPeak>t[0];}).map(function(t){
+              var _mt=(estimatedPeak-t[0])/actualRateFromPeak;
+              var _dd=new Date(infDate.getFullYear(),infDate.getMonth()+Math.round(_mt),1);
+              var _ip=_dd<=new Date();
+              return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-top:1px solid #f1f5f9"><span style="color:#64748b">Above '+t[0]+' µg/L ('+t[1]+')</span><span style="font-weight:600;color:'+(_ip?'#94a3b8':'#1e293b')+'">~'+(+(Math.round(_mt*10)/10)).toFixed(1)+' months → '+MNAMES[_dd.getMonth()]+' '+_dd.getFullYear()+(_ip?' ✓ passed':' (upcoming)')+'</span></div>';
+            }).join('');
+            if(_durRows) commentParts.push('<strong>Infusion duration by threshold</strong> <span style="color:#94a3b8;font-size:11px">(at actual decline rate of '+actAbs+' µg/L/month from peak of ~'+rnd(estimatedPeak)+' µg/L)</span>:<div style="margin-top:4px">'+_durRows+'</div>');
+          }
+        } else if(monthsToFirst!==null&&monthsToFirst<0.5){
+          commentParts.push('<span style="color:#94a3b8;font-style:italic">First post-infusion result too soon to derive a decline rate — add a later result.</span>');
+        }
+      } else {
+        // Low/very_low: flag peak-to-actual as unreliable; show actual-to-actual between confirmed results
+        commentParts.push('<span style="color:#b45309;font-size:11px">⚠️ Decline rate from estimated peak to first result ('+fmtD(firstPost.date)+') is not shown — when anaemia was present at infusion, the estimated peak is too uncertain to calculate a meaningful rate from it.</span>');
+        if(actualToActualRate!==null&&actualToActualInfo){
+          var a2aAbs=+(Math.abs(actualToActualRate).toFixed(1));
+          var expAbsLow=+(Math.abs(expectedDeclinePM).toFixed(1));
+          var a2aVerdict='';
+          if(expectedDeclinePM<-0.1){
+            var a2aRatio=actualToActualRate>0?actualToActualRate/expAbsLow:0;
+            if(actualToActualRate<=0) a2aVerdict='✅ <strong style="color:#16a34a">Better than expected</strong> — ferritin stable or rising between confirmed results.';
+            else if(a2aRatio>1.3) a2aVerdict='🔴 <strong style="color:#dc2626">Faster than expected</strong> — losses may be higher than entered, or absorption lower than expected.';
+            else if(a2aRatio<0.7) a2aVerdict='🟢 <strong style="color:#16a34a">Slower than expected</strong> — levels holding better than conditions predict.';
+            else a2aVerdict='✅ <strong style="color:#16a34a">Within expected range</strong> — consistent with entered conditions.';
+          } else {
+            a2aVerdict='Model predicted approximately stable; confirmed results show '+a2aAbs+' µg/L/month change.';
+          }
+          commentParts.push('<strong>Confirmed decline rate (result to result):</strong> <strong>'+a2aAbs+'</strong> µg/L/month ('+fmtD(actualToActualInfo.from.date)+' '+actualToActualInfo.from.ferritin+' µg/L → '+fmtD(actualToActualInfo.to.date)+' '+actualToActualInfo.to.ferritin+' µg/L). <span style="color:#16a34a">This is the reliable figure.</span> vs model expected <strong>'+expAbsLow+'</strong> µg/L/month. '+a2aVerdict);
+          if(actualToActualRate>0){
+            var _lp2=postActuals[postActuals.length-1];
+            var _lp2Date=parseDate(_lp2.date);
+            var _now2=new Date();
+            if(_lp2Date&&_lp2Date<_now2){
+              var _ms2=+((_now2-_lp2Date)/(30.44*86400000)).toFixed(1);
+              if(_ms2>=0.3){var _raw2=+(_lp2.ferritin-actualToActualRate*_ms2).toFixed(0);estTodayFerr=Math.max(FERRITIN_FLOOR,_raw2);}
+            }
+          }
+          if(estTodayFerr!==null){
+            var _ec6=estTodayFerr<30?'#dc2626':estTodayFerr<50?'#b45309':'#16a34a';
+            var _act2=estTodayFerr<30?' 🔴 A current blood test is strongly recommended.':estTodayFerr<50?' ⚠️ Below sufficiency threshold — consider booking a blood test.':' ✅ Still above sufficiency threshold.';
+            commentParts.push('<strong>Estimated ferritin today:</strong> ~<strong style="color:'+_ec6+'">'+estTodayFerr+'</strong> µg/L.'+_act2);
+          }
+          if(actualToActualRate>0&&actualToActualInfo.from.ferritin>15){
+            var _startF=actualToActualInfo.from.ferritin;
+            var _startD=parseDate(actualToActualInfo.from.date);
+            var _durRowsA=[[50,'sufficiency threshold'],[30,'depleted threshold'],[15,'critical zone']].filter(function(t){return _startF>t[0];}).map(function(t){
+              var _mt2=(_startF-t[0])/actualToActualRate;
+              var _dd2=new Date(_startD.getFullYear(),_startD.getMonth()+Math.round(_mt2),1);
+              var _ip2=_dd2<=new Date();
+              return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-top:1px solid #f1f5f9"><span style="color:#64748b">Above '+t[0]+' µg/L ('+t[1]+')</span><span style="font-weight:600;color:'+(_ip2?'#94a3b8':'#1e293b')+'">~'+(+(Math.round(_mt2*10)/10)).toFixed(1)+' months → '+MNAMES[_dd2.getMonth()]+' '+_dd2.getFullYear()+(_ip2?' ✓ passed':' (upcoming)')+'</span></div>';
+            }).join('');
+            if(_durRowsA) commentParts.push('<strong>Duration from first confirmed result by threshold</strong> <span style="color:#94a3b8;font-size:11px">(at confirmed decline rate of '+a2aAbs+' µg/L/month)</span>:<div style="margin-top:4px">'+_durRowsA+'</div>');
+          }
+        }
+      }
+    } else {
+      commentParts.push('<span style="color:#94a3b8;font-style:italic">No post-infusion blood test results found — add ferritin results on the Actual Results tab to enable analysis.</span>');
+    }
+
+    var clinicalNoteHtml=lowConf?'<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#1e40af;line-height:1.6">📋 <strong>Note:</strong> This patient was anaemic at the time of infusion. The post-infusion ferritin peak cannot be reliably estimated from the dose formula alone. The most important clinical action is a ferritin blood test 4–6 weeks after infusion to confirm the actual peak — this transforms the reliability of all subsequent monitoring.</div>':'';
 
     var block='<div style="margin-bottom:16px;padding:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px">';
     block+='<div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px">'+fmtD(inf.date)+' — '+inf.dose+' mg IV infusion</div>';
+    block+=clinicalNoteHtml;
     block+=condHtml;
     block+='<div style="position:relative;width:100%;height:220px;margin-bottom:6px"><canvas id="'+cid+'"></canvas></div>';
     block+='<div id="iaLegend_'+idx+'" style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#64748b;margin-bottom:10px"></div>';
@@ -3522,13 +3997,47 @@ function renderInfusionAnalysis(){
       commentParts.map(function(p){return '<p style="margin:0 0 6px 0">'+p+'</p>';}).join('')+'</div>';
     block+='</div>';
     htmlParts.push(block);
-    chartJobs.push({idx:idx,inf:inf,infDate:infDate,estimatedPeak:estimatedPeak,expectedDeclinePM:expectedDeclinePM,allActuals:allActuals,cid:cid});
+    chartJobs.push({idx:idx,inf:inf,infDate:infDate,estimatedPeak:estimatedPeak,expectedDeclinePM:expectedDeclinePM,allActuals:allActuals,cid:cid,estTodayFerr:estTodayFerr,actualRateFromPeak:actualRateFromPeak,peakConfidence:peakConfidence,peakLow:peakLow,peakHigh:peakHigh,actualToActualRate:actualToActualRate,lowConf:lowConf,drawBackProjection:drawBackProjection,backProjPeak:backProjPeak,actualToActualInfo:actualToActualInfo,preEstVal:preEstVal,lastTwoRate:lastTwoRate});
   });
+
+  var eduPanels=
+    // Blood test markers panel (Part 6)
+    '<details style="margin-bottom:10px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">'+
+    '<summary style="padding:10px 12px;font-size:12px;font-weight:600;color:#1e293b;background:#f8fafc;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">'+
+    'What to check on blood results <span style="color:#94a3b8;font-weight:400;font-size:11px">▼ expand</span></summary>'+
+    '<div style="padding:10px 12px;font-size:11px;color:#475569;line-height:1.7">'+
+    '<p style="margin:0 0 8px 0;color:#64748b;font-style:italic">These markers can help you understand what your clinician may look at. This tool does not diagnose anaemia or interpret blood tests.</p>'+
+    '<table style="width:100%;border-collapse:collapse">'+
+    '<tr style="background:#f1f5f9"><td style="padding:4px 6px;font-weight:600;width:110px">Ferritin</td><td style="padding:4px 6px">Storage iron marker. Usually falls early in deficiency. Can be falsely normal or high during inflammation, illness or infection.</td></tr>'+
+    '<tr><td style="padding:4px 6px;font-weight:600">Haemoglobin</td><td style="padding:4px 6px">Oxygen-carrying protein in red blood cells. May remain normal in early iron deficiency. Can fall later if deficiency progresses.</td></tr>'+
+    '<tr style="background:#f1f5f9"><td style="padding:4px 6px;font-weight:600">MCV</td><td style="padding:4px 6px">Mean cell volume — average red blood cell size. May become low in iron deficiency anaemia. Often normal in early deficiency.</td></tr>'+
+    '<tr><td style="padding:4px 6px;font-weight:600">MCH</td><td style="padding:4px 6px">Mean cell haemoglobin — haemoglobin content per red blood cell. May fall before or alongside MCV. Low MCH can suggest iron-restricted red blood cell production.</td></tr>'+
+    '<tr style="background:#f1f5f9"><td style="padding:4px 6px;font-weight:600">MCHC</td><td style="padding:4px 6px">Mean cell haemoglobin concentration. May fall in more established microcytic or hypochromic anaemia.</td></tr>'+
+    '<tr><td style="padding:4px 6px;font-weight:600">RDW</td><td style="padding:4px 6px">Red cell distribution width. May rise when red blood cell sizes become more variable.</td></tr>'+
+    '<tr style="background:#f1f5f9"><td style="padding:4px 6px;font-weight:600">Transferrin sat.</td><td style="padding:4px 6px">Reflects available circulating iron (TSAT). May fall when iron supply becomes insufficient for red blood cell production.</td></tr>'+
+    '<tr><td style="padding:4px 6px;font-weight:600">Serum iron</td><td style="padding:4px 6px">Variable — can fluctuate day-to-day. Should not usually be interpreted alone.</td></tr>'+
+    '<tr style="background:#f1f5f9"><td style="padding:4px 6px;font-weight:600">TIBC / transferrin</td><td style="padding:4px 6px">Transferrin binding capacity. May rise in iron deficiency; helps interpret TSAT.</td></tr>'+
+    '<tr><td style="padding:4px 6px;font-weight:600">CRP</td><td style="padding:4px 6px">Inflammation marker. Ferritin may rise during inflammation or infection and underestimate true deficiency.</td></tr>'+
+    '</table></div></details>'+
+    // Typical progression panel (Part 7)
+    '<details style="margin-bottom:10px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">'+
+    '<summary style="padding:10px 12px;font-size:12px;font-weight:600;color:#1e293b;background:#f8fafc;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">'+
+    'Typical progression pattern in iron deficiency <span style="color:#94a3b8;font-weight:400;font-size:11px">▼ expand</span></summary>'+
+    '<div style="padding:10px 12px;font-size:11px;color:#475569;line-height:1.7">'+
+    '<p style="margin:0 0 6px 0;color:#64748b;font-style:italic">Patterns vary significantly between individuals and do not always follow a fixed sequence. These are possible trends, not guaranteed progressions.</p>'+
+    '<div style="margin-bottom:6px"><strong style="color:#ca8a04">Stage 1 — Low iron stores</strong><br>Ferritin commonly falls early in iron deficiency. Haemoglobin often remains normal. MCV and MCH are often still within range.</div>'+
+    '<div style="margin-bottom:6px"><strong style="color:#b45309">Stage 2 — Iron-restricted red blood cell production</strong><br>Ferritin may be very low. Transferrin saturation can fall. MCH and/or MCV may trend downward as iron-restricted red blood cell production develops. Haemoglobin may still be borderline normal.</div>'+
+    '<div style="margin-bottom:6px"><strong style="color:#dc2626">Stage 3 — Iron deficiency anaemia</strong><br>Ferritin often low. Haemoglobin may fall below normal. MCV and MCH may be low. RDW may be raised.</div>'+
+    '<p style="margin:6px 0 0 0;color:#64748b;font-style:italic;font-size:10px">This model is intended to illustrate possible iron-storage trends and physiological patterns rather than reproduce exact biological behaviour.</p>'+
+    '</div></details>'+
+    // Inflammation caveat (Part 8)
+    '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:11px;color:#64748b;line-height:1.6;margin-bottom:12px">'+
+    '<strong>Note on inflammation:</strong> Ferritin can rise during inflammation, illness, liver disease or infection and may not always reflect true available iron stores. A high ferritin result alongside active illness may underestimate the degree of iron deficiency.</div>';
 
   section.innerHTML=
     '<div class="st">Past infusion analysis</div>'+
     '<p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.5">Set the approximate conditions at the time of each past infusion. The model estimates what your ferritin trajectory should have looked like, and compares it against your actual blood test results — helping identify whether iron loss was higher or lower than expected.</p>'+
-    htmlParts.join('');
+    htmlParts.join('')+eduPanels;
 
   chartJobs.forEach(function(job){renderInfusionAnalysisChart(job);});
 }
@@ -3549,12 +4058,15 @@ function renderInfusionAnalysisChart(job){
     monthCount++;
   }
 
-  // Expected trajectory
+  // Expected trajectory — always starts from estimatedPeak midpoint
+  // For low/very_low confidence: reduced opacity to signal uncertainty
   var expData=new Array(monthCount).fill(null);
   if(infIdx>=0){
     expData[infIdx]=job.estimatedPeak;
-    for(var m=infIdx+1;m<monthCount;m++) expData[m]=Math.max(0,+(expData[m-1]+job.expectedDeclinePM).toFixed(1));
+    for(var m=infIdx+1;m<monthCount;m++) expData[m]=Math.max(FERRITIN_FLOOR,+(expData[m-1]+job.expectedDeclinePM).toFixed(1));
   }
+  var expColor=job.lowConf?'rgba(59,130,246,0.4)':'#3b82f6';
+  var expLabel=job.lowConf?'Expected trajectory — reduced confidence (anaemia at infusion)':'Expected trajectory';
 
   // Actual readings mapped to month slots
   var actData=new Array(monthCount).fill(null);
@@ -3565,34 +4077,229 @@ function renderInfusionAnalysisChart(job){
     if(mi>=0&&mi<monthCount) actData[mi]=actData[mi]===null?a.ferritin:Math.max(actData[mi],a.ferritin);
   });
 
-  var allVals=expData.concat(actData,[50,30]).filter(function(v){return v!=null&&v>0;});
+  // Pre-infusion actual (for trend line anchor, lower boundary, back-projection)
+  var preActForTrend=null;
+  job.allActuals.forEach(function(a){
+    var ad=parseDate(a.date);
+    if(ad&&ad<infDate) preActForTrend={date:a.date,ferritin:a.ferritin};
+  });
+  var tpmi=-1;
+  if(preActForTrend){
+    var tpad=parseDate(preActForTrend.date);
+    tpmi=(tpad.getFullYear()-wStart.getFullYear())*12+(tpad.getMonth()-wStart.getMonth());
+  }
+
+  // First post-infusion actual (needed for boundary endpoints)
+  var postActsList=job.allActuals.filter(function(a){var d=parseDate(a.date);return d&&d>infDate;});
+  var firstPostAct=postActsList.length?postActsList[0]:null;
+  var act1MI=-1;
+  if(firstPostAct){
+    var _fa1d=parseDate(firstPostAct.date);
+    if(_fa1d) act1MI=(_fa1d.getFullYear()-wStart.getFullYear())*12+(_fa1d.getMonth()-wStart.getMonth());
+  }
+
+  // Uncertainty band: draw when Hb was low or ferritin <30, AND at least one post-infusion result
+  var drawUncertaintyBand=firstPostAct!==null&&(job.lowConf||(job.peakConfidence==='medium'&&job.preEstVal<30));
+
+  var now=new Date();
+  var todayMI=(now.getFullYear()-wStart.getFullYear())*12+(now.getMonth()-wStart.getMonth());
+  var showTodayIA=todayMI>=0&&todayMI<monthCount;
+
+  // Main line dataset — two behaviours depending on uncertainty band
+  var mainLineArr=new Array(monthCount).fill(null);
+  if(!drawUncertaintyBand){
+    // Classic: pre-inf actual → [estimated peak] → post-inf actuals
+    if(tpmi>=0&&tpmi<monthCount) mainLineArr[tpmi]=preActForTrend.ferritin;
+    if(infIdx>=0&&!job.lowConf) mainLineArr[infIdx]=job.estimatedPeak;
+    job.allActuals.forEach(function(a){
+      var ad=parseDate(a.date);if(!ad||ad<=infDate)return;
+      var mi=(ad.getFullYear()-wStart.getFullYear())*12+(ad.getMonth()-wStart.getMonth());
+      if(mi>=0&&mi<monthCount) mainLineArr[mi]=a.ferritin;
+    });
+    if(job.estTodayFerr!==null&&showTodayIA&&todayMI>infIdx) mainLineArr[todayMI]=job.estTodayFerr;
+  } else {
+    // Zone A: orange solid, confirmed post-infusion actuals only (no speculative peak)
+    job.allActuals.forEach(function(a){
+      var ad=parseDate(a.date);if(!ad||ad<=infDate)return;
+      var mi=(ad.getFullYear()-wStart.getFullYear())*12+(ad.getMonth()-wStart.getMonth());
+      if(mi>=0&&mi<monthCount) mainLineArr[mi]=a.ferritin;
+    });
+    if(job.estTodayFerr!==null&&showTodayIA&&todayMI>infIdx) mainLineArr[todayMI]=job.estTodayFerr;
+  }
+  var mainLineDset=drawUncertaintyBand
+    ?{label:'Confirmed ferritin results (actual blood tests)',data:mainLineArr,borderColor:'#f97316',borderWidth:2,tension:0,fill:false,pointRadius:0,spanGaps:true,order:3}
+    :{label:'Actual trend (smoothed)',data:mainLineArr,borderColor:'#f97316',borderWidth:2,tension:0.4,fill:false,pointRadius:0,spanGaps:true,order:3};
+
+  // Zone B boundary datasets (uncertainty zone from infusion date to first actual)
+  var upperBoundDset=null,lowerBoundDset=null;
+  if(drawUncertaintyBand&&firstPostAct&&infIdx>=0&&act1MI>=0){
+    var upperArr=new Array(monthCount).fill(null);
+    upperArr[infIdx]=job.estimatedPeak;
+    upperArr[act1MI]=firstPostAct.ferritin;
+    upperBoundDset={label:'Upper uncertainty boundary',data:upperArr,borderColor:'rgba(251,191,36,0.6)',borderWidth:1,borderDash:[6,4],pointRadius:0,fill:false,tension:0,spanGaps:true,order:6};
+
+    var lowerArr=new Array(monthCount).fill(null);
+    var _preInfMI=tpmi>=0?tpmi:infIdx;
+    var _preInfF=preActForTrend?preActForTrend.ferritin:job.preEstVal;
+    if(_preInfMI>=0&&_preInfMI<monthCount) lowerArr[_preInfMI]=_preInfF;
+    lowerArr[act1MI]=firstPostAct.ferritin;
+    lowerBoundDset={label:'Lower uncertainty boundary',data:lowerArr,borderColor:'rgba(148,163,184,0.5)',borderWidth:1,borderDash:[3,4],pointRadius:0,fill:false,tension:0,spanGaps:true,order:6};
+  }
+
+  // Back-projection dataset — three-point speculative curve (pre-inf → back-projected peak → first actual)
+  var bpDataset=null;
+  if(job.drawBackProjection&&job.backProjPeak!==null&&job.actualToActualInfo&&preActForTrend){
+    var bpArr=new Array(monthCount).fill(null);
+    if(tpmi>=0&&tpmi<monthCount) bpArr[tpmi]=preActForTrend.ferritin;
+    if(infIdx>=0) bpArr[infIdx]=job.backProjPeak;
+    var _bpAct1=job.actualToActualInfo.from;
+    var _bpAct1d=parseDate(_bpAct1.date);
+    if(_bpAct1d){
+      var _bpAct1MI=(_bpAct1d.getFullYear()-wStart.getFullYear())*12+(_bpAct1d.getMonth()-wStart.getMonth());
+      if(_bpAct1MI>=0&&_bpAct1MI<monthCount) bpArr[_bpAct1MI]=_bpAct1.ferritin;
+    }
+    bpDataset={label:'Derived likely peak (back-calculated from confirmed results)',data:bpArr,borderColor:'rgba(100,116,139,0.8)',borderWidth:2,borderDash:[3,3],pointRadius:0,fill:false,tension:0.4,spanGaps:true,order:8};
+  }
+
+  var allVals=expData.concat(actData,[50,30,job.peakHigh||0,job.backProjPeak||0]).filter(function(v){return v!=null&&v>0;});
   var yMax=allVals.length?Math.min(300,Math.max(80,Math.ceil(Math.max.apply(null,allVals)*1.2/10)*10)):150;
-  var yMin=allVals.length?Math.max(0,Math.floor(Math.min.apply(null,allVals)*0.85/10)*10):0;
+
+  var coreDatasets=[
+    {label:expLabel,data:expData,borderColor:expColor,borderDash:[5,3],borderWidth:2,pointRadius:0,fill:false,tension:0,spanGaps:false,order:4},
+    mainLineDset,
+    {label:'Actual ferritin readings',data:actData,borderColor:'#64748b',borderWidth:0,pointRadius:6,pointStyle:'circle',pointBackgroundColor:'#64748b',pointBorderColor:'#1e3a5f',pointBorderWidth:2,showLine:false,fill:false,order:1},
+    {label:'Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',data:new Array(monthCount).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false,order:5},
+    {label:'Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',data:new Array(monthCount).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false,order:5}
+  ];
+  if(upperBoundDset) coreDatasets.push(upperBoundDset);
+  if(lowerBoundDset) coreDatasets.push(lowerBoundDset);
+  if(bpDataset) coreDatasets.push(bpDataset);
 
   var inst=new Chart(canvas,{
     type:'line',
-    data:{labels:labels,datasets:[
-      {label:'Expected trajectory',data:expData,borderColor:'#3b82f6',borderDash:[5,3],borderWidth:2,pointRadius:0,fill:false,tension:0,spanGaps:false},
-      {label:'Actual ferritin readings',data:actData,borderColor:'#64748b',backgroundColor:'#64748b',borderWidth:0,pointRadius:5,pointBackgroundColor:'#64748b',showLine:false,fill:false},
-      {label:'Recommended minimum (50 µg/L)',data:new Array(monthCount).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
-      {label:'Depleted stores (30 µg/L)',data:new Array(monthCount).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
-    ]},
+    data:{labels:labels,datasets:coreDatasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
-      scales:{y:{min:yMin,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
+      scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
         x:{ticks:{font:{size:10},autoSkip:true,maxTicksLimit:13,maxRotation:45}}}},
     plugins:[{
       id:'iv-marker-'+job.idx,
-      afterDraw:function(chart){
-        if(infIdx<0)return;
+      beforeDatasetsDraw:function(chart){
         var ctx2=chart.ctx;ctx2.save();
-        var xPos=chart.scales.x.getPixelForValue(infIdx);
         var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
-        ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
-        ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
-        ctx2.setLineDash([]);
-        ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
-        ctx2.fillText(job.inf.dose+'mg IV',xPos,yTop+10);
+        var xLeft=chart.chartArea.left,xRight=chart.chartArea.right;
+        var yScale=chart.scales.y;
+        var clamp=function(v){return Math.min(yBot,Math.max(yTop,v));};
+        var y30px=clamp(yScale.getPixelForValue(30));
+        var y15px=clamp(yScale.getPixelForValue(15));
+        var yFloorPx=clamp(yScale.getPixelForValue(FERRITIN_FLOOR));
+        var yZeroPx=clamp(yScale.getPixelForValue(0));
+        var xSpan=xRight-xLeft;
+        // 15–30 µg/L amber band
+        if(y15px>y30px+1){
+          ctx2.fillStyle='rgba(251,191,36,0.15)';
+          ctx2.fillRect(xLeft,y30px,xSpan,y15px-y30px);
+          ctx2.setLineDash([4,3]);ctx2.strokeStyle='rgba(251,191,36,0.5)';ctx2.lineWidth=1;
+          ctx2.beginPath();ctx2.moveTo(xLeft,y30px);ctx2.lineTo(xRight,y30px);ctx2.stroke();
+          ctx2.beginPath();ctx2.moveTo(xLeft,y15px);ctx2.lineTo(xRight,y15px);ctx2.stroke();
+          ctx2.setLineDash([]);
+          if(y15px-y30px>12){ctx2.fillStyle='#b45309';ctx2.font='9px sans-serif';ctx2.textAlign='left';ctx2.fillText('Low iron stores (15–30 µg/L)',xLeft+xSpan*0.06,(y30px+y15px)/2+4);}
+        }
+        // <15 µg/L to floor band
+        if(yFloorPx>y15px+1){
+          ctx2.fillStyle='rgba(217,119,6,0.18)';
+          ctx2.fillRect(xLeft,y15px,xSpan,yFloorPx-y15px);
+          if(yFloorPx-y15px>12){ctx2.fillStyle='#92400e';ctx2.font='9px sans-serif';ctx2.textAlign='left';ctx2.fillText('Severely depleted (<15 µg/L)',xLeft+xSpan*0.36,(y15px+yFloorPx)/2+4);}
+        }
+        // ≤FERRITIN_FLOOR red band
+        if(yZeroPx>yFloorPx+1){
+          ctx2.fillStyle='rgba(220,38,38,0.12)';
+          ctx2.fillRect(xLeft,yFloorPx,xSpan,yZeroPx-yFloorPx);
+          ctx2.setLineDash([3,3]);ctx2.strokeStyle='rgba(220,38,38,0.6)';ctx2.lineWidth=1.5;
+          ctx2.beginPath();ctx2.moveTo(xLeft,yFloorPx);ctx2.lineTo(xRight,yFloorPx);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#991b1b';ctx2.font='9px sans-serif';ctx2.textAlign='left';
+          ctx2.fillText('Very low / anaemia risk possible',xLeft+xSpan*0.63,yFloorPx-3);
+        }
+        // Post-infusion uncertainty zone — triangular amber fill from infusion date to first actual
+        if(drawUncertaintyBand&&firstPostAct&&act1MI>=0&&infIdx>=0){
+          var xInf=chart.scales.x.getPixelForValue(infIdx);
+          var xAct1=chart.scales.x.getPixelForValue(act1MI);
+          var yUpperAtInf=clamp(yScale.getPixelForValue(job.estimatedPeak));
+          var yAct1px=clamp(yScale.getPixelForValue(firstPostAct.ferritin));
+          var _preInfF=preActForTrend?preActForTrend.ferritin:job.preEstVal;
+          var _preInfMI2=tpmi>=0?tpmi:infIdx;
+          var lowerAtInf=(_preInfMI2<infIdx&&act1MI>infIdx)
+            ?_preInfF+(infIdx-_preInfMI2)/(act1MI-_preInfMI2)*(firstPostAct.ferritin-_preInfF)
+            :_preInfF;
+          var yLowerAtInf=clamp(yScale.getPixelForValue(lowerAtInf));
+          ctx2.fillStyle='rgba(251,191,36,0.08)';
+          ctx2.beginPath();
+          ctx2.moveTo(xInf,yUpperAtInf);ctx2.lineTo(xAct1,yAct1px);ctx2.lineTo(xInf,yLowerAtInf);
+          ctx2.closePath();ctx2.fill();
+        }
+        ctx2.restore();
+      },
+      afterDraw:function(chart){
+        var ctx2=chart.ctx;ctx2.save();
+        var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
+        var xLeft=chart.chartArea.left,xRight=chart.chartArea.right;
+        // Inline label for 30 µg/L reference line
+        var y30lab=chart.scales.y.getPixelForValue(30);
+        if(y30lab>yTop+3&&y30lab<yBot-3){
+          ctx2.fillStyle='#dc2626';ctx2.font='9px sans-serif';ctx2.textAlign='right';
+          ctx2.fillText('30 µg/L',xRight-4,y30lab-3);
+        }
+        // Infusion marker (amber vertical line)
+        if(infIdx>=0){
+          var xPos=chart.scales.x.getPixelForValue(infIdx);
+          ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
+          ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
+          ctx2.fillText(job.inf.dose+'mg IV',xPos,yTop+10);
+        }
+        // Back-projection peak label (small, grey, italic — just names the line)
+        if(job.drawBackProjection&&job.backProjPeak!==null&&infIdx>=0){
+          var xBpPos=chart.scales.x.getPixelForValue(infIdx);
+          var yBpPeak=chart.scales.y.getPixelForValue(job.backProjPeak);
+          if(yBpPeak>yTop+14&&yBpPeak<yBot-3){
+            ctx2.fillStyle='rgba(100,116,139,0.75)';ctx2.font='italic 8px sans-serif';ctx2.textAlign='right';
+            ctx2.fillText('Derived likely peak',xBpPos-4,yBpPeak-3);
+          }
+        }
+        // Today marker (blue vertical line)
+        if(showTodayIA){
+          var txPos=chart.scales.x.getPixelForValue(todayMI);
+          ctx2.strokeStyle='#0369a1';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
+          ctx2.beginPath();ctx2.moveTo(txPos,yTop);ctx2.lineTo(txPos,yBot);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#0369a1';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
+          ctx2.fillText('Today',txPos,yBot-6);
+        }
+        // Expected rate label — midpoint of the blue expected line
+        if(job.expectedDeclinePM<-0.1&&infIdx>=0){
+          var _expMidIdx=Math.floor((infIdx+monthCount-1)/2);
+          var _expYval=expData[_expMidIdx];
+          if(_expYval!=null){
+            var _expXpx=chart.scales.x.getPixelForValue(_expMidIdx);
+            var _expYpx=chart.scales.y.getPixelForValue(_expYval)-8;
+            if(_expYpx>yTop+4&&_expYpx<yBot-3&&_expXpx>xLeft+30&&_expXpx<xRight-30){
+              ctx2.fillStyle=job.lowConf?'rgba(59,130,246,0.6)':'#3b82f6';ctx2.font='bold 9px sans-serif';ctx2.textAlign='center';
+              ctx2.fillText('Expected: '+Math.abs(job.expectedDeclinePM).toFixed(1)+' µg/L/mo',_expXpx,_expYpx);
+            }
+          }
+        }
+        // Derived decline label — last two post-infusion actuals, upper-right
+        ctx2.font='bold 9px sans-serif';ctx2.textAlign='right';
+        var _rLabelY=yTop+(yBot-yTop)*0.12;
+        if(job.lastTwoRate!==null&&job.lastTwoRate>0){
+          ctx2.fillStyle='#f97316';
+          ctx2.fillText('Derived decline: '+job.lastTwoRate.toFixed(1)+' µg/L/mo',xRight-4,_rLabelY);
+        } else if(firstPostAct!==null&&job.lastTwoRate===null){
+          ctx2.fillStyle='rgba(148,163,184,0.8)';
+          ctx2.fillText('Derived decline: need ≥2 post-infusion results',xRight-4,_rLabelY);
+        }
         ctx2.restore();
       }
     }]
@@ -3602,16 +4309,28 @@ function renderInfusionAnalysisChart(job){
   var leg=document.getElementById('iaLegend_'+job.idx);
   if(leg) leg.innerHTML=
     li('#64748b','Grey dots — Actual ferritin readings')+
-    li('#3b82f6','Blue dashed — Expected trajectory',true)+
+    '<span style="display:flex;align-items:center;gap:5px"><span style="border-top:2px solid #f97316;width:14px;height:0;display:inline-block;margin-top:6px;"></span>'+(drawUncertaintyBand?'Orange solid — Confirmed ferritin results (actual blood tests)':'Orange solid — Actual trend (smoothed)')+'</span>'+
+    li(job.lowConf?'rgba(59,130,246,0.4)':'#3b82f6',job.lowConf?'Blue dashed — Expected trajectory (reduced confidence)':'Blue dashed — Expected trajectory',true)+
     li('#f59e0b','Amber line — Infusion date',true)+
-    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
-    li('#dc2626','Red dashed — Depleted stores (30 µg/L)',true);
+    (showTodayIA?li('#0369a1','Blue line — Today',true):'')+
+    li('#16a34a','Green dashed — Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',true)+
+    (drawUncertaintyBand?'<span style="display:flex;align-items:center;gap:5px;margin-top:2px"><span style="width:12px;height:12px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.6);display:inline-block;border-radius:2px"></span>Amber fill — Post-infusion uncertainty zone (peak unknown — anaemia or low ferritin at infusion)</span>':'')+
+    (job.drawBackProjection&&job.backProjPeak!==null?'<span style="display:flex;align-items:center;gap:5px;margin-top:2px"><span style="border-top:1.5px dashed rgba(148,163,184,0.8);width:14px;height:0;display:inline-block;margin-top:6px;"></span>Grey dotted — Derived likely peak (back-calculated from confirmed decline rate)</span>':'');
 }
 
+// FUTURE ENHANCEMENT: Two-phase modelling
+// Allow user to define two sets of conditions for different date ranges
+// within the post-infusion period (e.g. standard pill months 1-3,
+// then tricycling months 4-10). Each phase would have its own
+// expected decline rate, producing a kinked expected trajectory line.
+// Covers cases where conditions changed mid-period, preventing
+// false "faster than expected" conclusions from single-phase mismatch.
+// Implement only after single-phase version is stable and user-tested.
 function calcIV(){
+  renderHistoricInfusionList();
   renderInfusionAnalysis();
   var ivDose=+(document.getElementById('ivDose').value)||1000;
-  var ivFloor=+(document.getElementById('ivFloor').value)||30;
+  var ivFloor=30;
   var ivHorizon=+(document.getElementById('ivHorizon').value)||24;
   var months=ivHorizon+1;
 
@@ -3689,10 +4408,8 @@ function calcIV(){
 
   // Chart
   var labels=Array.from({length:months},function(_,i){return fmt(i);});
-  var floorLine=new Array(months).fill(ivFloor);
   var ds=[
-    {label:'Projected ferritin',data:ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3},
-    {label:'Target floor ('+ivFloor+' μg/L)',data:floorLine,borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
+    {label:'Projected ferritin',data:ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3}
   ];
   // Mark infusion points
   if(schedule.length){
@@ -3706,22 +4423,119 @@ function calcIV(){
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' μg/L':'n/a');}}}},
       scales:{y:{min:0,max:Math.min(250,Math.max(80,rnd(Math.max.apply(null,ferrLine)*1.25))),title:{display:true,text:'Ferritin μg/L',font:{size:11}},ticks:{font:{size:11}}},
-        x:{ticks:{font:{size:10},autoSkip:true,maxTicksLimit:13,maxRotation:45}}}}
+        x:{ticks:{font:{size:10},autoSkip:true,maxTicksLimit:13,maxRotation:45}}}},
+    plugins:[{
+      id:'iv-zones',
+      beforeDatasetsDraw:function(chart){
+        var ctx2=chart.ctx;ctx2.save();
+        var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
+        var xLeft=chart.chartArea.left,xRight=chart.chartArea.right;
+        var yScale=chart.scales.y;
+        var clamp=function(v){return Math.min(yBot,Math.max(yTop,v));};
+        var xSpan=xRight-xLeft;
+        var y50px=clamp(yScale.getPixelForValue(50));
+        var y30px=clamp(yScale.getPixelForValue(30));
+        var y15px=clamp(yScale.getPixelForValue(15));
+        var yFloorPx=clamp(yScale.getPixelForValue(FERRITIN_FLOOR));
+        var yZeroPx=clamp(yScale.getPixelForValue(0));
+        // 30–50 µg/L: possibly symptomatic
+        if(y30px>y50px+1){
+          ctx2.fillStyle='rgba(253,230,138,0.22)';
+          ctx2.fillRect(xLeft,y50px,xSpan,y30px-y50px);
+          if(y30px-y50px>12){ctx2.fillStyle='#a16207';ctx2.font='9px sans-serif';ctx2.textAlign='left';ctx2.fillText('Possibly symptomatic (30–50 µg/L)',xLeft+xSpan*0.06,(y50px+y30px)/2+4);}
+        }
+        // 15–30 µg/L amber band
+        if(y15px>y30px+1){
+          ctx2.fillStyle='rgba(251,191,36,0.15)';
+          ctx2.fillRect(xLeft,y30px,xSpan,y15px-y30px);
+          ctx2.setLineDash([4,3]);ctx2.strokeStyle='rgba(251,191,36,0.5)';ctx2.lineWidth=1;
+          ctx2.beginPath();ctx2.moveTo(xLeft,y30px);ctx2.lineTo(xRight,y30px);ctx2.stroke();
+          ctx2.beginPath();ctx2.moveTo(xLeft,y15px);ctx2.lineTo(xRight,y15px);ctx2.stroke();
+          ctx2.setLineDash([]);
+          if(y15px-y30px>12){ctx2.fillStyle='#b45309';ctx2.font='9px sans-serif';ctx2.textAlign='left';ctx2.fillText('Low iron stores (15–30 µg/L)',xLeft+xSpan*0.06,(y30px+y15px)/2+4);}
+        }
+        // <15 µg/L to floor band
+        if(yFloorPx>y15px+1){
+          ctx2.fillStyle='rgba(217,119,6,0.18)';
+          ctx2.fillRect(xLeft,y15px,xSpan,yFloorPx-y15px);
+          if(yFloorPx-y15px>12){ctx2.fillStyle='#92400e';ctx2.font='9px sans-serif';ctx2.textAlign='left';ctx2.fillText('Severely depleted (<15 µg/L)',xLeft+xSpan*0.36,(y15px+yFloorPx)/2+4);}
+        }
+        // ≤FERRITIN_FLOOR red band
+        if(yZeroPx>yFloorPx+1){
+          ctx2.fillStyle='rgba(220,38,38,0.12)';
+          ctx2.fillRect(xLeft,yFloorPx,xSpan,yZeroPx-yFloorPx);
+          ctx2.setLineDash([3,3]);ctx2.strokeStyle='rgba(220,38,38,0.6)';ctx2.lineWidth=1.5;
+          ctx2.beginPath();ctx2.moveTo(xLeft,yFloorPx);ctx2.lineTo(xRight,yFloorPx);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#991b1b';ctx2.font='9px sans-serif';ctx2.textAlign='left';
+          ctx2.fillText('Very low / anaemia risk possible',xLeft+xSpan*0.63,yFloorPx-3);
+        }
+        ctx2.restore();
+      },
+      afterDraw:function(chart){
+        var ctx2=chart.ctx;ctx2.save();
+        var yScale=chart.scales.y;
+        var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
+        var xLeft=chart.chartArea.left,xRight=chart.chartArea.right;
+        var y50px=yScale.getPixelForValue(50);
+        if(y50px>yTop&&y50px<yBot){
+          ctx2.strokeStyle='#16a34a';ctx2.setLineDash([6,3]);ctx2.lineWidth=1.5;
+          ctx2.beginPath();ctx2.moveTo(xLeft,y50px);ctx2.lineTo(xRight,y50px);ctx2.stroke();
+          ctx2.setLineDash([]);
+          ctx2.fillStyle='#16a34a';ctx2.font='bold 9px sans-serif';ctx2.textAlign='left';
+          ctx2.fillText('50 µg/L — sufficiency threshold',xLeft+4,y50px-3);
+        }
+        // Loss rate label — upper right (net deficit after diet, not total demand)
+        var _netDefMg=mgLostMonth+basalIV-mgAbsDietMonth;
+        var _netUgL=Math.round(Math.abs(_netDefMg)/8*10)/10;
+        ctx2.fillStyle='#dc2626';ctx2.font='bold 11px sans-serif';ctx2.textAlign='right';
+        if(_netDefMg>0){
+          ctx2.fillText('−'+_netUgL+' µg/L/mo',xRight-4,yTop+13);
+          ctx2.font='10px sans-serif';
+          ctx2.fillText('('+rnd(_netDefMg)+' mg/mo net deficit)',xRight-4,yTop+25);
+        } else {
+          ctx2.fillText('~0 µg/L/mo',xRight-4,yTop+13);
+          ctx2.font='10px sans-serif';
+          ctx2.fillText('(diet covers losses)',xRight-4,yTop+25);
+        }
+        ctx2.restore();
+      }
+    }]
   });
   function ivli(color,label,shape){
     var s=shape==='triangle'?'width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:12px solid '+color+';display:inline-block;':
+      shape==='dashed'?'border-top:2px dashed '+color+';width:14px;height:0;display:inline-block;margin-top:6px;':
       'display:inline-block;background:'+color+';width:10px;height:10px;border-radius:2px;';
     return '<span style="display:flex;align-items:center;gap:5px"><span style="'+s+'"></span>'+label+'</span>';
   }
   document.getElementById('ivLegend').innerHTML=
     ivli('#3b82f6','Projected ferritin')+
-    ivli('#dc2626','Target floor ('+ivFloor+' μg/L)')+
+    ivli('#16a34a','50 µg/L — sufficiency threshold','dashed')+
     (schedule.length?ivli('#7c3aed','Infusion given','triangle'):'');
+
+  // Commentary box
+  var totalLossIV=rnd(mgLostMonth+basalIV);
+  var dietAbsIV=rnd(mgAbsDietMonth);
+  var netDefIV=rnd(Math.max(0,mgLostMonth+basalIV-mgAbsDietMonth));
+  var freqStr=schedule.length>0&&ivHorizon>0?(rnd((ivHorizon/schedule.length)*10)/10)+' months':null;
+  var commEl=document.getElementById('ivCommentary');
+  if(commEl){
+    var freqLine=freqStr?'At this loss rate, a '+ivDose+' mg infusion would be needed approximately every <strong>'+freqStr+'</strong> on average.':'No infusions required over the selected horizon — diet alone appears sufficient.';
+    commEl.innerHTML=
+      '<strong>Loss rate breakdown:</strong> '+totalLossIV+' mg/month total iron demand '+
+      '(<span title="Loss rate calculated from period duration, flow, and diet inputs on the Balance Model tab." style="border-bottom:1px dotted #94a3b8;cursor:help">menstrual losses + 30 mg/month basal physiology</span>). '+
+      'Diet absorbs approximately '+dietAbsIV+' mg/month. Net monthly deficit without supplementation: <strong>'+netDefIV+' mg/month</strong>.<br>'+
+      freqLine+'<br>'+
+      '<span style="color:#94a3b8">This model excludes oral supplementation. Infusion timing is triggered when projected ferritin falls to 30 µg/L. Individual response to infusions varies widely. For discussion with a clinician only.</span>';
+    commEl.style.display='';
+  }
 }
 
 function calcStrategy(){
   var c=lc;
   if(!c||!c.startFerr) return;
+  var fm2=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate'};
+  var unitLabel2=fm2.abbr==='bisglycinate'?'capsule':'tablet';
 
   var startFerr=c.startFerr||25;
   var ferrChangePM=c.ferrChangePM||0;   // µg/L per month from current net balance
@@ -3734,18 +4548,34 @@ function calcStrategy(){
   document.getElementById('stratTargetV').textContent=target;
   var tLabel=document.getElementById('stratTargetLabel');
   var tText,tColor;
-  if(target<30){tText='Below depleted stores threshold — not recommended as a target';tColor='#dc2626';}
-  else if(target<50){tText='Below optimal — depleted stores, symptoms likely';tColor='#b45309';}
-  else if(target<=70){tText='Recommended minimum for menstruating women (BSH/NICE)';tColor='#16a34a';}
-  else if(target<=100){tText='Optimal — good symptom buffer and recovery headroom';tColor='#16a34a';}
+  if(target<30){tText='Below depleted stores threshold (30 µg/L) — not recommended as a target';tColor='#dc2626';}
+  else if(target<50){tText='Below sufficiency level — depleted stores, symptoms likely';tColor='#b45309';}
+  else if(target<=70){tText='Sufficiency threshold — symptoms unlikely above this level';tColor='#16a34a';}
+  else if(target<=100){tText='Well-repleted — good symptom buffer and recovery headroom';tColor='#16a34a';}
   else{tText='Well-repleted — typically seen after IV infusion';tColor='#64748b';}
   tLabel.textContent=tText;tLabel.style.color=tColor;
 
   var ivDose=+(document.getElementById('stratIVDose').value)||0;
 
   // ── PHASE 1: RECOVERY ──
-  var ivFerrBoost=ivDose>0?mg2f(ivDose):0;
+  function calcIVBoost(doseMg,startFerritin){
+    var fr=startFerritin<15?0.30:startFerritin<30?0.60:startFerritin<50?0.80:1.0;
+    return (doseMg*fr)/8;
+  }
+  var ivFerrBoost=ivDose>0?calcIVBoost(ivDose,startFerr):0;
   var startAfterIV=startFerr+ivFerrBoost;
+  var ivUncertaintyNote='',ivConfidenceLabel='';
+  if(ivDose>0){
+    if(startFerr<15){
+      ivConfidenceLabel='(wide uncertainty — anaemia likely)';
+      ivUncertaintyNote='Note: at this ferritin level anaemia is likely, meaning a significant proportion of infused iron is diverted to haemoglobin correction rather than stores. The actual post-infusion ferritin peak is typically substantially lower than the standard formula suggests — and varies widely between patients. A blood test 4–6 weeks after infusion is the only way to confirm the actual peak.';
+    } else if(startFerr<30){
+      ivConfidenceLabel='(estimate — verify with post-infusion test)';
+      ivUncertaintyNote='Note: at this ferritin level iron diversion to haemoglobin is possible. Actual peak may be lower than estimated. A 4–6 week post-infusion blood test is recommended to confirm.';
+    } else {
+      ivConfidenceLabel='(estimate)';
+    }
+  }
 
   var phase1Grid=document.getElementById('stratPhase1Grid');
   var phase1Text=document.getElementById('stratPhase1Text');
@@ -3756,18 +4586,27 @@ function calcStrategy(){
   if(doseNote){
     var suppDose=c.suppDose||0;
     var oralIntol=conds['oral-intol'];
-    if(oralIntol){
-      doseNote.innerHTML='<strong>Oral iron intolerance is flagged.</strong> Phase 1 recovery is modelled without oral supplementation — recovery depends on '+(ivDose>0?'the infusion selected below.':'an infusion (none currently selected — choose one above to model the effect).');
+    if(ivDose>0){
+      var dnBg=startFerr<15?'#fef2f2':startFerr<30?'#fffbeb':'#f0fdfa';
+      var dnBd=startFerr<15?'#fecaca':startFerr<30?'#fde68a':'#99f6e4';
+      var dnTx=startFerr<15?'#b91c1c':startFerr<30?'#92400e':'#0f766e';
+      var dnHTML='<strong>'+ivDose+' mg IV infusion selected for Phase 1 recovery.</strong> Estimated post-infusion ferritin: ~<strong><span data-ctip="ctip-post-iv">'+rnd(startAfterIV)+'</span></strong> µg/L '+ivConfidenceLabel+'.';
+      if(ivUncertaintyNote) dnHTML+='<span style="display:block;margin-top:5px">'+ivUncertaintyNote+'</span>';
+      dnHTML+='<span style="display:block;margin-top:5px">A blood test 4–6 weeks after infusion is recommended to confirm the actual peak before moving to Phase 2 maintenance planning.</span>';
+      doseNote.innerHTML=dnHTML;
+      doseNote.style.background=dnBg;doseNote.style.borderColor=dnBd;doseNote.style.color=dnTx;
+    } else if(oralIntol){
+      doseNote.innerHTML='<strong>Oral iron intolerance is flagged.</strong> Phase 1 recovery is modelled without oral supplementation — recovery depends on an infusion (none currently selected — choose one above to model the effect).';
       doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
     } else if(suppDose===0){
       doseNote.innerHTML='⚠️ <strong>No supplement is set in the Balance Model tab.</strong> Go to the Balance Model tab and set a supplement dose to model oral recovery.';
       doseNote.style.background='#fef2f2';doseNote.style.borderColor='#fecaca';doseNote.style.color='#b91c1c';
     } else {
-      var ntabs=Math.round(suppDose/65);
-      var pkMg=ntabs*200;
-      var tabPrimary2=ntabs===0?'less than 1 tablet per day':
-        '<strong>'+ntabs+' ferrous sulfate tablet'+(ntabs===1?'':'s')+' per day ('+pkMg+'mg on the packet)</strong>';
-      var elemNote2='Each tablet is labelled '+pkMg/ntabs+'mg — that is the tablet weight, not the iron dose. Each tablet contains 65mg of actual iron your body can absorb, so '+ntabs+' tablet'+(ntabs===1?'':'s')+' = '+suppDose+'mg actual iron per day.';
+      var ntabs=Math.round(suppDose/fm2.elemPerTab);
+      var pkMg=ntabs*fm2.packetMg;
+      var tabPrimary2=ntabs===0?'less than 1 '+unitLabel2+' per day':
+        '<strong>'+ntabs+' '+fm2.name+' '+unitLabel2+(ntabs===1?'':'s')+' per day ('+pkMg+'mg on the packet)</strong>';
+      var elemNote2=ntabs>0?'Each '+unitLabel2+' is labelled '+fm2.packetMg+'mg — that is the '+unitLabel2+' weight, not the iron dose. Each '+unitLabel2+' contains '+fm2.elemPerTab+'mg of actual iron your body can absorb, so '+ntabs+' '+unitLabel2+(ntabs===1?'':'s')+' = '+ntabs*fm2.elemPerTab+'mg actual iron per day.':'';
       doseNote.innerHTML='<strong>Phase 1 dose (from Balance Model tab):</strong> '+tabPrimary2+'. '+elemNote2+' To change this, adjust the supplement slider on the Balance Model tab.';
       doseNote.style.background='#fefce8';doseNote.style.borderColor='#fde047';doseNote.style.color='#854d0e';
     }
@@ -3779,46 +4618,47 @@ function calcStrategy(){
   // Months to target — oral only
   if(startFerr>=target){
     noIVMonths=0;
-    noIVMsg='Ferritin is already at or above the '+target+' µg/L target.';
+    noIVMsg='Ferritin is already at or above the '+target+' µg/L (~'+fwsMg(target)+' mg estimated stored iron) target.';
   } else if(ferrChangePM<=0){
     noIVMonths=null;
-    noIVMsg='With the current balance ('+sign(netMonth)+rnd(netMonth)+' mg/month net), ferritin is '+(netMonth<0?'declining':'not rising')+' — the target cannot be reached without increasing intake or reducing losses.';
+    noIVMsg='With the current balance (<span data-ctip="ctip-net-balance">'+sign(netMonth)+rnd(netMonth)+' mg/month net</span>), ferritin is '+(netMonth<0?'declining':'not rising')+' — the target cannot be reached without increasing intake or reducing losses.';
   } else {
     noIVMonths=Math.ceil((target-startFerr)/ferrChangePM);
-    noIVMsg='At the current rate of +'+rnd(ferrChangePM*10)/10+' µg/L/month, recovery to '+target+' µg/L should take approximately '+noIVMonths+' month'+(noIVMonths===1?'':'s')+'.';
+    noIVMsg='At the current rate of <span data-ctip="ctip-time-target">+'+rnd(ferrChangePM*10)/10+' µg/L/month</span>, recovery to '+target+' µg/L (~'+fwsMg(target)+' mg estimated stored iron) should take approximately '+noIVMonths+' month'+(noIVMonths===1?'':'s')+'.';
   }
 
   // Months to target — with infusion
   if(ivDose>0){
     if(startAfterIV>=target){
       ivMonths=0;
-      ivMsg='A '+ivDose+' mg infusion would be expected to raise ferritin to approximately '+rnd(startAfterIV)+' µg/L immediately — meeting or exceeding the '+target+' µg/L target in one step.';
+      ivMsg='A '+ivDose+' mg infusion is estimated to raise ferritin to approximately <span data-ctip="ctip-post-iv">'+fws(rnd(startAfterIV))+'</span> '+ivConfidenceLabel+' — meeting or exceeding the '+target+' µg/L target.'+(ivUncertaintyNote?' '+ivUncertaintyNote:'');
     } else if(ferrChangePM<=0){
       ivMonths=null;
-      ivMsg='A '+ivDose+' mg infusion would raise ferritin to approximately '+rnd(startAfterIV)+' µg/L, but with the current oral balance not positive, ferritin would then plateau or decline. Ongoing oral supplementation or loss reduction is needed to sustain it.';
+      ivMsg='A '+ivDose+' mg infusion is estimated to raise ferritin to approximately <span data-ctip="ctip-post-iv">'+fws(rnd(startAfterIV))+'</span> '+ivConfidenceLabel+', but with the current oral balance not positive, ferritin would then plateau or decline. Ongoing oral supplementation or loss reduction is needed to sustain it.'+(ivUncertaintyNote?' '+ivUncertaintyNote:'');
     } else {
       ivMonths=Math.ceil((target-startAfterIV)/ferrChangePM);
-      ivMsg='A '+ivDose+' mg infusion would raise ferritin to approximately '+rnd(startAfterIV)+' µg/L immediately. The remaining gap to '+target+' µg/L would take approximately '+ivMonths+' further month'+(ivMonths===1?'':'s')+' at the current oral rate.';
+      ivMsg='A '+ivDose+' mg infusion is estimated to raise ferritin to approximately <span data-ctip="ctip-post-iv">'+fws(rnd(startAfterIV))+'</span> '+ivConfidenceLabel+'. The remaining gap to '+target+' µg/L would take approximately '+ivMonths+' further month'+(ivMonths===1?'':'s')+' at the current oral rate.'+(ivUncertaintyNote?' '+ivUncertaintyNote:'');
     }
   }
 
   window._ctipData.target={noIVMonths:noIVMonths,target:target,startFerr:startFerr,ferrChangePM:ferrChangePM,netMonth:netMonth};
   if(ivDose>0) window._ctipData.ivCalc={ivDose:ivDose,startFerr:startFerr,startAfterIV:startAfterIV,ivMonths:ivMonths,target:target,ferrChangePM:ferrChangePM};
+  window._ctipData.startFerrCtip={startFerr:startFerr};
+  window._ctipData.recovTarget={target:target,startFerr:startFerr,gap:Math.max(0,target-startFerr)};
   phase1Grid.innerHTML=
-    mc('Starting ferritin',startFerr,'µg/L',startFerr<30?'danger':startFerr<50?'warning':'ok')+
-    mc('Recovery target',target,'µg/L','neutral')+
+    mc('Starting ferritin',startFerr,'µg/L (~'+fwsMg(startFerr)+' mg stored iron)',startFerr<30?'danger':startFerr<50?'warning':'ok','ctip-start-ferr')+
+    mc('Recovery target',target,'µg/L (~'+fwsMg(target)+' mg stored iron)','neutral','ctip-recovery-target')+
     (noIVMonths===null
       ?mc('Time to target (oral only)','Not achievable','','danger','ctip-time-target')
       :mc('Time to target (oral only)',noIVMonths===0?'Already there':noIVMonths+(noIVMonths>0?' mo':''),'',noIVMonths===0?'ok':noIVMonths<=3?'ok':noIVMonths<=6?'warning':'danger','ctip-time-target'))+
     (ivDose>0
       ?(ivMonths===null
         ?mc('With '+ivDose+' mg infusion','Needs ongoing support','','warning','ctip-iv-months')
-        :mc('With '+ivDose+' mg infusion',ivMonths===0?'Target met immediately':ivMonths+' mo further','','ok','ctip-iv-months'))
+        :mc('With '+ivDose+' mg infusion',ivMonths===0?'Target met at infusion':ivMonths+' mo further','','ok','ctip-iv-months'))
       :'')+
-    (ivDose>0?mc('Post-infusion ferritin','~'+rnd(startAfterIV),'µg/L',startAfterIV>=target?'ok':'warning','ctip-post-iv'):'');
+    (ivDose>0?mc('Post-infusion ferritin','~'+rnd(startAfterIV),'µg/L (~'+fwsMg(rnd(startAfterIV))+' mg stored iron)',startAfterIV>=target?'ok':'warning','ctip-post-iv'):'');
 
-  var p1html='<p style="margin-bottom:'+(ivDose>0?'6':'0')+'px">'+noIVMsg+'</p>';
-  if(ivDose>0) p1html+='<p style="margin:0">'+ivMsg+'</p>';
+  var p1html=ivDose>0?'<p style="margin:0">'+ivMsg+'</p>':'<p style="margin:0">'+noIVMsg+'</p>';
   phase1Text.innerHTML=p1html;
 
   // ── PHASE 2: MAINTENANCE ──
@@ -3841,12 +4681,14 @@ function calcStrategy(){
   if(!phase2Grid||!phase2Text||!altDayText)return;
 
   if(deficitAfterDiet<=0){
+    window._ctipData.stratTotalLoss={totalLossMonth:totalLossMonth,basalLossMonth:lc&&lc.basalLossMonth||30,mgLostMonth:lc&&lc.mgLostMonth||0};
+    window._ctipData.stratDietCovers={dietNetMonth:lc&&lc.dietNetMonth||0,totalLossMonth:totalLossMonth};
     phase2Grid.innerHTML=
-      mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
-      mc('Diet covers',rnd(dietNetMonth),'mg/mo','ok')+
-      mc('Supplement needed','None','','ok');
-    phase2Text.innerHTML='<p style="margin:0">Diet alone appears sufficient to cover total losses ('+rnd(totalLossMonth)+' mg/month). No supplement is needed for maintenance — though checking ferritin every 3–6 months is still sensible.</p>';
-    altDayText.innerHTML='Not applicable — diet alone covers losses.';
+      mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral','ctip-strat-total-loss')+
+      mc('Diet covers',rnd(dietNetMonth),'mg/mo','ok','ctip-strat-diet-covers')+
+      mc('Supplement needed','None','','ok','ctip-no-supp-needed');
+    phase2Text.innerHTML='<p style="margin:0">Diet alone appears sufficient to cover total losses (<span data-ctip="ctip-strat-total-loss">'+rnd(totalLossMonth)+' mg/month</span>). No supplement is needed for maintenance — though checking ferritin every 3–6 months is still sensible.</p>';
+    altDayText.innerHTML='';altDayText.parentElement.style.display='none';
     return;
   }
 
@@ -3867,12 +4709,6 @@ function calcStrategy(){
   function r5(n){return Math.ceil(n/5)*5;}
   var mDailyR=r5(maintDailyMg);
   var mAltDayR=r5(maintAltDayMg);
-
-  // Practical tablet translation
-  // Ferrous sulfate 200mg tablet = 65mg elemental
-  // Ferrous fumarate 210mg tablet = 69mg elemental
-  // Ferrous bisglycinate ~20mg elemental per capsule (OTC)
-  var fm2=lc&&lc.suppFormulation?lc.suppFormulation:{name:'Ferrous sulfate 200mg',packetMg:200,elemPerTab:65,abbr:'sulfate'};
 
   function tabletAdvice(dailyMg){
     // Use maintAbsRate (already defined above) not hardcoded 0.04
@@ -3910,7 +4746,7 @@ function calcStrategy(){
   var spatoneNote='';
   if(deficitAfterDiet>0&&deficitAfterDiet<=2.5){
     var sachetsNeeded=Math.ceil(deficitAfterDiet/spatoneAbsPerSachet);
-    spatoneNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Alternative for maintenance — liquid iron sachets (e.g. Spatone or similar iron water):</strong> Your maintenance need is small enough that '+sachetsNeeded+' sachet'+(sachetsNeeded===1?'':'s')+' per day ('+sachetsNeeded*5+'mg actual iron, ~'+rnd(sachetsNeeded*spatoneAbsPerSachet)+'mg absorbed — absorption varies 15–25%, better with orange juice) may be sufficient to stay level. A very well-tolerated long-term option — much easier to sustain than tablets. Available OTC. See the <strong>Side effects &amp; tolerability</strong> tab for a full comparison.</div>';
+    spatoneNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:8px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Alternative for maintenance — liquid iron sachets (e.g. Spatone or similar iron water):</strong> Your maintenance need is small enough that '+sachetsNeeded+' sachet'+(sachetsNeeded===1?'':'s')+' per day ('+sachetsNeeded*5+'mg actual iron, ~<span data-ctip="ctip-spatone">'+rnd(sachetsNeeded*spatoneAbsPerSachet)+'</span>mg absorbed — absorption varies 15–25%, better with orange juice) may be sufficient to stay level. A very well-tolerated long-term option — much easier to sustain than tablets. Available OTC. See the <strong>Side effects &amp; tolerability</strong> tab for a full comparison.</div>';
   }
 
   var oralIntolNote='';
@@ -3923,17 +4759,20 @@ function calcStrategy(){
     var bisglycAbsPerMonth2=bisglycAbsPerDose2*15;
     window._ctipData.bisglyc={baseRate:lc&&lc.tieredAbsRate||0.04,bisglycRate:bisglycAbsRate2,bisglycAbsPerDose:bisglycAbsPerDose2,bisglycAbsPerMonth:bisglycAbsPerMonth2,deficitAfterDiet:deficitAfterDiet};
     var bisglycCoversIt=bisglycAbsPerMonth2>=(deficitAfterDiet*0.8);
-    var postStopRateStr=lc&&lc.ferrChangePM!==undefined?rnd(Math.abs(((lc.dietNetMonth||0)-lc.totalLossMonth)/8)*10)/10:'?';
+    var postStopRateStr=lc&&lc.totalLossMonth!==undefined?rnd(Math.abs((lc.dietNetMonth||0)-lc.totalLossMonth)):'?';
+    window._ctipData.oiStopRate={postStopRate:lc&&lc.totalLossMonth!==undefined?Math.abs((lc.dietNetMonth||0)-lc.totalLossMonth):0,totalLossMonth:lc&&lc.totalLossMonth||0,dietNetMonth:lc&&lc.dietNetMonth||0};
+    window._ctipData.maintIntol={ointolOption:ointolOption,deficitAfterDiet:deficitAfterDiet};
+    window._ctipData.oiSpatone={deficitAfterDiet:deficitAfterDiet,sachetsNeeded:sachetsNeeded2,absPerSachet:spatoneAbsPerSachet2,displayedAbs:sachetsNeeded2*spatoneAbsPerSachet2};
 
     if(ointolOption==='infusion'){
       oralIntolNote='<div style="margin-top:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:7px;padding:10px 14px;font-size:12px;color:#0369a1;line-height:1.6">'+
-        '<strong>Option A selected — Infusion only:</strong> No ongoing oral iron. Without maintenance, ferritin will decline at approximately '+postStopRateStr+' µg/L/month. See the <strong>Infusion Planner</strong> tab to estimate how frequently infusions would be needed to keep ferritin above 30 µg/L. This is clinically valid but typically requires a repeat infusion every 3–12 months depending on losses.'+
+        '<strong>Option A selected — Infusion only:</strong> No ongoing oral iron. Without maintenance, net monthly iron deficit is approximately <span data-ctip="ctip-oi-stop-rate">'+postStopRateStr+'</span> mg/month — stored iron would deplete without ongoing intervention. See the <strong>Infusion Planner</strong> tab to estimate how frequently infusions would be needed to keep ferritin above 30 µg/L. This is clinically valid but typically requires a repeat infusion every 3–12 months depending on losses.'+
         '</div>';
     } else if(ointolOption==='spatone'){
       oralIntolNote='<div style="margin-top:8px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:10px 14px;font-size:12px;color:#854d0e;line-height:1.6">'+
         '<strong>Option B selected — Spatone liquid iron:</strong> '+
         (spatoneCoversIt?
-          'Your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month) is small enough that <strong>'+sachetsNeeded2+' Spatone sachet'+(sachetsNeeded2===1?'':'s')+' per day</strong> ('+sachetsNeeded2*5+'mg actual iron · ~'+rnd(sachetsNeeded2*spatoneAbsPerSachet2)+'mg absorbed/month) should cover it. Take mixed in orange juice. Available OTC — no prescription needed.':
+          'Your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month) is small enough that <strong>'+sachetsNeeded2+' Spatone sachet'+(sachetsNeeded2===1?'':'s')+' per day</strong> ('+sachetsNeeded2*5+'mg actual iron · ~<span data-ctip="ctip-oi-spatone">'+rnd(sachetsNeeded2*spatoneAbsPerSachet2)+'</span>mg absorbed/month) should cover it. Take mixed in orange juice. Available OTC — no prescription needed.':
           'Your deficit ('+rnd(deficitAfterDiet)+' mg/month) is higher than Spatone covers reliably. <strong>2–3 sachets/day</strong> will slow ferritin decline after an infusion but may not fully maintain levels. Best used alongside infusion-based maintenance.')+
         ' Each sachet is labelled 250ml natural iron-rich water — actual iron content is 5mg per sachet. Absorption varies — typically 15–25% depending on timing and whether taken with food or juice; taking with orange juice improves absorption (Persson et al, Acta Obstet Gynecol 2003). The ~25% figure used here is an optimistic estimate; real-world absorption may be closer to 15–20%.'+
         '</div>';
@@ -3942,7 +4781,7 @@ function calcStrategy(){
         '<strong>Option C selected — Bisglycinate every other day:</strong> 1 capsule (20mg actual iron) every other day = approximately <strong><span data-ctip="ctip-bisglyc">'+rnd(bisglycAbsPerMonth2)+'</span> mg absorbed per month</strong>. '+
         (bisglycCoversIt?
           'This should cover your maintenance deficit ('+rnd(deficitAfterDiet)+' mg/month needed). Combined with an initial infusion, this may eliminate the need for repeat infusions.':
-          'This covers ~'+rnd(bisglycAbsPerMonth2/deficitAfterDiet*100)+'% of your deficit — ferritin may still slowly decline but much more slowly, significantly extending time between infusions.')+
+          'This covers ~<span data-ctip="ctip-bisglyc">'+rnd(bisglycAbsPerMonth2/deficitAfterDiet*100)+'</span>% of your deficit — ferritin may still slowly decline but much more slowly, significantly extending time between infusions.')+
         '<br><br><strong>Start protocol:</strong> <em>Discuss with your GP before starting</em> — they should know you are trialling this, even though it is available OTC. Then: 1 capsule every 3 days for 2 weeks → increase to every other day if well tolerated. Morning, with vitamin C or orange juice. If any GI symptoms arise, stop and contact your GP.'+
         '<br><span style="font-size:11px;color:#475569">If well tolerated, consider removing the oral intolerance flag and remodelling with bisglycinate formulation at a higher dose.</span>'+
         '</div>';
@@ -3955,7 +4794,6 @@ function calcStrategy(){
   var altDayTabs=Math.max(1,Math.ceil(mAltDayR/fm2.elemPerTab));
   var altDayElem=altDayTabs*fm2.elemPerTab;   // always consistent with tab count
   var altDayPkMg=altDayTabs*fm2.packetMg;
-  var unitLabel2=fm2.abbr==='bisglycinate'?'capsule':'tablet';
   window._ctipData.maint={totalLossMonth:totalLossMonth,dietNetMonth:lc&&lc.dietNetMonth||0,deficitAfterDiet:deficitAfterDiet,tieredAbsRate:maintAbsRate,mDailyTabs:mDailyTabs,mDailyElem:mDailyElem,unitLabel:unitLabel2};
   window._ctipData.altday={deficitAfterDiet:deficitAfterDiet,maintAbsRate:maintAbsRate,isBisglycForAlt:isBisglycForAlt,altDayHepcidinMult:altDayHepcidinMult,altDayTabs:altDayTabs};
   // Drive the maintenance-dose card from the same weekly calculation used in the text below,
@@ -3968,21 +4806,75 @@ function calcStrategy(){
   var maintCardSub=useWeekly
     ?('('+tpwV*fm2.packetMg+'mg on packet/week = '+tpwV*fm2.elemPerTab+'mg elemental)')
     :('('+mDailyPkMg+'mg on packet = '+mDailyElem+'mg elemental)');
+  window._ctipData.stratTotalLoss={totalLossMonth:totalLossMonth,basalLossMonth:lc&&lc.basalLossMonth||30,mgLostMonth:lc&&lc.mgLostMonth||0};
+  window._ctipData.stratDietCovers={dietNetMonth:lc&&lc.dietNetMonth||0,totalLossMonth:totalLossMonth};
   phase2Grid.innerHTML=
-    mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral')+
-    mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning')+
+    mc('Total loss to replace',rnd(totalLossMonth),'mg/mo','neutral','ctip-strat-total-loss')+
+    mc('Diet covers',rnd(Math.min(lc&&lc.dietNetMonth||0,totalLossMonth)),'mg/mo',(lc&&lc.dietNetMonth||0)>=totalLossMonth?'ok':'warning','ctip-strat-diet-covers')+
     mc('Remaining gap',rnd(deficitAfterDiet),'mg/mo',deficitAfterDiet>30?'danger':'warning','ctip-remaining-gap')+
-    (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral'):
-    mc('Maintenance dose',maintCardVal,maintCardSub,'neutral','ctip-maint-dose')+
-    mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral','ctip-altday'));
+    (conds['oral-intol']?mc('Maintenance (oral intol)','See options below','','neutral','ctip-maint-intol'):
+    mc('Maintenance dose',maintCardVal,maintCardSub,'neutral','ctip-maint-dose')+(maintDailyMg>=fm2.elemPerTab?mc('Alt-day option',altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day','('+altDayPkMg+'mg on packet = '+altDayElem+'mg elemental)','neutral','ctip-altday'):''));
 
   phase2Text.innerHTML=
     (conds['oral-intol']?'<p style="margin-bottom:6px;color:#b91c1c"><strong>Oral iron intolerance flagged.</strong> Select an option above to model the maintenance approach.</p>':
-    '<p style="margin-bottom:6px">To stay level against losses of '+rnd(totalLossMonth)+' mg/month, a practical supplement schedule would be <span data-ctip="ctip-tabs-week">'+tabAdvice+'</span></p>')+
+    '<p style="margin-bottom:6px">To stay level against losses of <span data-ctip="ctip-strat-total-loss">'+rnd(totalLossMonth)+' mg/month</span>, a practical supplement schedule would be <span data-ctip="ctip-tabs-week">'+tabAdvice+'</span></p>')+
     '<p style="margin:0;font-size:12px;color:#64748b">Note: these figures are for <em>maintenance only</em> — staying level, not recovering. If ferritin is still below target, a higher dose or infusion is needed first (see Phase 1 above).</p>'+
     spatoneNote+oralIntolNote;
 
-  altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance:<div style="text-align:center;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:8px 12px;margin:8px 0"><strong>'+altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day</strong><br><span style="font-size:11px;color:#475569">'+altDayPkMg+'mg on the packet · '+altDayElem+'mg elemental per dose</span></div>This is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
+  // ── FORMULATION COMPARISON + DIET COMMENTARY ──
+  if(!conds['oral-intol']&&deficitAfterDiet>0){
+    var maintNeedMg=deficitAfterDiet;
+    var sulfMonthly=65*0.08*30,fumMonthly=69*0.08*30;
+    var sulfPW=Math.ceil(maintNeedMg/(65*0.08*4.3)),fumPW=Math.ceil(maintNeedMg/(69*0.08*4.3));
+    var sulfD=maintNeedMg>=sulfMonthly,fumD=maintNeedMg>=fumMonthly;
+    var sulfDose=sulfD?Math.ceil(maintNeedMg/sulfMonthly)+' tablet'+(Math.ceil(maintNeedMg/sulfMonthly)===1?'':'s')+'/day':sulfPW+' tablet'+(sulfPW===1?'':'s')+'/week';
+    var fumDose=fumD?Math.ceil(maintNeedMg/fumMonthly)+' tablet'+(Math.ceil(maintNeedMg/fumMonthly)===1?'':'s')+'/day':fumPW+' tablet'+(fumPW===1?'':'s')+'/week';
+    var bisglyAbs=0.04*1.6,bisglyMo=20*bisglyAbs*30;
+    var bisglyPW=Math.ceil(maintNeedMg/(20*bisglyAbs*4.3));
+    var bisglyDose=maintNeedMg>=bisglyMo?Math.ceil(maintNeedMg/bisglyMo)+' capsule'+(Math.ceil(maintNeedMg/bisglyMo)===1?'':'s')+'/day':bisglyPW+' capsule'+(bisglyPW===1?'':'s')+'/week';
+    var bisglyCapMonth=Math.ceil(maintNeedMg/bisglyMo*30); // capsules/month (raw daily need × 30)
+    var bisglyRawCost=bisglyCapMonth/90*10; // ~£10 per 90 caps
+    var bisglyMonthlyCost=bisglyRawCost<2?'under £2/month':'~£'+Math.round(bisglyRawCost)+'/month';
+    var sp1M=1.25*30,sp2M=1.25*2*30;
+    var sp1OK=sp1M>=maintNeedMg,sp2OK=sp2M>=maintNeedMg;
+    var spDose=sp1OK?'1 sachet/day':sp2OK?'2 sachets/day':'Not sufficient';
+    var spNote=sp1OK?'Sufficient for maintenance at this level of loss. Very well tolerated. Available OTC.':sp2OK?'2 sachets/day covers this deficit. More expensive than tablets but excellent tolerability.':'Not sufficient for this level of loss ('+rnd(sp2M)+'mg/month absorbed from 2 sachets vs '+rnd(maintNeedMg)+'mg/month needed). Spatone is only suitable when maintenance losses are very low.';
+    var spCostStr=sp1OK?'~£8–10/month':sp2OK?'~£16–20/month':null;
+    var fcHTML='<div style="margin-top:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px">';
+    fcHTML+='<div style="font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Phase 2 — Your maintenance options compared</div>';
+    fcHTML+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    fcHTML+='<tr style="border-bottom:1px solid #e2e8f0"><td style="padding:4px 8px 4px 0;color:#64748b;font-weight:500;width:36%">Option</td><td style="padding:4px 8px;color:#64748b;font-weight:500;width:22%">Dose</td><td style="padding:4px 0;color:#64748b;font-weight:500">Notes</td></tr>';
+    fcHTML+='<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px 6px 0;font-weight:500">Ferrous sulfate 200mg</td><td style="padding:6px 8px;font-weight:600;color:#0f172a">'+sulfDose+'</td><td style="padding:6px 0;color:#475569">NHS prescription. Standard first-line choice.<br><span style="font-size:11px;color:#94a3b8">£9.90/item England, or free if exempt — see note below</span></td></tr>';
+    fcHTML+='<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px 6px 0;font-weight:500">Ferrous fumarate 210mg</td><td style="padding:6px 8px;font-weight:600;color:#0f172a">'+fumDose+'</td><td style="padding:6px 0;color:#475569">NHS prescription. Marginally better tolerated than sulfate.<br><span style="font-size:11px;color:#94a3b8">£9.90/item England, or free if exempt — see note below</span></td></tr>';
+    fcHTML+='<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px 6px 0;font-weight:500">Ferrous bisglycinate 20mg <span style="font-weight:400;color:#64748b">(OTC)</span></td><td style="padding:6px 8px;font-weight:600;color:#0f172a">'+bisglyDose+'</td><td style="padding:6px 0;color:#475569">Not prescribed on NHS. Fewer GI side effects. Good for maintenance or sensitive stomachs.<br><span style="font-size:11px;color:#94a3b8">Approx. cost: '+bisglyMonthlyCost+' (Holland &amp; Barrett, Amazon, OptiFer, Gentle Iron)</span></td></tr>';
+    fcHTML+='<tr><td style="padding:6px 8px 6px 0;font-weight:500">Spatone liquid <span style="font-weight:400;color:#64748b">(1 sachet = 5mg)</span></td><td style="padding:6px 8px;font-weight:600;color:'+(sp1OK||sp2OK?'#166534':'#991b1b')+'">'+spDose+'</td><td style="padding:6px 0;color:#475569">'+spNote+(spCostStr?'<br><span style=\'font-size:11px;color:#94a3b8\'>Approx. cost: '+spCostStr+' (Boots, Holland &amp; Barrett, supermarkets)</span>':'')+'</td></tr>';
+    fcHTML+='</table>';
+    fcHTML+='<div style="margin-top:8px;font-size:11px;color:#94a3b8;line-height:1.5">Prices are approximate UK retail (2025) and may vary by retailer. Buying larger pack sizes typically reduces the per-unit cost. <strong style="color:#64748b">NHS prescription:</strong> £9.90 per item in England — free if under 16, in full-time education, on qualifying benefits, pregnant/recently gave birth, or with a prepayment certificate (~£111/year covering all prescriptions).</div>';
+    var cDQ=lc&&lc.dietQ?lc.dietQ:3;
+    if(cDQ<5){
+      var dqL=['','Poor','Low','Average','Good','Excellent'],dqMgArr=[0,6,8,10,13,16];
+      var nDQ=Math.min(cDQ+1,5);
+      var dDelta=rnd((dqMgArr[nDQ]-dqMgArr[cDQ])*0.04*30);
+      var dEx={1:'Introducing one portion of red meat (80g beef, lamb or pork) twice a week — approximately 2mg absorbed iron per day.',2:'Adding one portion of red meat or oily fish three times a week, plus a handful of spinach or fortified cereal daily.',3:'Adding 2–3 portions of red meat per week (e.g. 80g beef mince in a meal), one serving of liver per fortnight, or an iron-rich smoothie daily (spinach, pumpkin seeds, fortified oat milk).',4:'This level requires near-optimal daily iron intake — red meat or liver most days alongside iron-rich plant foods. Difficult to sustain for most people.'};
+      var dIcon=maintNeedMg<=15?'✅':maintNeedMg<=40?'⚡':'ℹ️';
+      var dHead=maintNeedMg<=15?'Diet change may close this gap':maintNeedMg<=40?'Diet change can contribute but unlikely to close this gap alone':'Diet change alone cannot realistically cover this need';
+      var dBody='';
+      if(maintNeedMg<=15){dBody='Improving diet from <strong>'+dqL[cDQ]+'</strong> to <strong>'+dqL[nDQ]+'</strong> could add approximately <strong>'+dDelta+'mg absorbed iron per month</strong> — potentially enough to cover this maintenance need without supplements.<br><br><strong>Practical change:</strong> '+dEx[cDQ]+'<br><br>Worth trying before committing to long-term supplementation. Retest ferritin in 3 months to confirm.';}
+      else if(maintNeedMg<=40){dBody='Improving diet from <strong>'+dqL[cDQ]+'</strong> to <strong>'+dqL[nDQ]+'</strong> adds approximately <strong>'+dDelta+'mg/month</strong> absorbed — covering about <strong>'+Math.round(dDelta/maintNeedMg*100)+'%</strong> of the '+rnd(maintNeedMg)+'mg/month maintenance need. Worth doing alongside a low-dose supplement rather than instead of one.<br><br><strong>Practical change:</strong> '+dEx[cDQ];}
+      else{dBody='At '+rnd(maintNeedMg)+'mg/month deficit, the benefit from realistic dietary improvement (~'+dDelta+'mg/month) is too small to make a meaningful difference. Supplementation is needed.';}
+      fcHTML+='<div style="margin-top:10px;padding:10px 12px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px">';
+      fcHTML+='<div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:4px">'+dIcon+' '+dHead+'</div>';
+      fcHTML+='<div style="font-size:12px;color:#78350f;line-height:1.55">'+dBody+'</div>';
+      fcHTML+='<div style="font-size:11px;color:#92400e;margin-top:6px;line-height:1.4">💡 Vitamin C alongside iron-rich foods significantly improves absorption. Tea or coffee within 1 hour of a meal reduces absorption by up to 60%.</div>';
+      fcHTML+='<div style="font-size:11px;color:#92400e;margin-top:3px">These are maintenance estimates only — not applicable during Phase 1 recovery.</div>';
+      fcHTML+='</div>';
+    }
+    fcHTML+='</div>';
+    phase2Text.innerHTML+=fcHTML;
+  }
+
+  altDayText.parentElement.style.display=maintDailyMg>=fm2.elemPerTab?'':'none';
+  if(maintDailyMg>=fm2.elemPerTab) altDayText.innerHTML='Research (Moretti et al, <em>Lancet Haematology</em> 2015) found that taking iron every other day avoids the hepcidin spike that follows each dose — hepcidin temporarily closes the intestinal iron transporter, meaning a second dose the next day is largely wasted. Spacing doses every other day gives the transporter time to reset, resulting in improved fractional absorption per dose with fewer tablets and potentially fewer GI side effects.<br><br>Evidence for alternate-day dosing is strongest in non-anaemic iron-deficient women. For maintenance:<div style="text-align:center;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:8px 12px;margin:8px 0"><strong><span data-ctip="ctip-altday">'+altDayTabs+' '+unitLabel2+(altDayTabs===1?'':'s')+' every other day</span></strong><br><span data-ctip="ctip-altday" style="font-size:11px;color:#475569">'+altDayPkMg+'mg on the packet · '+altDayElem+'mg elemental per dose</span></div>This is estimated to provide comparable net absorption to taking iron daily — though individual response varies. During active recovery (Phase 1) where speed matters, daily dosing or an infusion is generally preferred.';
 
   // ── PLAN SUMMARY BOX ──
   var summaryEl=document.getElementById('stratSummaryText');
@@ -3991,25 +4883,31 @@ function calcStrategy(){
     var oralIntolS=conds['oral-intol'];
     var summaryLines=[];
 
-    // Helper: tablets-first description
+    // Helper: tablets-first description — always uses the selected formulation (fm2)
     function tabFirst(elMg){
-      var nt=Math.round(elMg/65);
-      var pkMg=nt*200;
-      return nt+' ferrous sulfate tablet'+(nt===1?'':'s')+'/day ('+pkMg+'mg on the packet · '+elMg+'mg actual iron)';
+      var nt=Math.round(elMg/fm2.elemPerTab);
+      var pkMg=nt*fm2.packetMg;
+      return nt+' '+fm2.name+' '+unitLabel2+(nt===1?'':'s')+'/day ('+pkMg+'mg on the packet · '+nt*fm2.elemPerTab+'mg actual iron)';
     }
     function tabFirstWeekly(elMgPerDay){
-      var fsWk=Math.ceil(elMgPerDay/65*30/4.3);
-      var pkMgWk=fsWk*200;
-      return (fsWk===1?'1 ferrous sulfate tablet':fsWk+' ferrous sulfate tablets')+' per week — '+pkMgWk+'mg on packet per week ('+elMgPerDay+'mg actual iron/day equivalent), spread a few days apart';
+      // Use same tpw as tabletAdvice() to guarantee consistency between body text and summary
+      var tpwS=window._ctipData&&window._ctipData.tabsWeek?window._ctipData.tabsWeek.tpw:Math.ceil(elMgPerDay/fm2.elemPerTab*30/4.3);
+      var pkMgWk=tpwS*fm2.packetMg;
+      var elemDayEq=rnd(tpwS*fm2.elemPerTab/7);
+      return tpwS+' '+fm2.name+' '+unitLabel2+(tpwS===1?'':'s')+' per week — '+pkMgWk+'mg on packet per week ('+elemDayEq+'mg actual iron/day equivalent), spread a few days apart';
     }
 
     // Phase 1 sentence
     var p1Desc='';
     if(oralIntolS&&ivDose>0){
-      p1Desc='<strong>Phase 1 — Recovery:</strong> A '+ivDose+' mg IV infusion to raise ferritin rapidly to approximately '+rnd(startFerr+mg2f(ivDose))+' µg/L. No oral supplementation (oral intolerance documented).';
+      p1Desc='<strong>Phase 1 — Recovery:</strong> A '+ivDose+' mg IV infusion estimated to raise ferritin to approximately <span data-ctip="ctip-post-iv">'+rnd(startAfterIV)+' µg/L</span> '+ivConfidenceLabel+'. No oral supplementation (oral intolerance documented).'+(ivUncertaintyNote?' '+ivUncertaintyNote:'');
     } else if(ivDose>0&&suppDoseS>0){
-      var p1Mo=noIVMonths===null?'an unknown period':ivMonths===0?'immediately':ivMonths+' month'+(ivMonths===1?'':'s');
-      p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion at the start, then continue '+tabFirst(suppDoseS)+' until '+target+' µg/L is reached — estimated '+p1Mo+'.';
+      if(ivMonths===0){
+        p1Desc='<strong>Phase 1 — Recovery:</strong> A '+ivDose+' mg IV infusion estimated to raise ferritin to approximately <span data-ctip="ctip-post-iv">'+rnd(startAfterIV)+' µg/L</span> '+ivConfidenceLabel+' — meeting the '+target+' µg/L target. The oral supplement already set ('+tabFirst(suppDoseS)+') continues as maintenance going forward — no further recovery phase needed.'+(ivUncertaintyNote?' '+ivUncertaintyNote:'');
+      } else {
+        var p1Mo=ivMonths===null?'an unknown period':ivMonths+' month'+(ivMonths===1?'':'s');
+        p1Desc='<strong>Phase 1 — Recovery:</strong> '+ivDose+' mg IV infusion at the start, then continue '+tabFirst(suppDoseS)+' until '+target+' µg/L is reached — estimated '+p1Mo+'.';
+      }
     } else if(suppDoseS>0){
       var p1Mo2=noIVMonths===null?'an unknown period (balance is not currently positive — review dose)':noIVMonths===0?'already at target':noIVMonths+' month'+(noIVMonths===1?'':'s');
       p1Desc='<strong>Phase 1 — Recovery:</strong> '+tabFirst(suppDoseS)+' until ferritin reaches '+target+' µg/L — estimated '+p1Mo2+'.';
@@ -4028,7 +4926,7 @@ function calcStrategy(){
       var r5S=function(n){return Math.ceil(n/5)*5;};
       var maintAbsRateS=lc&&lc.tieredAbsRate?Math.max(lc.tieredAbsRate,0.04):0.04;
       var mDailyS=r5S(deficitAfterDiet/(maintAbsRateS*30));
-      p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+tabFirstWeekly(mDailyS)+'. This covers the net deficit of '+rnd(deficitAfterDiet)+' mg/month after diet.';
+      p2Desc='<strong>Phase 2 — Maintenance:</strong> Once the '+target+' µg/L target is reached, reduce to '+tabFirstWeekly(mDailyS)+'. This covers the net deficit of <span data-ctip="ctip-remaining-gap">'+rnd(deficitAfterDiet)+' mg/month</span> after diet.';
     }
     summaryLines.push(p2Desc);
 
@@ -4044,6 +4942,56 @@ function calcStrategy(){
     summaryEl.innerHTML=summaryLines.map(function(l){return '<p style="margin:0 0 8px 0">'+l+'</p>';}).join('');
   }
 
+  // ── BLOOD TEST SCHEDULE ──
+  var schedEl=document.getElementById('stratBloodTestSchedule');
+  if(schedEl){
+    var hasInf=ivDose>0||conds['oral-intol'];
+    var isLow=startFerr<50;
+    var schedule=[];
+    if(hasInf){
+      schedule=[
+        {when:'4 weeks after infusion',what:'Ferritin + FBC',why:'Post-treatment check. By 4 weeks haemoglobin correction is largely complete and ferritin has settled from its early transient peak — giving the most useful and stable reference point for all future monitoring. If your GP is unable to arrange this, a private ferritin test (e.g. Medichecks, ~£30) at 2 weeks gives a useful near-peak reading that can be entered into the Actual Results tab to improve the accuracy of your infusion analysis.'},
+        {when:'3 months after infusion',what:'Ferritin',why:'First check of your personal decline rate on current management. If ferritin has dropped significantly from the 4-week result, the maintenance plan may need adjusting before it becomes a problem.'},
+        {when:'6 months after infusion',what:'Ferritin + FBC',why:'Key checkpoint — by now you have enough confirmed results to calculate your actual personal decline rate and compare with the model estimate. If declining faster than expected, plan the next infusion earlier.'},
+        {when:'Every 3 months thereafter',what:'Ferritin',why:'Ongoing monitoring. Once two or three consistent results confirm your decline rate, you can discuss extending to every 4 months with your GP if levels are stable.'}
+      ];
+    } else if(isLow){
+      schedule=[
+        {when:'Now',what:'Ferritin + FBC + CRP',why:'Baseline before starting treatment. CRP confirms no active inflammation which could falsely elevate ferritin.'},
+        {when:'6–8 weeks after starting supplements',what:'Ferritin',why:'Early confirmation that absorption is working and ferritin is rising as expected. If not rising, the dose, formulation or absorption may need reviewing.'},
+        {when:'3 months',what:'Ferritin',why:'Confirms you are on track for the recovery target. Adjust dose if rising too slowly.'},
+        {when:'On reaching target',what:'Ferritin + FBC',why:'Confirms target reached before moving to Phase 2 maintenance dose. Do not reduce dose based on how you feel — confirm with a blood test.'},
+        {when:'6 weeks after moving to maintenance dose',what:'Ferritin',why:'Critical check — confirms ferritin is holding steady on the lower maintenance dose before committing to it long term.'},
+        {when:'3 months on maintenance',what:'Ferritin',why:'Confirms maintenance dose is genuinely maintaining. If declining, increase dose before it becomes a problem.'},
+        {when:'Every 3–4 months ongoing',what:'Ferritin',why:'Long-term monitoring. Once two or three results confirm stability, frequency can reduce with GP agreement.'}
+      ];
+    } else {
+      schedule=[
+        {when:'Every 3 months initially',what:'Ferritin',why:'While establishing your response to the current plan.'},
+        {when:'Every 4–6 months once stable',what:'Ferritin',why:'Ongoing maintenance monitoring once two or three results confirm stability.'}
+      ];
+    }
+    var schedRows=schedule.map(function(r){
+      return '<tr style="border-top:1px solid #f1f5f9">'
+        +'<td style="padding:7px 12px 7px 0;vertical-align:top;white-space:nowrap;font-weight:600;color:#1e293b;font-size:12px">'+r.when+'</td>'
+        +'<td style="padding:7px 12px 7px 0;vertical-align:top;white-space:nowrap;color:#0369a1;font-weight:600;font-size:12px">'+r.what+'</td>'
+        +'<td style="padding:7px 0;vertical-align:top;color:#475569;font-size:12px;line-height:1.5">'+r.why+'</td></tr>';
+    }).join('');
+    var privateTip=hasInf?'<div style="margin-top:10px;background:#fefce8;border:1px solid #fde047;border-radius:7px;padding:9px 12px;font-size:12px;color:#854d0e;line-height:1.55">💡 <strong>Tip:</strong> a private ferritin test at approximately 2 weeks post-infusion (e.g. Medichecks, ~£30) gives the closest practical reading to your true peak. Enter it as an actual result in the Actual Results tab to improve the accuracy of your Infusion Planner analysis. This is optional and does not need to involve your GP.</div>':'';
+    schedEl.innerHTML=
+      '<div class="section" style="margin-top:.25rem">'
+      +'<div class="st">📅 Blood test monitoring schedule</div>'
+      +'<p style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:.75rem">Getting the timing right matters as much as the tests themselves. Testing too infrequently means problems are found late — when recovery is harder. The schedule below is based on your current situation and updates as your inputs change.</p>'
+      +'<div class="card" style="padding:10px 14px;overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+      +'<thead><tr><th style="text-align:left;padding:0 12px 8px 0;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">When</th>'
+      +'<th style="text-align:left;padding:0 12px 8px 0;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">What</th>'
+      +'<th style="text-align:left;padding:0 0 8px;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Why</th></tr></thead>'
+      +'<tbody>'+schedRows+'</tbody></table></div>'
+      +'<p style="font-size:12px;color:#475569;line-height:1.5;margin-top:8px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:7px">⚠️ Always test before adjusting your supplement dose or requesting the next infusion — never rely on symptoms alone. Ferritin can be significantly lower than expected before symptoms become obvious.</p>'
+      +privateTip
+      +'</div>';
+  }
+
   // ── BUILD SCENARIO LINE FOR CHART ──
   // Phase 1: current supplement dose (from Balance Model) drives recovery — same rate as blue line
   //          plus any infusion boost at month 1
@@ -4056,7 +5004,7 @@ function calcStrategy(){
 
   var scenMonths=13;
   var scenLine=[startFerr];
-  var scenIVBoost=ivDose>0?mg2f(ivDose):0;
+  var scenIVBoost=ivDose>0?calcIVBoost(ivDose,startFerr):0;
   var recoveryRate=lc.ferrChangePM||0;
 
   // Phase 2 rate depends on oral intolerance option selected
@@ -4096,7 +5044,7 @@ function calcStrategy(){
         next=prev+maintenanceRate;
       }
     }
-    scenLine.push(Math.max(0,+next.toFixed(1)));
+    scenLine.push(Math.max(FERRITIN_FLOOR,+next.toFixed(1)));
   }
   window.strategyScenario={ferrLine:scenLine,ivDose:ivDose,target:target};
 
@@ -4120,8 +5068,7 @@ function renderStratChart(){
   ds.push({label:'Treatment plan',data:sc.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
   var hasStop=false;
   if(lc&&lc.startFerr){
-    var suppFerrPM=lc.suppDose>0?(Math.min(lc.suppDose*(lc.tieredAbsRate||0.04),4.0)*30)/8:0;
-    var postStopRate=(lc.ferrChangePM||0)-suppFerrPM;
+    var postStopRate=(lc.dietNetMonth-lc.totalLossMonth)/8;
     var ivBoost=sc.ivDose>0?mg2f(sc.ivDose):0;
     var stopArr=[lc.startFerr];var stReached=lc.startFerr>=sc.target;
     for(var m=1;m<months;m++){
@@ -4133,22 +5080,107 @@ function renderStratChart(){
     ds.push({label:'If supplementation stops after reaching target',data:stopArr,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
     hasStop=true;
   }
-  ds.push({label:'Recommended minimum (50 µg/L)',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false});
-  ds.push({label:'Depleted stores threshold (30 µg/L)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false});
+  ds.push({label:'Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',data:new Array(months).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false});
+  ds.push({label:'Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',data:new Array(months).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false});
   var allVals=sc.ferrLine.concat(hasStop?stopArr:[]).concat([50,30]);
-  var yMax=Math.ceil(Math.max.apply(null,allVals.filter(function(v){return v>0;}))*1.2/10)*10||150;
+  var _ivS=sc.ivDose||0,_sfS=sc.ferrLine[0]||0;
+  var _peak=_ivS>0?(_sfS<15?_sfS+_ivS*0.30/8:_sfS<30?_sfS+_ivS*0.60/8:_sfS<50?_sfS+_ivS*0.80/8:_sfS+_ivS/8)*1.15:0;
+  var _maxD=Math.max.apply(null,allVals.filter(function(v){return v>0;}))||0;
+  var yMax=Math.ceil(Math.max(_peak,100,_maxD*1.10)/10)*10||150;
+  var plateauStartIdx=-1;
+  for(var pi=0;pi<sc.ferrLine.length;pi++){if(sc.ferrLine[pi]>=sc.target){plateauStartIdx=pi;break;}}
+  // Infusion spike range — population-level 3–7 µg/L per 100mg (conditional on ivDose > 0)
+  var ivDoseS=sc.ivDose||0;
+  var startFerrS=sc.ferrLine[0];
+  var spikeLow=ivDoseS>0?rnd(startFerrS+ivDoseS/100*3):null;
+  var spikeHigh=ivDoseS>0?rnd(startFerrS+ivDoseS/100*7):null;
+  if(ivDoseS>0) window._ctipData.stratSpike={ivDose:ivDoseS,startFerr:startFerrS,spikeLow:spikeLow,spikeHigh:spikeHigh};
   if(stratChartInst)stratChartInst.destroy();
   stratChartInst=new Chart(canvas,{type:'line',data:{labels:labels,datasets:ds},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.raw!=null?rnd(c.raw)+' µg/L':'n/a');}}}},
       scales:{y:{min:0,max:yMax,title:{display:true,text:'Ferritin µg/L',font:{size:11}},ticks:{font:{size:11}}},
-        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}}});
+        x:{ticks:{font:{size:11},autoSkip:false,maxRotation:0}}}},
+    plugins:[{id:'strat-p2-annot',
+      beforeDatasetsDraw:function(chart){
+        if(!spikeLow||!spikeHigh)return;
+        var cx2=chart.ctx;cx2.save();
+        var yScale2=chart.scales.y,xScale2=chart.scales.x,ca2=chart.chartArea;
+        var x0=xScale2.getPixelForValue(0),x1=xScale2.getPixelForValue(1);
+        var tickW=x1-x0;
+        var bandLeft=Math.max(ca2.left,x0-tickW*0.2);
+        var bandRight=Math.min(ca2.right,x0+tickW*0.7);
+        var yBandTop=Math.min(ca2.bottom,Math.max(ca2.top,yScale2.getPixelForValue(spikeHigh)));
+        var yBandBot=Math.min(ca2.bottom,Math.max(ca2.top,yScale2.getPixelForValue(spikeLow)));
+        cx2.fillStyle='rgba(20,184,166,0.13)';
+        cx2.fillRect(bandLeft,yBandTop,bandRight-bandLeft,yBandBot-yBandTop);
+        cx2.setLineDash([4,3]);cx2.strokeStyle='rgba(20,184,166,0.55)';cx2.lineWidth=1;
+        cx2.beginPath();cx2.moveTo(bandLeft,yBandTop);cx2.lineTo(bandRight,yBandTop);cx2.stroke();
+        cx2.beginPath();cx2.moveTo(bandLeft,yBandBot);cx2.lineTo(bandRight,yBandBot);cx2.stroke();
+        cx2.setLineDash([]);cx2.restore();
+      },
+      afterDraw:function(chart){
+        var cx=chart.ctx,ca=chart.chartArea,yScale=chart.scales.y,xScale=chart.scales.x;
+        // Spike label
+        if(spikeLow&&spikeHigh){
+          cx.save();
+          var x0L=xScale.getPixelForValue(0),x1L=xScale.getPixelForValue(1);
+          var bandRightL=Math.min(ca.right,x0L+(x1L-x0L)*0.7);
+          var yMidBand=(yScale.getPixelForValue(spikeLow)+yScale.getPixelForValue(spikeHigh))/2;
+          yMidBand=Math.min(ca.bottom-4,Math.max(ca.top+8,yMidBand));
+          cx.fillStyle='rgba(13,148,136,0.9)';cx.font='bold 8px sans-serif';cx.textAlign='left';
+          var labelX=bandRightL+5;
+          if(labelX+110>ca.right)labelX=bandRightL-5,cx.textAlign='right';
+          cx.fillText('Spike: '+spikeLow+'–'+spikeHigh+' µg/L',labelX,yMidBand-5);
+          cx.fillText('(infusion range)',labelX,yMidBand+6);
+          cx.restore();
+        }
+        // Orange line decline rate label
+        if(hasStop){
+          var oIdx=Math.round((months-1)*0.6);
+          if(oIdx<stopArr.length){
+            var oYVal=stopArr[oIdx];
+            var oXPx=xScale.getPixelForValue(oIdx);
+            var oYPx=yScale.getPixelForValue(oYVal)-14;
+            oYPx=Math.min(ca.bottom-4,Math.max(ca.top+8,oYPx));
+            var psDisp=Math.abs(postStopRate).toFixed(1);
+            var psLabel=postStopRate<0?'−'+psDisp+' µg/L/mo if supplements stopped':'+'+psDisp+' µg/L/mo (stable without supplements)';
+            cx.save();
+            cx.fillStyle='#f97316';cx.font='italic 10px sans-serif';cx.textAlign='center';
+            cx.fillText(psLabel,oXPx,oYPx);
+            cx.restore();
+          }
+        }
+        // Phase 2 annotation
+        if(plateauStartIdx<0||months<2)return;
+        var midIdx=Math.floor((plateauStartIdx+months-1)/2);
+        var yVal=sc.ferrLine[midIdx];if(yVal==null)return;
+        var xPx=xScale.getPixelForValue(midIdx);
+        var yPx=yScale.getPixelForValue(yVal)-12;
+        if(xPx<ca.left+30||xPx>ca.right-30||yPx<ca.top+4||yPx>ca.bottom-4)return;
+        cx.save();
+        cx.fillStyle='#3b82f6';cx.font='bold 9px sans-serif';cx.textAlign='center';
+        cx.fillText('Phase 2: maintained at target',xPx,yPx);
+        cx.restore();
+      }
+    }]});
   var legend=document.getElementById('stratChartLegend');
   if(legend)legend.innerHTML=
     li('#3b82f6','Blue — Treatment plan')+
+    (ivDoseS>0?li('rgba(20,184,166,0.7)','Teal band — Expected infusion spike range (<span data-ctip="ctip-strat-spike">'+spikeLow+'–'+spikeHigh+'</span> µg/L)'):'')+
     (hasStop?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
-    li('#16a34a','Green dashed — Recommended minimum (50 µg/L)',true)+
-    li('#dc2626','Red dashed — Depleted stores threshold (30 µg/L)',true);
+    li('#16a34a','Green dashed — Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',true)+
+    li('#dc2626','Red dashed — Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',true);
+  // Commentary box
+  var commEl2=document.getElementById('stratChartCommentary');
+  if(commEl2){
+    if(ivDoseS>0){
+      commEl2.innerHTML='The shaded region shows the expected ferritin range in the weeks following a <strong><span data-ctip="ctip-post-iv">'+ivDoseS+'mg IV infusion</span></strong> — estimated <strong><span data-ctip="ctip-strat-spike">'+spikeLow+'–'+spikeHigh+' µg/L</span></strong> based on published response rates of 3–7 µg/L per 100mg of IV iron. Individual response varies significantly and cannot be predicted without post-infusion blood testing. The model targets <strong><span data-ctip="ctip-recovery-target">'+sc.target+' µg/L</span></strong> as the treatment goal and plans maintenance supplementation to hold this level — the infusion spike is shown for context only and does not affect the modelled trajectory lines.';
+      commEl2.style.display='';
+    } else {
+      commEl2.style.display='none';
+    }
+  }
 }
 
 function refreshList(sel){
@@ -4353,9 +5385,9 @@ refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceL
       return hdr('Post-infusion ferritin estimate')+
         row('Current ferritin',rnd(iv.startFerr||0)+' µg/L')+
         row('IV iron dose',rnd(iv.ivDose||0)+' mg')+
-        row('Expected rise (dose ÷ 8)',rnd((iv.ivDose||0)/8)+' µg/L')+
-        row('Expected ferritin after infusion','~'+rnd(iv.startAfterIV||0)+' µg/L')+
-        note('Formula: starting ferritin + (IV dose ÷ 8). The ÷8 conversion assumes 1 µg/L ferritin = 8 mg stored iron. Actual response varies ±50% or more depending on inflammation.');
+        row('Estimated rise (tiered model)',rnd((iv.startAfterIV||0)-(iv.startFerr||0))+' µg/L')+
+        row('Estimated ferritin after infusion','~'+rnd(iv.startAfterIV||0)+' µg/L')+
+        note('Estimated using a tiered absorption model — response is lower when starting ferritin is very low, as more iron is diverted to haemoglobin correction. Ferritin × 8 = stored iron (mg) — population average. Actual peak varies widely; a blood test 4–6 weeks post-infusion is the only way to confirm it.');
     }
     if(id==='ctip-iv-months'){
       var iv=d.ivCalc||{};
@@ -4490,6 +5522,127 @@ refreshList('');renderInfusions();renderActuals();updateBands();updateAdherenceL
         row('Combined with your diet (~'+rnd(c.dietNetMonth||0)+' mg/mo)','~'+totalWithDiet+' mg total')+
         note('25% is the upper end of the published range (15–25%). Real-world absorption may be 15–20%. Taking with orange juice improves absorption (Persson et al 2003).');
     }
+    if(id.startsWith('ctip-ia-')){
+      var pts=id.split('-');var field=pts[2],iidx=pts[3];
+      var ia=d['ia_'+iidx]||{};
+      if(field==='peak'){
+        return hdr('Estimated post-infusion peak')+
+          row('Pre-infusion ferritin',(ia.preEstVal||'?')+' µg/L')+
+          row('IV iron dose',(ia.dose||'?')+' mg')+
+          row('Estimated rise (tiered model)',rnd((ia.estimatedPeak||0)-(ia.preEstVal||0))+' µg/L')+
+          row('Estimated peak',(ia.estimatedPeak||'?')+' µg/L')+
+          note('Estimated using a tiered absorption model — response is lower when starting ferritin is very low, as more iron is diverted to haemoglobin correction. Ferritin × 8 = stored iron (mg) — population average. Actual peak varies widely; a blood test 4–6 weeks post-infusion is the only way to confirm it.');
+      }
+      if(field==='act'){
+        return hdr('Actual decline rate')+
+          row('Estimated peak after infusion',(ia.estimatedPeak||'?')+' µg/L')+
+          row('First post-infusion result',(ia.firstPostFerr||'?')+' µg/L')+
+          row('Time elapsed',(ia.monthsToFirst||'?')+' months')+
+          row('(Peak − result) ÷ months',(ia.actualRateFromPeak||'?')+' µg/L/month')+
+          note('Measured from the estimated post-infusion peak to the first blood test after the infusion. More results will refine this rate.');
+      }
+      if(field==='exp'){
+        var expRows='';
+        expRows+=row('Period management',ia.pmgmtLabel||'—');
+        if(!ia.noPeriods){
+          expRows+=row('Flow intensity',ia.flowLabel||'—');
+          expRows+=row('Bleed days',(ia.bleedDays||0)+' days');
+          expRows+=row('Cycle length',(ia.cycleLen||'—')+' days');
+        }
+        expRows+=row('Diet quality',ia.dietLabel||'—');
+        expRows+=row('Oral supplement',(ia.suppDose||0)>0?(ia.suppDose+' mg/day'):'None');
+        return hdr('Inputs used for this estimate')+expRows+
+          hdr('Calculation')+
+          row('Flow ml per cycle',(ia.flowMlCycle||'?')+' ml')+
+          row('Menstrual iron loss/month',(ia.menstrualLossMgMonth||0)+' mg')+
+          row('Basal loss (fixed)','30 mg')+
+          row('Total monthly losses',(ia.totalLossMgMonth||'?')+' mg')+
+          row('Diet absorption/month',(ia.dietAbsMgMonth||'?')+' mg')+
+          row('Supplement absorption/month',(ia.suppAbsMgMonth||0)+' mg')+
+          row('Net monthly deficit',(ia.netDeficitMgMonth||'?')+' mg')+
+          row('Expected decline (deficit ÷ 8)',(ia.expectedDeclinePM||'?')+' µg/L/month')+
+          note('Menstrual loss = flow ml × 0.5 mg/ml × (30 ÷ cycle days). ÷8 converts mg stored iron to µg/L ferritin change. Verify the inputs above match what you entered.');
+      }
+    }
+    if(id==='ctip-start-ferr'){
+      var sf=d.startFerrCtip||{};
+      var sfv=sf.startFerr||0;
+      var sfTier=sfv<15?'Critically depleted — absent iron stores likely':sfv<30?'Depleted stores — treatment indicated in symptomatic patients (BSH 2021)':sfv<50?'Below sufficiency level — symptoms may persist':'At or above sufficiency threshold (50 µg/L)';
+      return hdr('Starting ferritin')+
+        row('Current ferritin',sfv+' µg/L (~'+fwsMg(sfv)+' mg stored iron)')+
+        row('Clinical tier',sfTier)+
+        note('Your most recent ferritin from the Balance Model. Stored iron estimate: ferritin × 8 — population average, not exact. This is the starting point for all recovery calculations — it determines which absorption tier applies and how the IV infusion boost is estimated.');
+    }
+    if(id==='ctip-recovery-target'){
+      var rt=d.recovTarget||{};
+      return hdr('Recovery target')+
+        row('Target ferritin',(rt.target||50)+' µg/L (~'+fwsMg(rt.target||50)+' mg stored iron)')+
+        row('Starting ferritin',(rt.startFerr||0)+' µg/L')+
+        row('Gap to close',Math.max(0,(rt.target||0)-(rt.startFerr||0))+' µg/L')+
+        note('Set using the slider above. Stored iron estimate: ferritin × 8 — population average, not exact. Symptoms are unlikely above 50 µg/L for most people. A higher target gives more buffer against ongoing losses before symptoms can return.');
+    }
+    if(id==='ctip-strat-total-loss'){
+      var tl=d.stratTotalLoss||{};
+      return hdr('Total monthly iron loss')+
+        row('Menstrual iron loss',rnd(tl.mgLostMonth||0)+' mg/month')+
+        row('Basal loss (skin/gut/sweat)',rnd(tl.basalLossMonth||30)+' mg/month')+
+        row('Total',rnd(tl.totalLossMonth||0)+' mg/month')+
+        note('The 30 mg/month basal figure is a fixed clinical estimate (Green et al 1968) — it cannot be reduced. Menstrual loss is calculated from your flow and bleed settings in the Balance Model.');
+    }
+    if(id==='ctip-strat-diet-covers'){
+      var dc=d.stratDietCovers||{};
+      return hdr('Diet contribution to losses')+
+        row('Diet absorption/month',rnd(dc.dietNetMonth||0)+' mg/month')+
+        row('Total losses/month',rnd(dc.totalLossMonth||0)+' mg/month')+
+        row('Covered by diet',rnd(Math.min(dc.dietNetMonth||0,dc.totalLossMonth||0))+' mg/month')+
+        note('From your Balance Model diet settings. If diet absorption exceeds total losses, no supplement is needed to maintain stores. The remainder becomes the gap a supplement must cover.');
+    }
+    if(id==='ctip-maint-intol'){
+      var mi=d.maintIntol||{};
+      var optLabel=mi.ointolOption==='infusion'?'Infusion only (Option A)':mi.ointolOption==='spatone'?'Liquid iron — Spatone (Option B)':mi.ointolOption==='bisglycinate'?'Bisglycinate every other day (Option C)':'None selected';
+      return hdr('Maintenance — oral intolerance flagged')+
+        row('Monthly deficit to cover',rnd(mi.deficitAfterDiet||0)+' mg/month')+
+        row('Current strategy selected',optLabel)+
+        note('Standard tablet maintenance is not shown because oral iron intolerance is flagged in the Balance Model. Use the radio buttons in the Maintenance section to choose an alternative approach.');
+    }
+    if(id==='ctip-oi-stop-rate'){
+      var osr=d.oiStopRate||{};
+      var ferrFall=rnd(Math.abs((osr.postStopRate||0)/8)*10)/10;
+      return hdr('Net deficit without oral supplement')+
+        row('Total monthly losses',rnd(osr.totalLossMonth||0)+' mg/month')+
+        row('Diet absorption',rnd(osr.dietNetMonth||0)+' mg/month')+
+        row('Net monthly deficit',rnd(osr.postStopRate||0)+' mg/month')+
+        row('Equivalent ferritin fall (÷8)',ferrFall+' µg/L/month')+
+        note('Without supplementation, iron stores deplete at this rate. The ÷8 conversion: 1 µg/L ferritin ≈ 8 mg stored iron.');
+    }
+    if(id==='ctip-oi-spatone'){
+      var ois=d.oiSpatone||{};
+      return hdr('Spatone maintenance — calculation')+
+        row('Monthly deficit to cover',rnd(ois.deficitAfterDiet||0)+' mg/month')+
+        row('Iron per sachet','5 mg actual iron')+
+        row('Absorption rate applied','~25% (optimistic estimate)')+
+        row('Absorbed per sachet','~'+rnd((ois.absPerSachet||1.25)*10)/10+' mg')+
+        row('Sachets modelled',(ois.sachetsNeeded||1)+' per day')+
+        note('25% is the upper end of the published range (15–25%). Real-world absorption may be closer to 15–20%. Taking with orange juice improves absorption (Persson et al, Acta Obstet Gynecol 2003).');
+    }
+    if(id==='ctip-strat-spike'){
+      var ss=d.stratSpike||{};
+      return hdr('Expected infusion spike range')+
+        row('IV iron dose',(ss.ivDose||0)+' mg')+
+        row('Pre-infusion ferritin',(ss.startFerr||0)+' µg/L')+
+        row('Low estimate (3 µg/L per 100mg)',rnd(ss.spikeLow||0)+' µg/L')+
+        row('High estimate (7 µg/L per 100mg)',rnd(ss.spikeHigh||0)+' µg/L')+
+        note('Population-level response range from observational data. Individual response varies widely — some patients respond outside this range. A blood test 4–6 weeks post-infusion is the only way to confirm the actual peak.');
+    }
+    if(id==='ctip-no-supp-needed'){
+      var ns=d.stratDietCovers||{};
+      var surplus=Math.max(0,(ns.dietNetMonth||0)-(ns.totalLossMonth||0));
+      return hdr('No supplement needed')+
+        row('Diet absorption/month',rnd(ns.dietNetMonth||0)+' mg/month')+
+        row('Total losses/month',rnd(ns.totalLossMonth||0)+' mg/month')+
+        row('Diet surplus',rnd(surplus)+' mg/month')+
+        note('Diet absorption exceeds total losses, so iron stores should hold stable without supplementation. Recheck ferritin every 3–6 months to confirm this holds.');
+    }
     return null;
   }
 
@@ -4523,19 +5676,50 @@ var nhsParsed=[];
 
 function parseNHSText(text){
   var results=[];
-  var lines=text.split('\n');
-  var months={january:0,february:1,march:2,april:3,may:4,june:5,july:6,
-              august:7,september:8,october:9,november:10,december:11};
-  lines.forEach(function(line){
+  var MMAP={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  var MNAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var valRx=/(\d+(?:\.\d+)?)\s*(?:ug\/L|µg\/L|ug\/l|µg\/l|ugL)?/i;
+  var sep=/[\s\t]+/;
+
+  function tryParse(line){
     line=line.trim();
-    if(!line) return;
-    var m=line.match(/(\d{1,2})\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{4})\s*[\s\t]+(\d+(?:\.\d+)?)\s*(?:ug\/L|µg\/L|ug\/l|µg\/l)/i);
-    if(m){
-      var day=parseInt(m[1]),month=months[m[2].toLowerCase()],year=parseInt(m[3]),val=parseFloat(m[4]);
-      var dateStr=year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-      results.push({date:dateStr,ferritin:val,display:m[1]+' '+m[2]+' '+m[3]+' → '+val+' µg/L'});
-    }
-  });
+    if(!line)return null;
+    var dateObj=null,val=null,dispDate='';
+
+    // Pattern A: "D Month YYYY   VAL" — full or abbreviated month
+    var mA=line.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})\s+([\d.]+)/);
+    if(mA){var mo=MMAP[mA[2].toLowerCase().slice(0,3)];
+      if(mo!==undefined){dateObj=new Date(+mA[3],mo,+mA[1]);val=parseFloat(mA[4]);
+        dispDate=mA[1]+' '+MNAMES[mo]+' '+mA[3];}}
+
+    // Pattern B: "DD/MM/YYYY VAL" or "DD-MM-YYYY VAL" (UK order)
+    if(!dateObj){var mB=line.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\s+([\d.]+)/);
+      if(mB){dateObj=new Date(+mB[3],+mB[2]-1,+mB[1]);val=parseFloat(mB[4]);
+        dispDate=mB[1]+'/'+mB[2]+'/'+mB[3];}}
+
+    // Pattern C: "YYYY-MM-DD VAL" (ISO)
+    if(!dateObj){var mC=line.match(/^(\d{4})-(\d{2})-(\d{2})\s+([\d.]+)/);
+      if(mC){dateObj=new Date(+mC[1],+mC[2]-1,+mC[3]);val=parseFloat(mC[4]);
+        dispDate=mC[1]+'-'+mC[2]+'-'+mC[3];}}
+
+    // Pattern D: "YYYYMMDD VAL" (no separators)
+    if(!dateObj){var mD=line.match(/^(\d{4})(\d{2})(\d{2})\s+([\d.]+)/);
+      if(mD){dateObj=new Date(+mD[1],+mD[2]-1,+mD[3]);val=parseFloat(mD[4]);
+        dispDate=mD[1]+'-'+mD[2]+'-'+mD[3];}}
+
+    // Pattern E: "DD-Mmm-YYYY VAL" (e.g. 28-Jan-2026  25 ug/L)
+    if(!dateObj){var mE=line.match(/^(\d{1,2})-([A-Za-z]{3,})-(\d{4})\s+([\d.]+)/);
+      if(mE){var moE=MMAP[mE[2].toLowerCase().slice(0,3)];
+        if(moE!==undefined){dateObj=new Date(+mE[3],moE,+mE[1]);val=parseFloat(mE[4]);
+          dispDate=mE[1]+'-'+mE[2]+'-'+mE[3];}}}
+
+    if(!dateObj||isNaN(dateObj)||!val||val<=0||val>2000)return null;
+    var y=dateObj.getFullYear(),mo=dateObj.getMonth(),dy=dateObj.getDate();
+    var dateStr=y+'-'+String(mo+1).padStart(2,'0')+'-'+String(dy).padStart(2,'0');
+    return {date:dateStr,ferritin:val,display:dy+' '+MNAMES[mo]+' '+y+' → '+val+' µg/L'};
+  }
+
+  text.split('\n').forEach(function(line){var r=tryParse(line);if(r)results.push(r);});
   var seen={};
   results=results.filter(function(r){if(seen[r.date])return false;seen[r.date]=true;return true;});
   results.sort(function(a,b){return a.date>b.date?1:-1;});
