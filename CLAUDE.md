@@ -1,48 +1,45 @@
 # Fe+ Iron Balance Tool — Claude Code Project Rules
 
+This file contains mandatory operating rules for Claude Code in this repository.
+
+## High-risk non-negotiables
+
+- This is a medical/health tool. Never add clinical recommendations, diagnoses, or treatment prescriptions.
+- Frame outputs as estimates, summaries, or GP discussion aids — not medical advice.
+- Do not remove or weaken disclaimer text.
+- `DEV_MODE` must not be `true` in a production-ready commit.
+- Plaintext unlock codes, promo codes, Stripe secrets, or credentials must never be committed.
+
 ## Project context
 
-- **Project:** Fe+ Iron Balance Tool
-- **Primary file:** `index.html` — single-file HTML app, all CSS and JavaScript inline (~4400 lines)
-- **Supporting files:** `success.html`, `terms.html`, `privacy.html`, `cancel.html`
-- **Stable version:** v1.0.0-beta (May 2026) — update this line when a new stable version is confirmed
-- **Live URL:** GitHub Pages
-- **Tool type:** Medical/health — iron deficiency tracking and GP discussion aid
+- Primary file: `index.html` — single-file HTML app, all CSS and JavaScript inline.
+- Supporting files: `success.html`, `terms.html`, `privacy.html`, `cancel.html`.
+- Live deployment: GitHub Pages.
 
-## Session start checklist
+## Working rules
 
-- Read `FEATURES.md` at the start of every session to understand current phase, completed tasks, and open priorities
-- Update `FEATURES.md` at the end of each session: mark completed items `[x]`, add any new issues found
+- Read `CURRENT_TASK.md` first.
+- If `CURRENT_TASK.md` says `# No active task`, is a template/stub, unclear, or not marked `ACTIVE`, ask before proceeding.
+- Make the smallest possible change for the active task.
+- Do not refactor unrelated systems.
+- Do not add speculative features, cleanup, abstractions, or error handling.
+- Use grep/search first; do not full-read `index.html`.
+- Inspect only limited code ranges around relevant matches.
+- After structural HTML changes, check div nesting.
+- Preserve existing tab, chart, paywall, and unlock behaviour unless the task explicitly changes it.
+- Remove all debug logs before finishing.
 
-## Working with index.html
+## Paywall notes
 
-- **Always use grep to find specific sections** — never do a full file read. The file is ~4400 lines and full reads waste context.
-- When you need a function, grep for its name. When you need a section, grep for a nearby unique string then read a limited range with offset/limit.
-- After any structural HTML fix (adding/removing divs), count div depths to confirm nesting is correct.
-- Check the actual tab structure in the file rather than assuming fixed tab names or counts.
-- Never break existing tab functionality when adding new features.
-- `ferrChart` (canvas) must only appear inside the Balance Model tab — do not duplicate or move it.
+- Paywall unlock uses `localStorage('ironToolUnlocked')`.
+- Premium tab interception is handled by the `showTab()` wrapper near the end of `index.html`.
+- `BYPASS_HASH` and `PROMO_HASHES` are safe to commit; plaintext secrets are not.
+- `SECURITY.md` is reference material for paywall/security tasks only.
 
-## Paywall and DEV_MODE
+## Required before finishing
 
-- `DEV_MODE` constant is in the first `<script>` block in `<head>` — `true` for testing, `false` before deploying. Never leave it `true` in a commit intended for production.
-- Paywall unlock is stored in `localStorage('ironToolUnlocked')`. The wrapper that intercepts `showTab()` for premium tabs is in the last `<script>` block before `</body>`.
-- `BYPASS_HASH` and `PROMO_HASHES` are in source — safe to commit. The plaintext secrets they hash must never be committed.
-- `PROMO_CODES.md` is in `.gitignore` — never commit it.
-
-## Code style
-
-- Prefer minimal surgical fixes over rewrites. Change only what the task requires.
-- No speculative additions — don't add features, error handling, or abstractions not asked for.
-- No comments explaining *what* the code does — only add a comment when the *why* is non-obvious (a hidden constraint, a clinical rationale, a workaround for a specific bug).
-- When debugging UI issues, add targeted `console.log` statements to isolate the problem before fixing. Remove all debug output before finishing.
-
-## Clinical language rules
-
-This tool is a medical/health product. The following rules are non-negotiable:
-
-- **Never add clinical recommendations, diagnoses, or treatment prescriptions to UI text, button labels, tooltips, or output copy.**
-- All outputs must be framed as estimates, summaries, or conversation aids — not medical advice.
-- Phrases like "you should take", "this will treat", "this diagnoses" are not permitted. Use "this suggests", "a GP discussion summary", "an estimate based on population averages".
-- Disclaimer text already in the UI must not be removed or weakened.
-- If a task requires adding new UI copy near clinical outputs, default to cautious framing and flag it if uncertain.
+- Summarise changed files.
+- Summarise what changed.
+- Confirm acceptance checks performed.
+- Confirm debug logs removed.
+- Do not update `FEATURES.md` unless explicitly asked.

@@ -41,10 +41,9 @@ input[type=range]:disabled{opacity:.35;cursor:not-allowed}
 .tt{display:none;position:absolute;left:24px;top:-4px;width:250px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.5;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .ib:hover .tt,.ib:focus .tt{display:block}
 .tt-d{color:#64748b;margin-bottom:3px}.tt-n{color:#16a34a;font-weight:600;margin-bottom:3px}.tt-s{color:#64748b;font-size:11px}
-.tabs{display:flex;border-bottom:1px solid #e2e8f0;margin-bottom:1rem;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+.tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;margin-bottom:1rem;gap:0}
 .tabs-wrap{position:relative}
-.tabs-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,#fff);pointer-events:none}
-.tab{font-size:13px;padding:7px 16px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0}
+.tab{font-size:13px;padding:7px 0;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex:0 0 20%;box-sizing:border-box;text-align:center}
 .tab.active{color:#1e293b;border-bottom-color:#3b82f6;font-weight:500}
 .trow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.5rem}
 .tog{font-size:12px;padding:4px 10px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#f8fafc;color:#64748b;user-select:none}
@@ -134,6 +133,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   <button class="tab" onclick="showTab('tips')">Tips 🔒</button>
   <button class="tab" onclick="showTab('tolerability')">Tolerability 🔒</button>
   <button class="tab" onclick="showTab('export')">GP letter 🔒</button>
+  <button class="tab" onclick="showTab('about-model')">How this works</button>
 </div>
 </div>
 
@@ -1273,6 +1273,125 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 </div>
 </div>
+</div>
+</div>
+
+<div id="tab-about-model" style="display:none">
+<div class="section">
+
+<div style="background:#1e3a5f;border-radius:12px;padding:20px 24px;margin-bottom:1.25rem;color:#f1f5f9">
+  <div style="font-size:20px;font-weight:700;margin-bottom:6px">How Fe+ works — and what it can and cannot tell you</div>
+  <div style="font-size:13px;color:#94a3b8;line-height:1.6">Understanding the model behind the numbers helps you use this tool with confidence — and know when to look further.</div>
+</div>
+
+<div class="card">
+  <div class="st">What the model does</div>
+  <p style="font-size:13px;line-height:1.7;color:#1e293b;margin-bottom:10px">Fe+ uses an iron balance approach — the same framework used in clinical research and BSH guidelines. The core logic is straightforward:</p>
+  <div style="background:#f8fafc;border-radius:8px;padding:14px 18px;margin-bottom:12px;border-left:4px solid #3b82f6">
+    <div style="font-size:13px;font-weight:600;color:#1e3a5f;margin-bottom:6px">Iron in − Iron out = Net monthly change in stores</div>
+    <div style="font-size:12px;color:#475569;line-height:1.7">
+      <strong>Iron in:</strong> dietary iron absorbed + oral supplement absorbed<br>
+      <strong>Iron out:</strong> menstrual blood loss + basal daily losses (~1mg/day)<br>
+      <strong>Net change:</strong> converted to ferritin change using the population average of 1 µg/L ≈ 8mg stored iron
+    </div>
+  </div>
+  <p style="font-size:13px;line-height:1.7;color:#475569">The model accounts for the fact that absorption rate changes with ferritin level — when stores are critically low, the body absorbs more efficiently; when replete, absorption drops. This reflects the behaviour of hepcidin, the hormone that regulates iron absorption, without requiring it to be modelled explicitly.</p>
+</div>
+
+<div class="card">
+  <div class="st">Why this works for genuinely low ferritin</div>
+  <p style="font-size:13px;line-height:1.7;color:#1e293b;margin-bottom:10px">For pre-menopausal women with confirmed low ferritin, the iron balance approach accurately represents the underlying physiology. The evidence is well established:</p>
+  <div style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:10px">
+    <div style="margin-bottom:8px">✓ <strong>Menstrual blood loss is the dominant driver</strong> of iron deficiency in pre-menopausal women — and is directly quantifiable from cycle length, bleed duration, and flow intensity</div>
+    <div style="margin-bottom:8px">✓ <strong>Dietary absorption follows predictable patterns</strong> based on ferritin level — the tiered rates used in this model are derived from published absorption studies (Camaschella, NEJM 2015; Hallberg &amp; Hultén 2000)</div>
+    <div style="margin-bottom:8px">✓ <strong>Supplement absorption is well characterised</strong> for each formulation — ferrous sulfate, fumarate, and bisglycinate have published absorption data that the model uses directly</div>
+    <div>✓ <strong>The hepcidin feedback loop is implicitly represented</strong> — when ferritin is very low, the model applies higher absorption rates; when replete, lower rates. This matches the physiological behaviour of hepcidin without requiring it to be explicitly modelled</div>
+  </div>
+  <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:12px 16px;font-size:12px;color:#15803d;line-height:1.6">
+    <strong>For a pre-menopausal woman with confirmed low ferritin, normal CRP, and no known inflammatory or hereditary condition:</strong> the model's projections are a clinically reasonable approximation of what is happening. The numbers won't be exact — individual variation exists — but the direction, the trend, and the order of magnitude are reliable.
+  </div>
+</div>
+
+<div class="card">
+  <div class="st">What ferritin actually is — and why this matters</div>
+  <p style="font-size:13px;line-height:1.7;color:#1e293b;margin-bottom:12px">This is the most important thing to understand about iron testing — and the most commonly misunderstood:</p>
+  <div style="background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1e293b;line-height:1.7">
+    <strong>Ferritin is not purely a measure of iron stores.</strong> It is also an acute phase protein — meaning it rises in response to inflammation, infection, liver stress, and metabolic conditions, completely independently of iron levels.
+  </div>
+  <p style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:10px">This creates two distinct clinical scenarios that look very different but both involve iron problems:</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:6px">LOW FERRITIN — iron deficiency</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Iron stores are genuinely low. The body has insufficient stored iron. Symptoms are caused by lack of iron reaching tissues. <strong>This is what Fe+ is designed to model.</strong> The balance approach works reliably here.</div>
+    </div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:6px">NORMAL/HIGH FERRITIN — but still symptomatic</div>
+      <div style="font-size:12px;color:#475569;line-height:1.6">Ferritin may be elevated by inflammation or chronic disease even when iron stores are inadequate. Symptoms may still be iron-related but the ferritin number does not reflect the true picture. <strong>Fe+ is not the right tool here.</strong></div>
+    </div>
+  </div>
+  <p style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:10px">Conditions that can elevate ferritin independently of iron stores include:</p>
+  <div style="font-size:12px;color:#475569;line-height:1.8;margin-bottom:10px">
+    · Chronic inflammation (rheumatoid arthritis, IBD, lupus)<br>
+    · Liver conditions (NAFLD, hepatitis, alcohol-related liver disease)<br>
+    · Metabolic syndrome and insulin resistance<br>
+    · Infection or acute illness at time of testing<br>
+    · Certain cancers (ferritin is used as a tumour marker in some contexts)
+  </div>
+  <p style="font-size:12px;line-height:1.7;color:#64748b">This is why a CRP test alongside ferritin is clinically important — a ferritin of 60 µg/L with CRP of 40 means something very different to a ferritin of 60 with CRP of 2. Fe+ does not have a CRP input because it is designed for confirmed iron deficiency — if your CRP is elevated, discuss the interpretation of your ferritin with your GP before relying on this model.</p>
+</div>
+
+<div class="card">
+  <div class="st">What the model does not cover</div>
+  <p style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:12px">Fe+ is designed for one specific scenario: pre-menopausal women with genuinely low ferritin driven primarily by menstrual blood loss. It is not designed for and should not be used to guide management of:</p>
+  <div style="font-size:13px;line-height:1.7;color:#475569">
+    <div style="border-left:3px solid #e2e8f0;padding-left:12px;margin-bottom:10px">
+      <strong style="color:#1e293b">Normal or high ferritin with iron-deficiency symptoms</strong><br>
+      If your ferritin is above 50 µg/L but you still feel iron deficient, the cause is likely not a simple deficit — inflammation, chronic disease, or impaired iron utilisation may be involved. A full iron panel (transferrin saturation, serum iron, TIBC) and CRP are needed alongside ferritin.
+    </div>
+    <div style="border-left:3px solid #e2e8f0;padding-left:12px;margin-bottom:10px">
+      <strong style="color:#1e293b">Hereditary haemochromatosis</strong><br>
+      A genetic condition causing the body to absorb too much iron regardless of stores, because the hepcidin regulatory system is impaired. Ferritin rises progressively and iron deposits in organs. If you have a family history of haemochromatosis, discuss with your GP before using this tool — the iron balance model does not apply.
+    </div>
+    <div style="border-left:3px solid #e2e8f0;padding-left:12px;margin-bottom:10px">
+      <strong style="color:#1e293b">Thalassaemia and haemoglobin disorders</strong><br>
+      These affect red blood cell production and iron utilisation in ways that are not captured by the balance model. Iron supplementation can be harmful in some thalassaemia carriers.
+    </div>
+    <div style="border-left:3px solid #e2e8f0;padding-left:12px">
+      <strong style="color:#1e293b">Anaemia of chronic disease</strong><br>
+      In this condition, inflammation blocks iron from being used for red cell production even when stores are adequate. Ferritin may be normal or high. The balance model does not represent this mechanism.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="st">Is there something else going on? When to look further</div>
+  <p style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:12px">If your ferritin keeps declining despite doing everything right — correct supplement, good diet, oral iron tolerated — and the model's predictions don't match your actual results, it is worth considering whether something else is contributing. Possible explanations include:</p>
+  <div style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:12px">
+    <div style="margin-bottom:8px">· <strong>Absorption impairment</strong> — coeliac disease (even mild or atypical), gut inflammation, or H. pylori infection can significantly reduce iron absorption. The Actual Results tab can detect this: if your ferritin is rising much more slowly than the model predicts despite good adherence, absorption may be impaired.</div>
+    <div style="margin-bottom:8px">· <strong>Unidentified blood loss</strong> — gut endometriosis, bowel pathology, or other sources of occult bleeding not captured by the menstrual loss inputs</div>
+    <div style="margin-bottom:8px">· <strong>Medication interactions</strong> — some medications affect iron absorption (PPIs, SSRIs) or increase bleeding (NSAIDs). These are worth reviewing with your GP.</div>
+    <div>· <strong>Rare hereditary conditions</strong> — iron-refractory iron deficiency anaemia (IRIDA) is a very rare genetic condition where iron absorption is impaired at the transporter level regardless of ferritin. If iron deficiency is truly refractory to treatment, a haematology referral is appropriate.</div>
+  </div>
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 16px;font-size:12px;color:#0369a1;line-height:1.6">
+    <strong>The Actual Results tab is your best diagnostic tool.</strong> When real blood test results are entered, the model derives your personal absorption rate from them. If this derived rate is much lower than expected, it suggests something beyond simple menstrual loss is at play — and gives you a concrete data point to discuss with your GP or specialist.
+  </div>
+</div>
+
+<div class="card">
+  <div class="st">The evidence base</div>
+  <p style="font-size:13px;line-height:1.7;color:#475569;margin-bottom:10px">The clinical assumptions used in this model are based on published research and guidelines:</p>
+  <div style="font-size:12px;color:#64748b;line-height:1.9">
+    · Camaschella C. Iron-deficiency anaemia. <em>NEJM</em> 2015 — tiered absorption rates and ferritin physiology<br>
+    · Hallberg L, Hultén L. Prediction of dietary iron absorption. <em>Am J Clin Nutr</em> 2000 — dietary absorption modelling<br>
+    · Moretti D et al. Alternate-day dosing improves iron absorption. <em>Lancet Haematology</em> 2015 — alternate-day supplement rationale<br>
+    · British Society for Haematology (BSH) 2021 guidelines — iron deficiency diagnosis and treatment thresholds<br>
+    · NICE NG73 — endometriosis diagnosis and management (period management recommendations)<br>
+    · Muñoz M et al. Iron deficiency without anaemia. <em>Br J Anaesth</em> 2011 — symptoms below anaemia threshold<br>
+    · WHO/FAO 2004 — iron requirements in vegetarian and vegan diets
+  </div>
+  <p style="font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">Fe+ is an educational planning tool. It provides estimates based on population averages and your entered data. It does not diagnose, prescribe, or replace clinical assessment. All treatment decisions should be made with a qualified clinician.</p>
+</div>
+
 </div>
 </div>
 
@@ -5237,8 +5356,8 @@ function refreshList(sel){
 }
 function showTab(t){
   window.scrollTo(0,0);
-  ['about','model','actual','infusion','strategy','tips','tolerability','export'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export'][i]===t);});
+  ['about','model','actual','infusion','strategy','tips','tolerability','export','about-model'].forEach(function(id){document.getElementById('tab-'+id).style.display=id===t?'':'none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['about','model','actual','infusion','strategy','tips','tolerability','export','about-model'][i]===t);});
   if(t==='infusion')calcIV();
   if(t==='strategy')calcStrategy();
   if(t==='actual')renderCycleChart();
