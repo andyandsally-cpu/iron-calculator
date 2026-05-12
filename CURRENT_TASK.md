@@ -1,22 +1,42 @@
-# No active task
-
-When starting a new Claude Code task, replace this file with an ACTIVE task in this format:
-
 # Current task
 
 ## Status
-ACTIVE
+READY
 
 ## Goal
-[One clear task]
+Add a solid orange line connecting the two actual result points on the
+"Where is this heading?" chart (renderBalChartE).
 
-## Files likely involved
-- index.html
+## Read first
+Grep "function renderBalChartE" and read the full function to confirm
+current dataset structure before editing.
+
+## The fix
+The actualData dataset currently has showLine:true but spanGaps:false,
+so no line draws between the two sparse non-null points because
+Chart.js won't bridge null gaps with spanGaps:false.
+
+Change the actualData dataset to use spanGaps:true so the line
+connects the two actual points across any null gaps between them:
+
+Find the actualData dataset in the datasets array — it will look like:
+```javascript
+{label:'Actual results',data:actualData,
+ borderColor:'#f97316',borderWidth:2.5,
+ pointRadius:6,pointBackgroundColor:'#f97316',
+ fill:false,tension:0,spanGaps:false,showLine:true}
+```
+
+Change `spanGaps:false` to `spanGaps:true`.
+
+## Files involved
+- index.html — renderBalChartE() actualData dataset only
 
 ## Out of scope
-- [Anything Claude must not touch]
+- Any other dataset or function
 
 ## Acceptance checks
-- [How you know it worked]
-- No paywall/DEV_MODE regression
-- DEV_MODE is false before final production-ready commit
+- Solid orange line visible between the two actual result dots
+- Dashed orange extrapolation continues from second actual onward
+- No other changes
+- No paywall / DEV_MODE regression

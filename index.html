@@ -425,6 +425,9 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
     <input type="text" id="sessionName" placeholder="Patient name / ID" value="Patient 1">
     <button onclick="saveSession()">Save</button>
     <button onclick="deleteSession()">Delete</button>
+    <button onclick="exportSession()" title="Download session as JSON file">⬇ Export</button>
+    <button onclick="importSession()" title="Load session from JSON file">⬆ Import</button>
+    <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="handleImportFile(this)">
   </div>
   <div class="pg">
     <div class="pf"><label>Age</label><input type="number" id="patAge" min="12" max="85" value="28" onchange="applyDefaults();calc()"></div>
@@ -671,6 +674,25 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 </div>
 
+<div id="balanceChartSection">
+  <div style="margin-bottom:24px">
+    <div class="st">Iron balance</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px">
+      Visual scales showing iron losses vs absorption. Beam angle reflects whether you are in deficit, balanced, or surplus.
+    </div>
+    <div id="balChartD" style="width:100%"></div>
+  </div>
+  <div style="margin-bottom:24px">
+    <div class="st">Where is this heading?</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px">
+      Actual results are plotted at their entered test dates. The orange dashed line extrapolates from the latest actual result using the trend from the last two actual results. The blue line starts from the latest actual result and applies the modelled monthly net effect.
+    </div>
+    <div style="position:relative;width:100%;height:220px"><canvas id="balChartE"></canvas></div>
+    <div id="balChartELegend" style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap"></div>
+    <div id="balChartECommentary" style="display:none;margin-top:12px;padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.7;background:#f8fafc;border:1px solid #e2e8f0;color:#1e293b"></div>
+  </div>
+</div>
+
 <div class="section">
 <div class="st">Monthly iron balance</div>
 <div class="grid3" id="metricsGrid"></div>
@@ -678,6 +700,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 
 
+<div id="ferrChartOld" style="display:none">
 <div class="section" style="margin-top:.25rem">
 <div class="st" id="chartTitle">Ferritin trajectory — 12 months</div>
 <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;font-style:italic">Estimated projections — actual results will vary. Individual absorption and losses differ from population averages used in this model.</div>
@@ -686,13 +709,8 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 <div style="display:flex;gap:14px;margin-top:8px;font-size:12px;color:#64748b;flex-wrap:wrap" id="chartLegend"></div>
 <div style="font-size:11px;color:#94a3b8;margin-top:6px;font-style:italic">Results are estimates — real responses vary between individuals.</div>
 </div>
-
-<div class="section" id="historicChartSection" style="display:none;margin-top:.25rem">
-<div class="st">Historic ferritin record</div>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.5">All results entered before the plan start date. Shown for reference only — not used in absorption calculations or plan tracking, as dosing records for this period are unreliable.</p>
-<div style="position:relative;width:100%;height:200px"><canvas id="historicChart"></canvas></div>
-<div style="display:flex;gap:14px;margin-top:6px;font-size:12px;color:#64748b;flex-wrap:wrap" id="historicLegend"></div>
 </div>
+
 <div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('actual')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">Add my actual results →</button></div>
 </div>
 
@@ -780,6 +798,13 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
     <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(234,179,8,0.2)"></span>Suboptimal (early recovery)</span>
     <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(22,163,74,0.15)"></span>Best window for testing</span>
   </div>
+</div>
+</div>
+<div class="section" id="actualHistSection" style="display:none">
+<div class="st">Historic ferritin record</div>
+<div class="card">
+  <p style="font-size:12px;color:#64748b;margin-bottom:10px;line-height:1.5">Your entered ferritin results over time, extended to today. The dashed line shows the trend extrapolated from your last two results. Threshold labels are shown directly on the chart.</p>
+  <div style="position:relative;width:100%;height:230px"><canvas id="actualHistChart"></canvas></div>
 </div>
 </div>
 <div style="text-align:center;padding:20px 0 8px"><button onclick="showTab('strategy')" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer">See my strategy options →</button></div>
@@ -1252,8 +1277,8 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
   </div>
   <div class="eg">
     <div class="eb" onclick="copyGPLetter()">📋 Copy full letter<br><span style="font-size:11px;color:#64748b">Paste into email</span></div>
-    <div class="eb" onclick="copySummary()">📄 Copy plain summary<br><span style="font-size:11px;color:#64748b">For notes or records</span></div>
-    <div class="eb" onclick="printLetter()">🖨 Print letter + chart<br><span style="font-size:11px;color:#64748b">Chart included on print</span></div>
+    <div class="eb" onclick="generateReport()">📋 Full Clinical Summary<br><span style="font-size:11px;color:#64748b">Print / Save PDF</span></div>
+    <div class="eb" onclick="printLetter()">✉️ Letter + Charts<br><span style="font-size:11px;color:#64748b">Print / Save PDF</span></div>
   </div>
   <div class="sm" id="copyMsg">Copied to clipboard</div>
 </div>
@@ -1406,8 +1431,10 @@ window.derivedFerrPM=null;
 var actuals=[{date:'',ferritin:0,supp:0},{date:'',ferritin:0,supp:0}];
 var chartInst=null;
 var stratChartInst=null;
+var balChartEInst=null;
 var historicChartInst=null;
 var tipsChartInst=null;
+var actualHistChartInst=null;
 window.strategyScenario=null;
 window.revisedScenario=null; // stores revised projection from last actual result
 var conds={endo:false,adeno:false,coeliac:false,'oral-intol':false,pcos:false,vegan:false};
@@ -1887,29 +1914,30 @@ function calc(){
 
   var ds=[];
 
-  // BLUE = treatment plan (hero line)
-  if(hasStrategy){
-    ds.push({label:'Treatment plan (Phase 1 recovery → Phase 2 maintenance)',data:window.strategyScenario.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
+  // BLUE = oral supplement + diet trajectory (no infusion effects)
+  if(lc&&lc.ferrLine){
+    ds.push({label:'Projected trajectory (current supplement + diet)',data:lc.ferrLine,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:.3,pointRadius:3,borderWidth:2.5});
   }
 
-  // ORANGE dashed = what happens if supplementation stops after reaching target
+  // ORANGE dashed = what happens if supplementation stops (oral only — no IV)
   var stopLine=null;
-  if(hasStrategy&&lc){
-    var sc2=window.strategyScenario;
-    var postStopRate=(lc.dietNetMonth-lc.totalLossMonth)/8;
-    var ivBoost2=sc2.ivDose>0?mg2f(sc2.ivDose):0;
-    var stopArr=[startFerr];
-    var stReached=startFerr>=sc2.target;
+  if(lc){
+    var postStopRate2=(lc.dietNetMonth-lc.totalLossMonth)/8;
+    var stopArr2=[startFerr];
+    var stReached2=startFerr>=(lc.m12ferr||50);
     for(var ss=1;ss<months;ss++){
-      var sPrev=stopArr[ss-1];
-      var sBoost=(ss===1&&!stReached)?ivBoost2:0;
-      var sNext;
-      if(!stReached){sNext=sPrev+sBoost+(lc.ferrChangePM||0);if(sNext>=sc2.target){stReached=true;sNext=sc2.target;}}
-      else{sNext=sPrev+postStopRate;}
-      stopArr.push(Math.max(FERRITIN_FLOOR,+sNext.toFixed(1)));
+      var sPrev2=stopArr2[ss-1];
+      var sNext2;
+      if(!stReached2){
+        sNext2=sPrev2+(lc.ferrChangePM||0);
+        if(sNext2>=(lc.m12ferr||50)){stReached2=true;sNext2=(lc.m12ferr||50);}
+      } else {
+        sNext2=sPrev2+postStopRate2;
+      }
+      stopArr2.push(Math.max(FERRITIN_FLOOR,+sNext2.toFixed(1)));
     }
-    stopLine=stopArr;
-    ds.push({label:'If supplementation stops after reaching target',data:stopLine,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
+    stopLine=stopArr2;
+    ds.push({label:'If supplementation stops',data:stopLine,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
   }
 
   // PURPLE dashed = revised projection from last actual
@@ -1955,8 +1983,8 @@ function calc(){
 
   // End-of-line labels
   var endLabelMap={
-    'Treatment plan (Phase 1 recovery → Phase 2 maintenance)':{text:'Treatment plan',color:'#3b82f6',yOff:-10},
-    'If supplementation stops after reaching target':{text:'If you stop after target',color:'#f97316',yOff:16},
+    'Projected trajectory (current supplement + diet)':{text:'Projected trajectory',color:'#3b82f6',yOff:-10},
+    'If supplementation stops':{text:'If you stop',color:'#f97316',yOff:16},
     'Revised projection from last blood test':{text:'Revised projection',color:'#7c3aed',yOff:-10}
   };
   chartInst.options.animation={onComplete:function(){
@@ -1980,20 +2008,19 @@ function calc(){
   chartInst.update();
 
   var titleEl=document.getElementById('chartTitle');
-  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months'+(hasStrategy?' · treatment plan vs stopping after target':'');
+  if(titleEl) titleEl.textContent='Ferritin trajectory — 12 months · supplement + diet projection'+(stopLine?' vs stopping':'');
 
   var explainer=document.getElementById('chartExplainer');
   if(explainer){
     var parts=[];
-    if(hasStrategy){
-      var sc=window.strategyScenario;
-      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Treatment plan:</strong> Rises during Phase 1 (recovery dose) until the '+sc.target+' µg/L target is reached, then flattens at the lower maintenance dose needed just to hold steady.');
+    if(lc&&lc.ferrLine){
+      parts.push('<strong style="color:#3b82f6">&#9644; Blue — Projected trajectory:</strong> Where ferritin is headed on your current supplement + diet, with no infusion effects included.');
       if(stopLine){
-        var postStopDescr=postStopRate<-0.5?'falls — net monthly deficit '+rnd(Math.abs(postStopRate)*8)+' mg/month once supplements stop':postStopRate>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
+        var postStopDescr=postStopRate2<-0.5?'falls — net monthly deficit '+rnd(Math.abs(postStopRate2)*8)+' mg/month once supplements stop':postStopRate2>0.5?'continues to rise slightly as diet covers losses':'holds roughly steady as diet just covers losses';
         var stopBreakdown='';
         if(lc){var tLoss2=rnd((lc.basalLossMonth||30)+(lc.mgLostMonth||0));var dNet2=rnd(lc.dietNetMonth||0);var netDef2=rnd(Math.max(0,tLoss2-dNet2));stopBreakdown=' <span data-ctip="ctip-stop-rate" style="color:#94a3b8;font-size:11px">('+tLoss2+' mg/month total losses − '+dNet2+' mg/month from diet = '+netDef2+' mg/month net deficit)</span>';}
-        var stopConclusion=postStopRate<0?' Diet alone cannot replace losses — stores would deplete again without ongoing maintenance supplementation. This is why Phase 2 matters.':' In your case, diet appears to cover losses — stopping supplements after the target may be sustainable, though monitoring is still advisable.';
-        parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops after reaching target:</strong> Ferritin '+postStopDescr+stopBreakdown+'.'+stopConclusion);
+        var stopConclusion=postStopRate2<0?' Diet alone cannot replace losses — stores would deplete again without ongoing supplementation.':' In your case, diet appears to cover losses — stopping supplements may be sustainable, though monitoring is still advisable.';
+        parts.push('<strong style="color:#f97316">- - Orange dashed — If supplementation stops:</strong> Ferritin '+postStopDescr+stopBreakdown+'.'+stopConclusion);
       }
     }
     if(hasRevised){
@@ -2018,8 +2045,8 @@ function calc(){
   }
 
   document.getElementById('chartLegend').innerHTML=
-    (hasStrategy?li('#3b82f6','Blue — Treatment plan (Phase 1: recovery · Phase 2: maintenance)'):'')+
-    (stopLine?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
+    (lc&&lc.ferrLine?li('#3b82f6','Blue — Projected trajectory (current supplement + diet)'):'')+
+    (stopLine?li('#f97316','Orange dashed — If supplementation stops',true):'')+
     (hasRevised?li('#7c3aed','Purple dashed — Revised projection from last blood test',true):'')+
     (va.length?li('#ea580c','Orange dots — Actual blood test results'):'');
   if(!window._inCalcDerived) calcDerived();
@@ -2028,6 +2055,7 @@ function calc(){
     else if(window.strategyScenario) calcStrategy();
   }
   autoSave();
+  renderBalanceCharts();
   // Render cycle chart on actuals tab if visible
   if(document.getElementById('tab-actual').style.display!=='none') renderCycleChart();
 }
@@ -2077,6 +2105,283 @@ function updateAnalysis(){
   box.className='analysis-box'+(severity==='danger'?' danger-box':severity==='warn'?' warn':severity==='balanced'?' balanced':severity==='positive'?' positive':'');
   title.textContent=severity==='danger'?'Clinical analysis — action recommended':severity==='warn'?'Clinical analysis — monitor closely':severity==='balanced'?'✅ Clinical analysis — balanced':'↑ Clinical analysis — iron stores rising';
   text.innerHTML=lines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
+}
+
+function renderBalanceCharts(){
+  renderBalScalesD();
+  renderBalChartE();
+}
+
+function renderBalScalesD(){
+  var el=document.getElementById('balChartD');
+  if(!el||!lc)return;
+  var losses=lc.totalLossMonth;
+  var absorbed=lc.mgAbsMonth;
+  var net=lc.netMonth;
+  var lossUg=+(losses/8).toFixed(1);
+  var absUg=+(absorbed/8).toFixed(1);
+  var netUg=+(net/8).toFixed(1);
+  var tiltDeg=Math.max(-18,Math.min(18,-(net/20)*18));
+  var tiltRad=tiltDeg*Math.PI/180;
+  var bx=340,by=140,armLen=200;
+  var lx=bx-armLen*Math.cos(tiltRad),ly=by+armLen*Math.sin(tiltRad);
+  var rx=bx+armLen*Math.cos(tiltRad),ry=by-armLen*Math.sin(tiltRad);
+  var chainLen=30;
+  var lpx=lx,lpy=ly+chainLen,rpx=rx,rpy=ry+chainLen;
+  var netLabel=net<-0.5?'Deficit: −'+Math.abs(net)+' mg · −'+Math.abs(netUg)+' µg/L /mo':
+               net>0.5?'Surplus: +'+net+' mg · +'+netUg+' µg/L /mo':'Balanced';
+  var netColor=net<-0.5?'#A32D2D':net>0.5?'#3B6D11':'#185FA5';
+  var dietAbs=Math.max(0,+(lc.dietNetMonth||0).toFixed(1));
+  var suppAbs=Math.max(0,+(absorbed-dietAbs).toFixed(1));
+  var dietUg=+(dietAbs/8).toFixed(1);
+  var suppUg=+(suppAbs/8).toFixed(1);
+  var mLoss=lc.mgLostMonth,bLoss=lc.basalLossMonth;
+  var mLossUg=+(mLoss/8).toFixed(1),bLossUg=+(bLoss/8).toFixed(1);
+  el.innerHTML='<svg width="100%" viewBox="0 0 680 340" role="img">'+
+    '<title>Iron balance scales</title>'+
+    '<desc>Balance scales showing iron losses vs absorption</desc>'+
+    '<rect x="334" y="60" width="12" height="160" rx="4" fill="#94a3b8" opacity="0.3"/>'+
+    '<rect x="284" y="218" width="112" height="8" rx="4" fill="#94a3b8" opacity="0.3"/>'+
+    '<circle cx="340" cy="'+by+'" r="7" fill="#94a3b8" opacity="0.4"/>'+
+    '<line x1="'+lx+'" y1="'+ly+'" x2="'+rx+'" y2="'+ry+'" stroke="#475569" stroke-width="3" opacity="0.4" stroke-linecap="round"/>'+
+    '<line x1="'+lx+'" y1="'+ly+'" x2="'+lpx+'" y2="'+lpy+'" stroke="#94a3b8" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,2"/>'+
+    '<line x1="'+rx+'" y1="'+ry+'" x2="'+rpx+'" y2="'+rpy+'" stroke="#94a3b8" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,2"/>'+
+    '<ellipse cx="'+lpx+'" cy="'+lpy+'" rx="68" ry="10" fill="#F7C1C1" stroke="#E24B4A" stroke-width="1"/>'+
+    '<rect x="'+(lpx-68)+'" y="'+(lpy+8)+'" width="136" height="88" rx="7" fill="#FCEBEB" stroke="#F09595" stroke-width="0.5"/>'+
+    '<text x="'+lpx+'" y="'+(lpy+24)+'" text-anchor="middle" style="font-size:12px;font-weight:bold;fill:#A32D2D">Losses</text>'+
+    '<text x="'+lpx+'" y="'+(lpy+40)+'" text-anchor="middle" style="font-size:10px;fill:#A32D2D">Menstrual: '+mLoss+' mg · '+mLossUg+' µg/L</text>'+
+    '<text x="'+lpx+'" y="'+(lpy+54)+'" text-anchor="middle" style="font-size:10px;fill:#A32D2D">Basal: '+bLoss+' mg · '+bLossUg+' µg/L</text>'+
+    '<line x1="'+(lpx-58)+'" y1="'+(lpy+62)+'" x2="'+(lpx+58)+'" y2="'+(lpy+62)+'" stroke="#F09595" stroke-width="0.5"/>'+
+    '<text x="'+lpx+'" y="'+(lpy+76)+'" text-anchor="middle" style="font-size:12px;font-weight:bold;fill:#A32D2D">'+losses+' mg · '+lossUg+' µg/L /mo</text>'+
+    '<ellipse cx="'+rpx+'" cy="'+rpy+'" rx="68" ry="10" fill="#C0DD97" stroke="#639922" stroke-width="1"/>'+
+    '<rect x="'+(rpx-68)+'" y="'+(rpy+8)+'" width="136" height="88" rx="7" fill="#EAF3DE" stroke="#97C459" stroke-width="0.5"/>'+
+    '<text x="'+rpx+'" y="'+(rpy+24)+'" text-anchor="middle" style="font-size:12px;font-weight:bold;fill:#3B6D11">Absorbed</text>'+
+    '<text x="'+rpx+'" y="'+(rpy+40)+'" text-anchor="middle" style="font-size:10px;fill:#3B6D11">Diet: '+dietAbs+' mg · '+dietUg+' µg/L</text>'+
+    '<text x="'+rpx+'" y="'+(rpy+54)+'" text-anchor="middle" style="font-size:10px;fill:#3B6D11">Supplement: '+suppAbs+' mg · '+suppUg+' µg/L</text>'+
+    '<line x1="'+(rpx-58)+'" y1="'+(rpy+62)+'" x2="'+(rpx+58)+'" y2="'+(rpy+62)+'" stroke="#97C459" stroke-width="0.5"/>'+
+    '<text x="'+rpx+'" y="'+(rpy+76)+'" text-anchor="middle" style="font-size:12px;font-weight:bold;fill:#3B6D11">'+absorbed+' mg · '+absUg+' µg/L /mo</text>'+
+    '<text x="340" y="322" text-anchor="middle" style="font-size:13px;font-weight:bold;fill:'+netColor+'">'+netLabel+'</text>'+
+    '</svg>';
+  var summary='';
+  if(net<-3){
+    summary='Losses exceed absorption — iron stores are being depleted at approximately '+Math.abs(netUg)+' µg/L per month. '+
+      'At this rate, ferritin will continue to fall without increasing absorption or reducing losses.';
+  } else if(net>3){
+    summary='Absorption outweighs losses — iron stores are building at approximately '+netUg+' µg/L per month. '+
+      'This is a positive balance — continue current plan and retest to confirm.';
+  } else {
+    summary='Balance is approximately neutral — absorption and losses are roughly matched. Stores are likely to remain stable, '+
+      'though a small ongoing deficit may still exist.';
+  }
+  var wrapper=el.parentNode;
+  if(wrapper){
+    var existing=document.getElementById('balScalesSummary');
+    if(existing)existing.parentNode.removeChild(existing);
+    var sumEl=document.createElement('div');
+    sumEl.id='balScalesSummary';
+    sumEl.style.cssText='margin-top:0;margin-bottom:16px;padding:12px 16px;'+
+      'border-radius:8px;font-size:13px;line-height:1.6;'+
+      'background:'+(net<-3?'#FDEAEA':net>3?'#EAF3DE':'#EFF6FF')+';'+
+      'border:1px solid '+(net<-3?'#F09595':net>3?'#97C459':'#BFDBFE')+';';
+    sumEl.innerHTML=summary;
+    wrapper.appendChild(sumEl);
+  }
+}
+
+function renderBalChartE(){
+  var canvas=document.getElementById('balChartE');
+  if(!canvas||!lc)return;
+  var rate=lc.ferrChangePM;
+  var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  var allValid=actuals.filter(function(a){return a.ferritin>0&&a.date;})
+    .sort(function(a,b){return parseDate(a.date)-parseDate(b.date);});
+
+  var lastActual=allValid.length>0?allValid[allValid.length-1]:null;
+  var lastVal=lastActual?lastActual.ferritin:lc.startFerr;
+  var lastDate=lastActual?parseDate(lastActual.date):null;
+
+  var obsRate=null,obsRateLabel='';
+  var a1=null,a2=null,d1=null,d2=null;
+  if(allValid.length>=2){
+    a1=allValid[allValid.length-2];
+    a2=allValid[allValid.length-1];
+    d1=parseDate(a1.date);
+    d2=parseDate(a2.date);
+    if(d1&&d2&&d2>d1){
+      var daysBetween=(d2-d1)/(1000*60*60*24);
+      var obsFerrPM=+((a2.ferritin-a1.ferritin)/daysBetween*30.44).toFixed(1);
+      var obsMgPM=+(obsFerrPM*8).toFixed(1);
+      obsRate=obsFerrPM;
+      obsRateLabel=(obsFerrPM>=0?'+':'')+obsFerrPM+' µg/L/mo'
+        +' ('+(obsMgPM>=0?'+':'')+obsMgPM+' mg/mo)';
+    }
+  }
+
+  var labelBaseDate=d1?new Date(d1.getFullYear(),d1.getMonth(),1)
+                      :(lastDate?new Date(lastDate.getFullYear(),lastDate.getMonth(),1):new Date());
+  var lastDateNorm=lastDate?new Date(lastDate.getFullYear(),lastDate.getMonth(),1):labelBaseDate;
+  var monthsToLast=Math.round((lastDateNorm-labelBaseDate)/(1000*60*60*24*30.44));
+  var totalMonths=Math.max(monthsToLast+7,8);
+  var labels=Array.from({length:totalMonths},function(_,i){
+    var d=new Date(labelBaseDate.getFullYear(),labelBaseDate.getMonth()+i,1);
+    return mn[d.getMonth()]+' '+d.getFullYear().toString().slice(2);
+  });
+
+  function monthIdx(date){
+    if(!date)return 0;
+    var d=new Date(date.getFullYear(),date.getMonth(),1);
+    return Math.round((d-labelBaseDate)/(1000*60*60*24*30.44));
+  }
+
+  var lastIdx=monthIdx(lastDate);
+
+  var projLine=new Array(totalMonths).fill(null);
+  projLine[lastIdx]=lastVal;
+  for(var i=lastIdx+1;i<totalMonths;i++){
+    projLine[i]=Math.max(FERRITIN_FLOOR,+(projLine[i-1]+rate).toFixed(1));
+  }
+
+  var actualData=new Array(totalMonths).fill(null);
+  if(a1&&d1)actualData[monthIdx(d1)]=a1.ferritin;
+  if(a2&&d2)actualData[monthIdx(d2)]=a2.ferritin;
+
+  var extrapData=new Array(totalMonths).fill(null);
+  if(obsRate!==null){
+    extrapData[lastIdx]=lastVal;
+    for(var j=lastIdx+1;j<totalMonths;j++){
+      extrapData[j]=Math.max(FERRITIN_FLOOR,+(extrapData[j-1]+obsRate).toFixed(1));
+    }
+  }
+
+  var allNums=projLine.concat(extrapData).concat(actualData)
+    .filter(function(v){return v!==null;});
+  var yMax=Math.ceil(Math.max(Math.max.apply(null,allNums.length?allNums:[60])*1.15,60)/10)*10;
+
+  if(balChartEInst){balChartEInst.destroy();balChartEInst=null;}
+  balChartEInst=new Chart(canvas,{
+    type:'line',
+    data:{labels:labels,datasets:[
+      {label:'Model projection',data:projLine,borderColor:'#3b82f6',
+       backgroundColor:'rgba(59,130,246,0.07)',fill:true,tension:0.3,
+       pointRadius:4,borderWidth:2.5,spanGaps:false},
+      obsRate!==null?{label:'Actual results',data:actualData,
+       borderColor:'#f97316',borderWidth:2.5,
+       pointRadius:6,pointBackgroundColor:'#f97316',
+       fill:false,tension:0,spanGaps:true,showLine:true}:null,
+      obsRate!==null?{label:'Observed trend (extrapolated)',data:extrapData,
+       borderColor:'#f97316',borderDash:[6,4],borderWidth:2,
+       pointRadius:3,pointBackgroundColor:'#f97316',
+       fill:false,tension:0.3,spanGaps:false}:null
+    ].filter(Boolean)},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:function(c){
+          if(c.raw===null)return null;
+          return c.dataset.label+': '+rnd(c.raw)+' µg/L';
+        }}}},
+      scales:{
+        y:{min:0,max:yMax,
+          title:{display:true,text:'Ferritin µg/L',font:{size:11}},
+          ticks:{font:{size:11}}},
+        x:{ticks:{font:{size:11},maxRotation:0,autoSkip:true,maxTicksLimit:10}}}},
+    plugins:[{
+      afterDraw:function(chart){
+        var cx=chart.ctx,ca=chart.chartArea;
+        var yS=chart.scales.y,xS=chart.scales.x,xL=ca.left,xR=ca.right;
+        [{val:50,color:'#16a34a',label:'Sufficient (50 µg/L)'},
+         {val:30,color:'#dc2626',label:'Depleted (30 µg/L)'},
+         {val:FERRITIN_FLOOR,color:'#94a3b8',label:'Floor ('+FERRITIN_FLOOR+' µg/L)'}
+        ].forEach(function(th){
+          var yPx=yS.getPixelForValue(th.val);
+          if(yPx<ca.top||yPx>ca.bottom)return;
+          cx.save();
+          cx.setLineDash([5,3]);cx.strokeStyle=th.color;cx.lineWidth=1.2;
+          cx.beginPath();cx.moveTo(xL,yPx);cx.lineTo(xR,yPx);cx.stroke();
+          cx.setLineDash([]);cx.font='10px sans-serif';cx.textAlign='right';
+          var tw=cx.measureText(th.label).width;
+          cx.fillStyle='rgba(255,255,255,0.88)';cx.fillRect(xR-tw-10,yPx-13,tw+8,14);
+          cx.fillStyle=th.color;cx.fillText(th.label,xR-6,yPx-3);
+          cx.restore();
+        });
+        var bMid=lastIdx+Math.floor((totalMonths-lastIdx)/2);
+        if(projLine[bMid]!=null){
+          var bx=xS.getPixelForValue(bMid);
+          var by=yS.getPixelForValue(projLine[bMid])-14;
+          by=Math.max(ca.top+10,Math.min(ca.bottom-4,by));
+          var bLabel=(rate>=0?'+':'')+rate.toFixed(1)+' µg/L/mo';
+          cx.save();cx.font='italic 10px sans-serif';cx.textAlign='center';
+          var bw=cx.measureText(bLabel).width;
+          cx.fillStyle='rgba(255,255,255,0.88)';cx.fillRect(bx-bw/2-4,by-11,bw+8,14);
+          cx.fillStyle='#3b82f6';cx.fillText(bLabel,bx,by);cx.restore();
+        }
+        if(obsRate!==null&&obsRateLabel){
+          var oMid=lastIdx+Math.floor((totalMonths-lastIdx)/2);
+          if(extrapData[oMid]!=null){
+            var ox=xS.getPixelForValue(oMid);
+            var oy=yS.getPixelForValue(extrapData[oMid])+16;
+            oy=Math.max(ca.top+10,Math.min(ca.bottom-4,oy));
+            cx.save();cx.font='italic 10px sans-serif';cx.textAlign='center';
+            var ow=cx.measureText(obsRateLabel).width;
+            cx.fillStyle='rgba(255,255,255,0.88)';cx.fillRect(ox-ow/2-4,oy-11,ow+8,14);
+            cx.fillStyle='#f97316';cx.fillText(obsRateLabel,ox,oy);cx.restore();
+          }
+        }
+      }
+    }]
+  });
+
+  var leg=document.getElementById('balChartELegend');
+  if(leg){
+    leg.innerHTML=
+      '<span style="display:flex;align-items:center;gap:5px">'+
+        '<span style="display:inline-block;width:14px;height:3px;background:#3b82f6;border-radius:2px"></span>'+
+        'Model projection (diet + supplement rate)</span>'+
+      (obsRate!==null?
+        '<span style="display:flex;align-items:center;gap:5px">'+
+          '<span style="display:inline-block;width:14px;height:3px;background:#f97316;border-radius:2px"></span>'+
+          'Actual results (last 2 tests)</span>':'')+
+      (obsRate!==null?
+        '<span style="display:flex;align-items:center;gap:5px">'+
+          '<span style="display:inline-block;width:14px;border-top:2px dashed #f97316"></span>'+
+          'Observed trend (extrapolated)</span>':'');
+  }
+
+  var commentary='';
+  if(obsRate!==null){
+    var rateDiff=+(obsRate-rate).toFixed(1);
+    if(rateDiff<-1.5){
+      commentary='<strong>Your observed trend is lower than the model predicts</strong> — '
+        +'the orange line is declining faster (or rising more slowly) than the blue line suggests it should based on your current settings. '
+        +'This difference of <strong>'+(obsRate>=0?'+':'')+obsRate+' µg/L/mo observed vs '+(rate>=0?'+':'')+rate.toFixed(1)+' µg/L/mo modelled</strong> could suggest: '
+        +'<ul style="margin:8px 0 0 16px;padding:0">'
+        +'<li>Your actual absorption may be lower than estimated — consider whether you are taking iron consistently and at the right time (away from tea, coffee, calcium)</li>'
+        +'<li>Losses may be higher than entered — check whether your flow or cycle length has changed</li>'
+        +'<li>An absorption issue such as coeliac disease or gut inflammation could be reducing how much iron reaches your stores — worth discussing with your GP if the gap persists</li>'
+        +'<li>Note: this is based on only two results — a third test would give a much more reliable trend</li>'
+        +'</ul>';
+    } else if(rateDiff>1.5){
+      commentary='<strong>Your observed trend is better than the model predicts</strong> — '
+        +'the orange line is rising faster (or declining more slowly) than the blue line suggests. '
+        +'This difference of <strong>'+(obsRate>=0?'+':'')+obsRate+' µg/L/mo observed vs '+(rate>=0?'+':'')+rate.toFixed(1)+' µg/L/mo modelled</strong> could suggest: '
+        +'<ul style="margin:8px 0 0 16px;padding:0">'
+        +'<li>Your absorption may be higher than the model estimates — this is a positive sign</li>'
+        +'<li>Your losses may be lower than entered — the model may be slightly overestimating your menstrual loss</li>'
+        +'<li>Consider updating your settings to better reflect your actual pattern</li>'
+        +'<li>Note: this is based on only two results — a third test would confirm whether this trend is sustained</li>'
+        +'</ul>';
+    } else {
+      commentary='<strong>Your observed trend broadly matches the model</strong> — '
+        +'the orange and blue lines are tracking closely ('+(obsRate>=0?'+':'')+obsRate+' µg/L/mo observed vs '+(rate>=0?'+':'')+rate.toFixed(1)+' µg/L/mo modelled). '
+        +'This suggests your supplement and diet settings are a reasonable reflection of your actual absorption. '
+        +'Continue monitoring with regular blood tests to confirm.';
+    }
+  }
+  var commDiv=document.getElementById('balChartECommentary');
+  if(commDiv){
+    if(commentary){commDiv.innerHTML=commentary;commDiv.style.display='';}
+    else{commDiv.style.display='none';}
+  }
 }
 
 function mc(label,value,unit,cls,ctipId){
@@ -2319,25 +2624,64 @@ function renderCycleChart(){
         var xAxis=chart.scales.x;
         var yAxis=chart.scales.y;
         var top=yAxis.top;var bottom=yAxis.bottom;
-        var zones=[
-          {from:0,to:bleedDays-1,color:'rgba(220,38,38,0.12)',label:'Avoid'},
-          {from:bleedDays,to:bleedDays+3,color:'rgba(234,179,8,0.10)',label:'Suboptimal'},
-          {from:bestStart-1,to:bestEnd-1,color:'rgba(22,163,74,0.10)',label:'Best'}
+        // Use getPixelForValue with 0-based data indices — correct for any cycle length
+        // regardless of how many axis ticks are rendered (getPixelForTick is tick-count dependent)
+        var halfStep=cycleLen>1?(xAxis.getPixelForValue(1)-xAxis.getPixelForValue(0))/2:0;
+        function px(idx){return Math.max(xAxis.left,Math.min(xAxis.right,xAxis.getPixelForValue(idx)));}
+        var fills=[
+          {from:0,to:bleedDays-1,color:'rgba(220,38,38,0.12)'},
+          {from:bleedDays,to:bleedDays+3,color:'rgba(234,179,8,0.10)'},
+          {from:bestStart-1,to:bestEnd-1,color:'rgba(22,163,74,0.10)'}
         ];
-        zones.forEach(function(z){
-          if(z.from>=xAxis.ticks.length||z.to<0)return;
-          var x0=xAxis.getPixelForTick(Math.max(0,z.from));
-          var x1=xAxis.getPixelForTick(Math.min(xAxis.ticks.length-1,z.to));
-          ctx.fillStyle=z.color;
-          ctx.fillRect(x0,top,x1-x0,bottom-top);
-          // Zone label
-          ctx.save();
-          ctx.font='bold 9px -apple-system,sans-serif';
-          ctx.fillStyle=z.color.replace('0.1','0.8').replace('0.12','0.8').replace('0.10','0.8');
-          ctx.textAlign='center';
-          ctx.fillText(z.label,(x0+x1)/2,top+10);
-          ctx.restore();
+        fills.forEach(function(z){
+          if(z.from>cycleLen-1||z.to<0)return;
+          var x0=Math.max(xAxis.left,px(Math.max(0,z.from))-halfStep);
+          var x1=Math.min(xAxis.right,px(Math.min(cycleLen-1,z.to))+halfStep);
+          if(x1>x0){ctx.fillStyle=z.color;ctx.fillRect(x0,top,x1-x0,bottom-top);}
         });
+        // 2px vertical marker at end of bleed period
+        var bleedEdge=Math.min(xAxis.right,px(bleedDays-1)+halfStep);
+        if(bleedEdge>=xAxis.left){
+          ctx.fillStyle='rgba(220,38,38,0.45)';
+          ctx.fillRect(bleedEdge-1,top,2,bottom-top);
+        }
+      },
+      afterDraw:function(chart){
+        var ctx=chart.ctx;
+        var xAxis=chart.scales.x;
+        var yAxis=chart.scales.y;
+        var top=yAxis.top;
+        var halfStep=cycleLen>1?(xAxis.getPixelForValue(1)-xAxis.getPixelForValue(0))/2:0;
+        function px(idx){return Math.max(xAxis.left,Math.min(xAxis.right,xAxis.getPixelForValue(idx)));}
+        var zones=[
+          {from:0,to:bleedDays-1,color:'rgba(185,28,28,0.85)',label:'Avoid testing',sub:'Bleeding'},
+          {from:bleedDays,to:bleedDays+3,color:'rgba(161,98,7,0.85)',label:'Suboptimal',sub:null},
+          {from:bestStart-1,to:bestEnd-1,color:'rgba(22,163,74,0.90)',label:'Best time to test',sub:null}
+        ];
+        ctx.save();
+        ctx.textAlign='center';
+        zones.forEach(function(z){
+          if(z.from>cycleLen-1||z.to<0)return;
+          var x0=Math.max(xAxis.left,px(Math.max(0,z.from))-halfStep);
+          var x1=Math.min(xAxis.right,px(Math.min(cycleLen-1,z.to))+halfStep);
+          var width=x1-x0;
+          if(width<2)return;
+          var tx=(x0+x1)/2;
+          if(width>=40){
+            ctx.font='bold 10px -apple-system,sans-serif';
+            var tw=ctx.measureText(z.label).width;
+            ctx.fillStyle='rgba(255,255,255,0.88)';
+            ctx.fillRect(tx-tw/2-4,top+3,tw+8,14);
+            ctx.fillStyle=z.color;
+            ctx.fillText(z.label,tx,top+14);
+          }
+          if(z.sub&&width>30){
+            ctx.font='9px -apple-system,sans-serif';
+            ctx.fillStyle=z.color;
+            ctx.fillText(z.sub,tx,top+26);
+          }
+        });
+        ctx.restore();
       }
     }]
   });
@@ -2897,7 +3241,6 @@ function renderHistoricChart(historicResults){
   var ferritinByDate={};
   historicResults.forEach(function(a){if(a.date)ferritinByDate[a.date]=a.ferritin;});
   var allDates=Object.keys(ferritinByDate).slice();
-  historicInfusions.forEach(function(inf){if(inf.date&&!ferritinByDate.hasOwnProperty(inf.date))allDates.push(inf.date);});
   allDates.sort();
 
   // Insert today into the label axis (null data) so the afterDraw marker can be positioned exactly
@@ -2910,6 +3253,28 @@ function renderHistoricChart(historicResults){
 
   var labels=allDates;
   var data=allDates.map(function(d){return ferritinByDate.hasOwnProperty(d)?ferritinByDate[d]:null;});
+  // Extrapolate trend from last two historic results to today
+  var extrapHist=new Array(allDates.length).fill(null);
+  var histValid=historicResults.slice().sort(function(a,b){
+    return parseDate(a.date)-parseDate(b.date);
+  }).filter(function(a){return a.ferritin>0&&a.date;});
+  if(showToday&&histValid.length>=2){
+    var hd1=parseDate(histValid[histValid.length-2].date);
+    var hd2=parseDate(histValid[histValid.length-1].date);
+    var hf1=histValid[histValid.length-2].ferritin;
+    var hf2=histValid[histValid.length-1].ferritin;
+    if(hd1&&hd2>hd1){
+      var hSlope=(hf2-hf1)/((hd2-hd1)/(1000*60*60*24));
+      var hDaysToToday=(new Date()-hd2)/(1000*60*60*24);
+      var hExtrapVal=Math.max(0,Math.round((hf2+hSlope*hDaysToToday)*10)/10);
+      var todayIdx=allDates.indexOf(todayStr);
+      var lastHistIdx=allDates.indexOf(histValid[histValid.length-1].date);
+      if(todayIdx>=0&&lastHistIdx>=0){
+        extrapHist[lastHistIdx]=hf2;
+        extrapHist[todayIdx]=hExtrapVal;
+      }
+    }
+  }
   var nonNull=data.filter(function(v){return v!=null;});
   var maxVal=Math.max.apply(null,nonNull);
   var minVal=Math.min.apply(null,nonNull);
@@ -2924,6 +3289,10 @@ function renderHistoricChart(historicResults){
       labels:labels,
       datasets:[
         {label:'Ferritin (historic)',data:data,spanGaps:true,borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,0.08)',fill:true,tension:.3,pointRadius:pts>20?3:5,pointBackgroundColor:'#64748b',borderWidth:1.5},
+        {label:'Trend (extrapolated to today)',data:extrapHist,
+         borderColor:'#94a3b8',borderDash:[6,4],borderWidth:1.5,
+         pointRadius:function(ctx){return ctx.dataIndex===allDates.indexOf(todayStr)?4:0;},
+         pointBackgroundColor:'#cbd5e1',fill:false,spanGaps:false},
         {label:'Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',data:new Array(allDates.length).fill(50),borderColor:'#16a34a',borderDash:[6,3],borderWidth:1.5,pointRadius:0,fill:false},
         {label:'Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',data:new Array(allDates.length).fill(30),borderColor:'#dc2626',borderDash:[4,2],borderWidth:1.5,pointRadius:0,fill:false}
       ]
@@ -2942,18 +3311,6 @@ function renderHistoricChart(historicResults){
         var ctx2=chart.ctx;
         ctx2.save();
         var yTop=chart.chartArea.top,yBot=chart.chartArea.bottom;
-        // Infusion markers (amber)
-        historicInfusions.forEach(function(inf){
-          if(!inf.date)return;
-          var idx=labels.indexOf(inf.date);
-          if(idx<0)return;
-          var xPos=chart.scales.x.getPixelForValue(idx);
-          ctx2.strokeStyle='#f59e0b';ctx2.lineWidth=2;ctx2.setLineDash([4,3]);
-          ctx2.beginPath();ctx2.moveTo(xPos,yTop);ctx2.lineTo(xPos,yBot);ctx2.stroke();
-          ctx2.setLineDash([]);
-          ctx2.fillStyle='#92400e';ctx2.font='bold 10px sans-serif';ctx2.textAlign='center';
-          ctx2.fillText(inf.dose+'mg IV',xPos,yTop+10);
-        });
         // Today marker (blue)
         if(showToday){
           var tIdx=labels.indexOf(todayStr);
@@ -2970,11 +3327,12 @@ function renderHistoricChart(historicResults){
       }
     }]
   });
-  document.getElementById('historicLegend').innerHTML=
+  var hLegEl=document.getElementById('historicLegend');
+  if(hLegEl)hLegEl.innerHTML=
     li('#64748b','Grey — Historic ferritin readings')+
     li('#16a34a','Green dashed — Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',true)+
     li('#dc2626','Red dashed — Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',true)+
-    (historicInfusions.length?li('#f59e0b','Amber dashed — IV infusion event',true):'')+
+    li('#94a3b8','Grey dashed — Trend extrapolated to today',true)+
     (showToday?li('#0369a1','Blue dashed — Today',true):'');
 }
 
@@ -3024,6 +3382,7 @@ function calcDerived(){
     window.revisedScenario=null;
     var pvs=document.getElementById('planVsActualSection');if(pvs)pvs.style.display='none';
     var ads=document.getElementById('adherenceSection');if(ads)ads.style.display='none';
+    renderActualHistChart();
     window._inCalcDerived=false;
     return;
   }
@@ -3236,7 +3595,129 @@ function calcDerived(){
   };
 
   // derivedFerrPM is now set — calc() will pick it up on next run
+  renderActualHistChart();
   window._inCalcDerived=false;
+}
+
+function renderActualHistChart(){
+  var canvas=document.getElementById('actualHistChart');
+  if(!canvas)return;
+  var section=document.getElementById('actualHistSection');
+  var valid=actuals.filter(function(a){return a.ferritin>0&&a.date;}).sort(function(a,b){return parseDate(a.date)-parseDate(b.date);});
+  if(valid.length<2){if(section)section.style.display='none';return;}
+  if(section)section.style.display='';
+
+  var today=new Date();
+  var todayLabel=today.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'});
+  var labels=valid.map(function(a){
+    var d=parseDate(a.date);
+    return d?d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'}):'?';
+  });
+  var ferrData=valid.map(function(a){return a.ferritin;});
+
+  // Extend x-axis to today if today is after the last result
+  var lastDate=parseDate(valid[valid.length-1].date);
+  var addToday=lastDate&&today>lastDate;
+  if(addToday){labels.push(todayLabel);ferrData.push(null);}
+  var n=labels.length;
+
+  // Extrapolate trend from last two results to today as a dashed line
+  var extrapData=new Array(n).fill(null);
+  if(addToday&&valid.length>=2&&lastDate){
+    var d1=parseDate(valid[valid.length-2].date);
+    var d2=lastDate;
+    var f1=valid[valid.length-2].ferritin;
+    var f2=valid[valid.length-1].ferritin;
+    if(d1&&d2>d1){
+      var slope=(f2-f1)/((d2-d1)/(1000*60*60*24));
+      var daysToToday=(today-d2)/(1000*60*60*24);
+      var extrapVal=Math.max(0,Math.round((f2+slope*daysToToday)*10)/10);
+      extrapData[n-2]=f2;
+      extrapData[n-1]=extrapVal;
+    }
+  }
+
+  // y-axis range — include extrapolated value if present
+  var allVals=ferrData.filter(function(v){return v!==null;}).concat(extrapData.filter(function(v){return v!==null;})).concat([15]);
+  var mn=Math.max(0,Math.floor(Math.min.apply(null,allVals)-5));
+  var mx=Math.ceil(Math.max.apply(null,allVals.concat([55]))+5);
+
+  if(actualHistChartInst)actualHistChartInst.destroy();
+  actualHistChartInst=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:'Ferritin µg/L',data:ferrData,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.10)',fill:true,tension:0.3,pointRadius:4,pointBackgroundColor:'#3b82f6',borderWidth:2,spanGaps:false},
+        {label:'Trend (extrapolated)',data:extrapData,borderColor:'#3b82f6',borderDash:[6,4],borderWidth:1.5,pointRadius:function(ctx){return ctx.dataIndex===n-1?4:0;},pointBackgroundColor:'#93c5fd',fill:false,spanGaps:false},
+        {label:'50 µg/L — low-normal',data:new Array(n).fill(50),borderColor:'#eab308',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'30 µg/L — functional deficiency',data:new Array(n).fill(30),borderColor:'#f97316',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'15 µg/L — severe depletion',data:new Array(n).fill(15),borderColor:'#dc2626',borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(ctx){
+          if(ctx.datasetIndex===1&&ctx.dataIndex===n-1)return 'Extrapolated today: '+ctx.raw+' µg/L';
+          return ctx.dataset.label.split('—')[0].trim()+': '+ctx.raw+' µg/L';
+        }}}
+      },
+      scales:{
+        y:{min:mn,max:mx,title:{display:true,text:'Ferritin µg/L',font:{size:10}},ticks:{font:{size:10}}},
+        x:{ticks:{font:{size:10},maxRotation:30,autoSkip:true,maxTicksLimit:10,callback:function(val,idx,ticks){
+          if(addToday&&idx===ticks.length-1)return todayLabel;
+          return this.getLabelForValue(val);
+        }}}
+      }
+    },
+    plugins:[{
+      id:'thresholdLabels',
+      afterDraw:function(chart){
+        var ctx=chart.ctx;
+        var yAxis=chart.scales.y;
+        var xAxis=chart.scales.x;
+        var thresholds=[
+          {val:50,label:'50 — low-normal',color:'#ca8a04'},
+          {val:30,label:'30 — functional deficiency',color:'#c2410c'},
+          {val:15,label:'15 — severe depletion',color:'#dc2626'}
+        ];
+        ctx.save();
+        ctx.font='bold 9px -apple-system,sans-serif';
+        ctx.textAlign='right';
+        thresholds.forEach(function(t){
+          if(t.val<yAxis.min||t.val>yAxis.max)return;
+          var y=yAxis.getPixelForValue(t.val);
+          var x=xAxis.right-4;
+          var tw=ctx.measureText(t.label).width;
+          ctx.fillStyle='rgba(255,255,255,0.85)';
+          ctx.fillRect(x-tw-5,y-10,tw+10,13);
+          ctx.fillStyle=t.color;
+          ctx.fillText(t.label,x,y);
+        });
+        ctx.restore();
+        // Label the extrapolated today value on the chart
+        if(addToday&&extrapData[n-1]!=null){
+          var exX=xAxis.getPixelForValue(n-1);
+          var exY=yAxis.getPixelForValue(extrapData[n-1]);
+          if(exX>=chart.chartArea.left&&exX<=chart.chartArea.right&&
+             exY>=chart.chartArea.top&&exY<=chart.chartArea.bottom){
+            ctx.save();
+            var exLabel='Est. today: '+extrapData[n-1]+' µg/L';
+            ctx.font='bold 10px sans-serif';
+            ctx.textAlign='right';
+            var elw=ctx.measureText(exLabel).width;
+            ctx.fillStyle='rgba(255,255,255,0.9)';
+            ctx.fillRect(exX-elw-10,exY-20,elw+8,15);
+            ctx.fillStyle='#3b82f6';
+            ctx.fillText(exLabel,exX-6,exY-9);
+            ctx.restore();
+          }
+        }
+      }
+    }]
+  });
 }
 
 
@@ -3454,9 +3935,227 @@ function copyGPLetter(){
 }
 
 function printLetter(){
-  showTab('export');
-  updateLetterPreview();
-  setTimeout(function(){window.print();},300);
+  var letter;
+  try{letter=buildGPLetter();}catch(e){alert('Please complete the balance model inputs first.');return;}
+
+  // Convert \n-delimited body to HTML with paragraph breaks and section headings
+  function lineIsHeading(l){
+    return l.length>0&&l.length<=55&&!/[.,!?;:]$/.test(l)&&!/\d/.test(l);
+  }
+  var bodyHtml='<p style="margin:0 0 8px"><strong>Subject: '+letter.subject+'</strong></p><p style="margin:0 0 14px">&nbsp;</p>';
+  letter.body.split('\n').forEach(function(line){
+    if(line===''||line.trim()===''){
+      bodyHtml+='<p style="margin:0 0 10px">&nbsp;</p>';
+    } else if(lineIsHeading(line)){
+      bodyHtml+='<h3 style="font-size:11pt;font-weight:700;margin:18px 0 4px;color:#1e293b">'+line+'</h3>';
+    } else {
+      bodyHtml+='<p style="margin:0 0 6px">'+line+'</p>';
+    }
+  });
+
+  // Charts — same canvas set as generateReport() minus tips/tol which are not GP-relevant
+  var chartDefs=[
+    {id:'ferrChart',label:'Balance model — projected ferritin trajectory'},
+    {id:'historicChart',label:'Historic ferritin record'},
+    {id:'stratFerritinChart',label:'Strategy — projected treatment plan'},
+    {id:'ivChart',label:'Infusion planner'}
+  ];
+  var chartsHtml='';
+  chartDefs.forEach(function(cd){
+    var cv=document.getElementById(cd.id);
+    var warnHtml='<p style="color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;padding:8px 12px;font-size:10pt;margin:0 0 10px">⚠️ '+cd.label+' — chart not available. Visit the relevant tab first, then reprint.</p>';
+    if(!cv){chartsHtml+=warnHtml;return;}
+    try{
+      var src=cv.toDataURL('image/png');
+      if(!src||src==='data:,'){chartsHtml+=warnHtml;return;}
+      chartsHtml+='<div style="margin-bottom:18px;page-break-inside:avoid">'
+        +'<div style="font-size:9.5pt;font-weight:500;color:#64748b;margin-bottom:5px">'+cd.label+'</div>'
+        +'<img src="'+src+'" style="width:100%;max-width:680px;display:block;border:1px solid #e2e8f0;border-radius:4px">'
+        +'</div>';
+    }catch(e){chartsHtml+=warnHtml;}
+  });
+
+  var win=window.open('','_blank','width=800,height=900');
+  if(!win)return;
+  win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Fe+ GP Letter</title>'
+    +'<style>body{font-family:Georgia,serif;font-size:11pt;line-height:1.8;padding:2cm;max-width:760px;margin:0 auto;color:#1e293b}strong{font-weight:600}h3{page-break-after:avoid}</style>'
+    +'</head><body>'
+    +bodyHtml
+    +(chartsHtml?'<div style="margin-top:36px;border-top:2px solid #cbd5e1;padding-top:20px"><h2 style="font-size:13pt;font-weight:700;color:#1e3a5f;margin:0 0 16px">Supporting charts</h2>'+chartsHtml+'</div>':'')
+    +'</body></html>');
+  win.document.close();
+  win.focus();
+  setTimeout(function(){win.print();win.close();},400);
+}
+
+function generateReport(){
+  var c=lc||{};
+  var today=new Date();
+  var fmtD=function(d){return d?d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'—';};
+  var addMonths=function(d,n){var r=new Date(d);r.setMonth(r.getMonth()+n);return r;};
+
+  function row(label,val,note){
+    return '<tr>'
+      +'<td style="padding:5px 16px 5px 0;color:#475569;width:44%;vertical-align:top;font-size:10.5pt">'+label+'</td>'
+      +'<td style="padding:5px 0;vertical-align:top">'
+        +'<span style="font-weight:500;color:#1e293b;font-size:10.5pt">'+val+'</span>'
+        +(note?'<div style="font-size:8.5pt;color:#94a3b8;margin-top:2px;font-style:italic">'+note+'</div>':'')
+      +'</td>'
+      +'</tr>';
+  }
+  function tbl(rows){return '<table style="width:100%;border-collapse:collapse;margin-bottom:4px">'+rows+'</table>';}
+  function sec(title,body){return '<div style="margin-bottom:28px"><h2 style="font-size:13pt;font-weight:700;color:#1e3a5f;border-bottom:2px solid #cbd5e1;padding-bottom:5px;margin:0 0 12px">'+title+'</h2>'+body+'</div>';}
+
+  // 1 — Header
+  var html='<div style="border-bottom:3px solid #1e3a5f;padding-bottom:14px;margin-bottom:28px">'
+    +'<div style="font-size:18pt;font-weight:700;color:#1e3a5f;margin-bottom:4px">Iron Balance Report</div>'
+    +'<div style="font-size:10.5pt;color:#64748b">Generated: '+fmtD(today)+'</div>'
+    +'<div style="font-size:9.5pt;color:#94a3b8;margin-top:6px">This report is a GP discussion aid, not medical advice.</div>'
+    +'</div>';
+
+  // 2 — Iron Status Summary
+  var allAct=actuals.filter(function(a){return a.ferritin>0&&a.date;}).sort(function(a,b){return parseDate(b.date)-parseDate(a.date);});
+  var latestAct=allAct[0];
+  var latestStr=latestAct?latestAct.ferritin+' µg/L ('+fmtD(parseDate(latestAct.date))+')':'—';
+  var condMap={endo:'Endometriosis',adeno:'Adenomyosis',coeliac:'Coeliac disease','oral-intol':'Oral iron intolerance',pcos:'PCOS',vegan:'Vegan / vegetarian'};
+  var activeConds=Object.keys(conds).filter(function(k){return conds[k];}).map(function(k){return condMap[k]||k;});
+  var flowDesc=['Very light','Light','Moderate','Heavy','Very heavy'][Math.min(c.flowIdx||2,4)];
+  html+=sec('Iron Status Summary',tbl(
+    row('Start ferritin (model input)',(c.startFerr||'—')+' µg/L','The ferritin level used as the starting point for all projections in the balance model')
+    +row('Latest actual result',latestStr,'Most recent blood test result entered in the Results tab')
+    +(c.meno==='post'?row('Menopausal status','Post-menopausal','Menstrual blood loss not included; basal losses only'):'')
+    +row('Conditions flagged',activeConds.length?activeConds.join(', '):'None flagged','Conditions that may affect iron absorption, loss, or interpretation of ferritin levels')
+    +(c.meno!=='post'?row('Menstrual blood loss',c.mlPerCycle?(c.mlPerCycle+' ml/cycle · flow: '+flowDesc):'—','Estimated blood volume lost per cycle; each ml of blood contains approximately 0.5 mg elemental iron'):'')
+    +(c.meno!=='post'?row('Monthly menstrual iron loss',(c.mgLostMonth||'—')+' mg/month ('+(c.mgLostMonth?rnd(c.mgLostMonth/30*10)/10:'—')+' mg/day)','Iron lost each month through menstruation; primary driver of iron deficiency in pre-menopausal women'):'')
+  ));
+
+  // 3 — Balance Model
+  var traj='Approximately stable';
+  if(c.netMonth<-3)traj='Depleting';else if(c.netMonth>3)traj='Replenishing';
+  html+=sec('Balance Model',tbl(
+    row('Basal losses (non-menstrual)',(c.basalLossMonth||30)+' mg/month','Background iron lost daily through gut cell shedding, skin, and minor bleeding — approximately 1 mg/day in all individuals')
+    +row('Total losses',(c.totalLossMonth||'—')+' mg/month','Basal losses plus menstrual losses; total iron that must be replaced each month to maintain stores')
+    +row('Diet contribution',(c.dietNetMonth||0)+' mg/month absorbed','Estimated elemental iron absorbed from food alone, adjusted for dietary enhancers and inhibitors present')
+    +row('Supplement contribution',(c.suppDose?rnd((c.mgAbsMonth||0)-(c.dietNetMonth||0))+' mg/month absorbed':'None'),'Iron absorbed from oral supplements; actual absorption varies with gut health, formulation, and food/drink timing')
+    +row('Total absorbed',(c.mgAbsMonth||'—')+' mg/month','Combined diet and supplement iron absorbed; compared against total losses to derive the net monthly balance')
+    +row('Net monthly balance',(c.netMonth>=0?'+':'')+c.netMonth+' mg/month','Positive = iron stores building; negative = stores depleting; ±3 mg/month is approximately stable')
+    +row('Ferritin change rate',(c.ferrChangePM>=0?'+':'')+rnd(c.ferrChangePM||0)+' µg/L/month','Estimated ferritin change per month; ~8 mg of stored iron corresponds to approximately 1 µg/L ferritin')
+    +row('12-month projection',rnd(c.m12ferr||c.startFerr||0)+' µg/L','Projected ferritin in 12 months if current dose, diet, and losses remain unchanged')
+    +row('Trajectory',traj,'Based on net balance: above +3 mg/month = replenishing; below −3 mg/month = depleting; between = stable')
+  ));
+
+  // 4 — Strategy
+  if(window.strategyScenario){
+    var sc=window.strategyScenario;
+    var tr=window._ctipData&&window._ctipData.target?window._ctipData.target:{};
+    var iv=window._ctipData&&window._ctipData.ivCalc?window._ctipData.ivCalc:null;
+    var fm2=c.suppFormulation||{name:'Ferrous sulfate 200mg',abbr:'sulfate'};
+    var uLbl=fm2.abbr==='bisglycinate'?'capsule':'tablet';
+    var tpw=window._ctipData&&window._ctipData.tabsWeek?window._ctipData.tabsWeek.tpw:null;
+    var targetDate='—';
+    if(tr.noIVMonths>0){targetDate=fmtD(addMonths(today,tr.noIVMonths))+' (~'+tr.noIVMonths+' month'+(tr.noIVMonths===1?'':'s')+')';}
+    else if(tr.noIVMonths===0){targetDate='Already at target';}
+    else if(tr.noIVMonths===null){targetDate='Not achievable at current rate — dose increase indicated';}
+    var stratRows=
+       row('Recovery target',sc.target+' µg/L','The ferritin level at which iron stores are considered adequately replenished for this plan')
+      +row('IV iron (if planned)',sc.ivDose>0?sc.ivDose+' mg infusion':'None planned','IV iron bypasses gut absorption and rapidly raises stores; oral supplementation then maintains levels thereafter')
+      +(tpw?row('Maintenance dose',tpw+' '+fm2.name+' '+uLbl+(tpw===1?'':'s')+'/week','Estimated dose required to maintain ferritin at or above target once the recovery phase is complete'):'')
+      +row('Estimated time to target (oral)',targetDate,'Based on current net iron balance and start ferritin; assumes current dose and absorption rate are sustained');
+    if(iv&&iv.ivMonths!=null&&iv.ivMonths>0){
+      stratRows+=row('Further oral period after infusion',iv.ivMonths+' month'+(iv.ivMonths===1?'':'s')+' (by ~'+fmtD(addMonths(today,iv.ivMonths))+')', 'Additional oral supplementation needed after IV iron to reach the ferritin target');
+    }
+    if(tolState&&tolState['altday']){stratRows+=row('Dosing schedule','Alternate-day dosing selected','Every-other-day dosing reduces side effects; hepcidin reset improves net absorption by ~10% versus daily dosing');}
+    html+=sec('Strategy',tbl(stratRows));
+  }
+
+  // 5 — Diet optimisation (conditional: only if tips are active)
+  var anyTipsOn=Object.keys(tipsDietState).some(function(k){return tipsDietState[k];});
+  if(anyTipsOn){
+    var tipRows=DIET_TIPS.filter(function(t){return tipsDietState[t.id];}).map(function(t){
+      return row(t.label,'Active',t.desc||'');
+    }).join('');
+    html+=sec('Diet optimisation (active strategies)',tbl(tipRows));
+  }
+
+  // 6 — Tolerability adjustments (conditional: only if options are active)
+  var anyTolOn=Object.keys(tolState).some(function(k){return tolState[k];});
+  if(anyTolOn){
+    var tolRows=TOL_OPTIONS.filter(function(o){return tolState[o.id];}).map(function(o){
+      return row(o.label,'Selected',o.note||'');
+    }).join('');
+    html+=sec('Tolerability adjustments',tbl(tolRows));
+  }
+
+  // 7 — Infusion Planner
+  var valInf=(historicInfusions||[]).filter(function(h){return h.date;});
+  if(valInf.length){
+    var lastInf=valInf.slice().sort(function(a,b){return parseDate(b.date)-parseDate(a.date);})[0];
+    html+=sec('Infusion Planner',tbl(
+      row('Most recent infusion',fmtD(parseDate(lastInf.date)),'Date of the last IV iron infusion recorded')
+      +row('Dose',lastInf.dose+' mg','IV iron dose administered; typical therapeutic doses range from 500–1000 mg depending on calculated deficit')
+    ));
+  }
+
+  // 8 — Charts
+  var instMap={
+    'ferrChart':window.chartInst,
+    'actualHistChart':window.actualHistChartInst,
+    'historicChart':window.historicChartInst,
+    'stratFerritinChart':window.stratChartInst,
+    'ivChart':window.ivChartInst,
+    'cycleChart':window.cycleChartInst,
+    'tipsChart':window.tipsChartInst,
+    'tolChart':window.tolChartInst
+  };
+  var chartDefs=[
+    {id:'ferrChart',label:'Balance model — projected ferritin trajectory'},
+    {id:'actualHistChart',label:'Historic ferritin record'},
+    {id:'historicChart',label:'Historic ferritin record (pre-plan)'},
+    {id:'stratFerritinChart',label:'Strategy — projected treatment plan'},
+    {id:'ivChart',label:'Infusion planner — trajectory'},
+    {id:'cycleChart',label:'Cycle analysis — within-cycle ferritin variation'},
+    {id:'tipsChart',label:'Diet tips — absorption comparison'},
+    {id:'tolChart',label:'Tolerability — formulation comparison'}
+  ];
+  var chartsHtml='';
+  chartDefs.forEach(function(cd){
+    var inst=instMap[cd.id];
+    var cv=document.getElementById(cd.id);
+    var warnHtml='<div style="margin-bottom:12px;font-size:9.5pt;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;padding:8px 12px">⚠️ <strong>'+cd.label+'</strong> — chart not available. Visit the relevant tab first, then re-export.</div>';
+    if(!cv||!inst){chartsHtml+=warnHtml;return;}
+    try{
+      var src=cv.toDataURL('image/png');
+      if(!src||src==='data:,'){chartsHtml+=warnHtml;return;}
+      var legend='';
+      if(inst.data&&inst.data.datasets){
+        var lgItems=inst.data.datasets.filter(function(ds){return ds.label;}).map(function(ds){
+          var col=typeof ds.borderColor==='string'?ds.borderColor:'#94a3b8';
+          return '<span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px">'
+            +'<span style="display:inline-block;width:18px;height:3px;background:'+col+';border-radius:2px;flex-shrink:0"></span>'
+            +'<span>'+ds.label+'</span></span>';
+        });
+        if(lgItems.length) legend='<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:7px;font-size:9pt;color:#475569">'+lgItems.join('')+'</div>';
+      }
+      chartsHtml+='<div style="margin-bottom:18px;page-break-inside:avoid">'
+        +'<div style="font-size:9.5pt;font-weight:500;color:#64748b;margin-bottom:5px">'+cd.label+'</div>'
+        +'<img src="'+src+'" style="width:100%;max-width:680px;display:block;border:1px solid #e2e8f0;border-radius:4px">'
+        +legend
+        +'</div>';
+    }catch(e){chartsHtml+=warnHtml;}
+  });
+  if(chartsHtml) html+=sec('Charts',chartsHtml);
+
+  // 9 — Footer
+  html+='<div style="margin-top:32px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:9pt;color:#94a3b8;text-align:center">Generated by Iron Balance Tool · Not a substitute for clinical judgement</div>';
+
+  var win=window.open('','_blank','width=860,height=960');
+  if(!win)return;
+  win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Iron Balance Report</title>'
+    +'<style>body{font-family:Georgia,serif;font-size:11pt;line-height:1.7;padding:2cm;max-width:800px;margin:0 auto;color:#1e293b}@media print{body{padding:1.5cm}}</style>'
+    +'</head><body>'+html+'</body></html>');
+  win.document.close();
+  win.focus();
+  setTimeout(function(){win.print();},400);
 }
 
 function generateNHSHelperText(){
@@ -3722,6 +4421,8 @@ function applySessionData(d){
   if(d.tolState) tolState=Object.assign({},d.tolState);
   if(typeof d.tipsInflamOn!=='undefined'){tipsInflamOn=!!d.tipsInflamOn;var ti=document.getElementById('tog-tips-inflam');if(ti)ti.classList.toggle('on',tipsInflamOn);}
   if(d.sliders){Object.keys(d.sliders).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.sliders[id];});}
+  // stratIVDose verified: saved in buildSessionData() selects array; restored here correctly.
+  // calcStrategy() re-runs when user visits strategy tab, or immediately if already active.
   if(d.selects){Object.keys(d.selects).forEach(function(id){var el=document.getElementById(id);if(el)el.value=d.selects[id];});}
   if(d.formulation){var fEl=document.querySelector('input[name="formulation"][value="'+d.formulation+'"]');if(fEl)fEl.checked=true;}
   if(d.periodMgmt){var pmEl=document.getElementById('periodMgmt');if(pmEl)pmEl.value=d.periodMgmt;}
@@ -3774,6 +4475,44 @@ function discardDraft(){
 function hideDraftBanner(){
   var banner=document.getElementById('draftBanner');
   if(banner) banner.style.display='none';
+}
+
+function exportSession(){
+  var data=buildSessionData();
+  delete data.name;
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  var today=new Date();
+  var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  a.href=url;a.download='iron-session-'+ds+'.json';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+function importSession(){
+  document.getElementById('importFileInput').click();
+}
+
+function handleImportFile(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var parsed=JSON.parse(e.target.result);
+      if(!parsed.sliders||!parsed.actuals){alert('Invalid session file — please use a file exported from this app.');input.value='';return;}
+      applySessionData(parsed);
+      var today=new Date();
+      var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+      document.getElementById('sessionName').value='Imported '+ds;
+      var msg=document.getElementById('copyMsg');
+      if(msg){msg.textContent='Session imported';msg.style.display='block';setTimeout(function(){msg.style.display='none';msg.textContent='Copied to clipboard';},2500);}
+    }catch(err){
+      alert('Could not read file — please check it is a valid session export.');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
 }
 
 function saveSession(){
@@ -5199,17 +5938,22 @@ function calcStrategy(){
       var oiBoost=(sm===1&&ivDose>0)?scenIVBoost:0;
       next=prev+oiBoost+maintenanceRate;
     } else {
-      var boost=(sm===1&&!reachedTarget)?scenIVBoost:0;
-      if(!reachedTarget){
-        next=prev+boost+recoveryRate;
-        if(next>=target){reachedTarget=true;next=target;}
-      } else {
+      if(sm===1&&scenIVBoost>0){
+        // IV spike month — no oral rate this month
+        next=prev+scenIVBoost;
+      } else if(scenIVBoost>0){
+        // Post-spike months: maintenance rate holds wherever IV landed
         next=prev+maintenanceRate;
+      } else {
+        // Oral-only recovery: climb at recoveryRate until target, then hold
+        next=prev+recoveryRate;
+        if(next>=target){reachedTarget=true;next=target;}
+        if(reachedTarget) next=target;
       }
     }
     scenLine.push(Math.max(FERRITIN_FLOOR,+next.toFixed(1)));
   }
-  window.strategyScenario={ferrLine:scenLine,ivDose:ivDose,target:target};
+  window.strategyScenario={ferrLine:scenLine,ivDose:ivDose,target:target,ivBoostVal:scenIVBoost};
 
   // Trigger chart redraw to show the new scenario line
   if(!window._inCalcDerived&&!window._inCalcStrategy){window._inCalcStrategy=true;calc();window._inCalcStrategy=false;}
@@ -5232,12 +5976,15 @@ function renderStratChart(){
   var hasStop=false;
   if(lc&&lc.startFerr){
     var postStopRate=(lc.dietNetMonth-lc.totalLossMonth)/8;
-    var ivBoost=sc.ivDose>0?mg2f(sc.ivDose):0;
-    var stopArr=[lc.startFerr];var stReached=lc.startFerr>=sc.target;
+    var ivBoost=sc.ivBoostVal||0;
+    var stopArr=[lc.startFerr];
     for(var m=1;m<months;m++){
-      var sPrev=stopArr[m-1],sBoost=(m===1&&!stReached)?ivBoost:0,sNext;
-      if(!stReached){sNext=sPrev+sBoost+(lc.ferrChangePM||0);if(sNext>=sc.target){stReached=true;sNext=sc.target;}}
-      else{sNext=sPrev+postStopRate;}
+      var sPrev=stopArr[m-1],sNext;
+      if(m===1&&ivBoost>0){
+        sNext=sPrev+ivBoost;
+      } else {
+        sNext=sPrev+postStopRate;
+      }
       stopArr.push(Math.max(0,+sNext.toFixed(1)));
     }
     ds.push({label:'If supplementation stops after reaching target',data:stopArr,borderColor:'#f97316',fill:false,tension:.3,pointRadius:3,borderWidth:2,borderDash:[3,2]});
@@ -5252,11 +5999,15 @@ function renderStratChart(){
   var yMax=Math.ceil(Math.max(_peak,100,_maxD*1.10)/10)*10||150;
   var plateauStartIdx=-1;
   for(var pi=0;pi<sc.ferrLine.length;pi++){if(sc.ferrLine[pi]>=sc.target){plateauStartIdx=pi;break;}}
-  // Infusion spike range — population-level 3–7 µg/L per 100mg (conditional on ivDose > 0)
+  // Green band: uncertainty range around calcIVBoost estimate
+  // Lower bound: 70% of boost (conservative — more diversion than expected)
+  // Upper bound: 115% of boost (optimistic — less diversion than expected)
+  // Both capped at clinically plausible maximum of startFerr + ivDose/8
   var ivDoseS=sc.ivDose||0;
   var startFerrS=sc.ferrLine[0];
-  var spikeLow=ivDoseS>0?rnd(startFerrS+ivDoseS/100*3):null;
-  var spikeHigh=ivDoseS>0?rnd(startFerrS+ivDoseS/100*7):null;
+  var ivBoostEst=sc.ivBoostVal||0;
+  var spikeLow=ivDoseS>0?rnd(Math.max(startFerrS,startFerrS+ivBoostEst*0.70)):null;
+  var spikeHigh=ivDoseS>0?rnd(Math.min(startFerrS+ivDoseS/8,startFerrS+ivBoostEst*1.15)):null;
   if(ivDoseS>0) window._ctipData.stratSpike={ivDose:ivDoseS,startFerr:startFerrS,spikeLow:spikeLow,spikeHigh:spikeHigh};
   if(stratChartInst)stratChartInst.destroy();
   stratChartInst=new Chart(canvas,{type:'line',data:{labels:labels,datasets:ds},
@@ -5275,9 +6026,9 @@ function renderStratChart(){
         var bandRight=Math.min(ca2.right,x0+tickW*0.7);
         var yBandTop=Math.min(ca2.bottom,Math.max(ca2.top,yScale2.getPixelForValue(spikeHigh)));
         var yBandBot=Math.min(ca2.bottom,Math.max(ca2.top,yScale2.getPixelForValue(spikeLow)));
-        cx2.fillStyle='rgba(20,184,166,0.13)';
+        cx2.fillStyle='rgba(34,197,94,0.13)';
         cx2.fillRect(bandLeft,yBandTop,bandRight-bandLeft,yBandBot-yBandTop);
-        cx2.setLineDash([4,3]);cx2.strokeStyle='rgba(20,184,166,0.55)';cx2.lineWidth=1;
+        cx2.setLineDash([4,3]);cx2.strokeStyle='rgba(34,197,94,0.55)';cx2.lineWidth=1;
         cx2.beginPath();cx2.moveTo(bandLeft,yBandTop);cx2.lineTo(bandRight,yBandTop);cx2.stroke();
         cx2.beginPath();cx2.moveTo(bandLeft,yBandBot);cx2.lineTo(bandRight,yBandBot);cx2.stroke();
         cx2.setLineDash([]);cx2.restore();
@@ -5289,13 +6040,20 @@ function renderStratChart(){
           cx.save();
           var x0L=xScale.getPixelForValue(0),x1L=xScale.getPixelForValue(1);
           var bandRightL=Math.min(ca.right,x0L+(x1L-x0L)*0.7);
-          var yMidBand=(yScale.getPixelForValue(spikeLow)+yScale.getPixelForValue(spikeHigh))/2;
-          yMidBand=Math.min(ca.bottom-4,Math.max(ca.top+8,yMidBand));
-          cx.fillStyle='rgba(13,148,136,0.9)';cx.font='bold 8px sans-serif';cx.textAlign='left';
-          var labelX=bandRightL+5;
-          if(labelX+110>ca.right)labelX=bandRightL-5,cx.textAlign='right';
-          cx.fillText('Spike: '+spikeLow+'–'+spikeHigh+' µg/L',labelX,yMidBand-5);
-          cx.fillText('(infusion range)',labelX,yMidBand+6);
+          var yBandTopPx=Math.min(ca.bottom,Math.max(ca.top,yScale.getPixelForValue(spikeHigh)));
+          cx.save();
+          cx.font='bold 8px sans-serif';
+          var line1='Post-infusion range';
+          var line2=spikeLow+'–'+spikeHigh+' µg/L (est.)';
+          var lw=Math.max(cx.measureText(line1).width,cx.measureText(line2).width);
+          var labelX=Math.min(bandRightL+5,ca.right-lw-8);
+          var ty=Math.max(ca.top+4,yBandTopPx-28);
+          cx.fillStyle='rgba(255,255,255,0.88)';
+          cx.fillRect(labelX-2,ty,lw+6,26);
+          cx.fillStyle='rgba(21,128,61,0.9)';
+          cx.textAlign='left';
+          cx.fillText(line1,labelX,ty+11);
+          cx.fillText(line2,labelX,ty+22);
           cx.restore();
         }
         // Orange line decline rate label
@@ -5325,20 +6083,36 @@ function renderStratChart(){
         cx.fillStyle='#3b82f6';cx.font='bold 9px sans-serif';cx.textAlign='center';
         cx.fillText('Phase 2: maintained at target',xPx,yPx);
         cx.restore();
+        // Threshold inline labels
+        var thresholds=[
+          {val:50,color:'#16a34a',text:'Sufficiency (50 µg/L)'},
+          {val:30,color:'#dc2626',text:'Depleted stores (30 µg/L)'}
+        ];
+        thresholds.forEach(function(th){
+          var yPxTh=yScale.getPixelForValue(th.val);
+          if(yPxTh<ca.top||yPxTh>ca.bottom)return;
+          cx.save();
+          cx.font='10px sans-serif';cx.textAlign='right';
+          var tw=cx.measureText(th.text).width;
+          var tx=ca.right-6;var ty=yPxTh-5;
+          cx.fillStyle='rgba(255,255,255,0.85)';
+          cx.fillRect(tx-tw-4,ty-11,tw+8,15);
+          cx.fillStyle=th.color;
+          cx.fillText(th.text,tx,ty);
+          cx.restore();
+        });
       }
     }]});
   var legend=document.getElementById('stratChartLegend');
   if(legend)legend.innerHTML=
     li('#3b82f6','Blue — Treatment plan')+
-    (ivDoseS>0?li('rgba(20,184,166,0.7)','Teal band — Expected infusion spike range (<span data-ctip="ctip-strat-spike">'+spikeLow+'–'+spikeHigh+'</span> µg/L)'):'')+
-    (hasStop?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'')+
-    li('#16a34a','Green dashed — Sufficiency threshold (50 µg/L) — symptoms unlikely above this level',true)+
-    li('#dc2626','Red dashed — Depleted stores (30 µg/L) — treatment indicated in symptomatic patients (BSH 2021)',true);
+    (ivDoseS>0?li('rgba(34,197,94,0.7)','Green band — Estimated post-infusion range ('+spikeLow+'–'+spikeHigh+' µg/L) — blue line shows best single estimate; actual value requires a blood test'):'')+
+    (hasStop?li('#f97316','Orange dashed — If supplementation stops after reaching target',true):'');
   // Commentary box
   var commEl2=document.getElementById('stratChartCommentary');
   if(commEl2){
     if(ivDoseS>0){
-      commEl2.innerHTML='The shaded region shows the expected ferritin range in the weeks following a <strong><span data-ctip="ctip-post-iv">'+ivDoseS+'mg IV infusion</span></strong> — estimated <strong><span data-ctip="ctip-strat-spike">'+spikeLow+'–'+spikeHigh+' µg/L</span></strong> based on published response rates of 3–7 µg/L per 100mg of IV iron. Individual response varies significantly and cannot be predicted without post-infusion blood testing. The model targets <strong><span data-ctip="ctip-recovery-target">'+sc.target+' µg/L</span></strong> as the treatment goal and plans maintenance supplementation to hold this level — the infusion spike is shown for context only and does not affect the modelled trajectory lines.';
+      commEl2.innerHTML='The green shaded band shows the estimated post-infusion ferritin range based on the model\'s efficiency-adjusted estimate with ±uncertainty range — estimated <strong>'+spikeLow+'–'+spikeHigh+' µg/L</strong> for a '+ivDoseS+'mg infusion. The blue line uses the model\'s best single estimate based on your pre-infusion ferritin and known diversion at low levels. <strong>The actual post-infusion value is unknown without a blood test 4–6 weeks after infusion.</strong>';
       commEl2.style.display='';
     } else {
       commEl2.style.display='none';
