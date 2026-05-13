@@ -2470,35 +2470,65 @@ function renderBalChartE(){
         +'</ul>';
       var gapUgPM=+(rate-obsRate).toFixed(1);
       var gapMgPM=+(gapUgPM*8).toFixed(1);
-      var VERY_HEAVY_LOSS_MG_MONTH=40*12/13;
-      var extraLossMg=Math.max(0,Math.min(20,VERY_HEAVY_LOSS_MG_MONTH-(lc.mgLostMonth||0)));
-      var extraLossUg=+(extraLossMg/8).toFixed(1);
+      var explainItems=[];
+      var explainedUg=0;
+      var flowIdx=lc.flowIdx||0;
+      var flowLabels=['Very light','Light','Medium','Heavy','Very heavy'];
+      if(flowIdx<4){
+        var vhMgMonth=+(flowMl[4]*(lc.bleedDays/5)*0.5*(30/lc.cycleLen)).toFixed(1);
+        var extraLossMg=Math.max(0,+(vhMgMonth-(lc.mgLostMonth||0)).toFixed(1));
+        var extraLossUg=+(extraLossMg/8).toFixed(1);
+        if(extraLossUg>0.2){
+          explainItems.push('Heavier blood loss than entered (flow currently set to '
+            +(flowLabels[flowIdx]||'Medium')+' — if actually heavier, losses could be '
+            +'up to <strong>'+extraLossUg+' µg/L/mo more</strong> than modelled)');
+          explainedUg=+(explainedUg+extraLossUg).toFixed(1);
+        }
+      } else {
+        explainItems.push('Flow is already set to Very heavy — higher blood loss cannot explain this gap. This factor has been ruled out.');
+      }
       var suppAbsNow=Math.max(0,+((lc.mgAbsMonth||0)-(lc.dietNetMonth||0)).toFixed(1));
-      var halfDoseReductionMg=+(suppAbsNow*0.5).toFixed(1);
-      var halfDoseReductionUg=+(halfDoseReductionMg/8).toFixed(1);
-      var explainedUg=+(extraLossUg+halfDoseReductionUg).toFixed(1);
+      if(suppAbsNow>2){
+        var halfDoseReductionUg=+(suppAbsNow*0.5/8).toFixed(1);
+        explainItems.push('Lower supplement adherence (dose entered as '+(lc.suppDose||0)+'mg/day'
+          +' — if actually taking ~'+Math.round((lc.suppDose||0)/2)+'mg/day, this could account for '
+          +'up to <strong>'+halfDoseReductionUg+' µg/L/mo</strong> of the gap)');
+        explainedUg=+(explainedUg+halfDoseReductionUg).toFixed(1);
+      } else {
+        explainItems.push('No significant supplement entered — reduced adherence cannot explain this gap. Diet-only absorption is already fully modelled.');
+      }
       var remainingGapUg=+(gapUgPM-explainedUg).toFixed(1);
+      var fullyExplained=remainingGapUg<=1.5;
       var explainBlock='<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0">'
         +'<strong>Could this gap be explained by known factors?</strong>'
         +'<p style="margin:6px 0">The gap between your modelled and observed rate is '
         +'<strong>'+gapUgPM+' µg/L/mo ('+gapMgPM+' mg/mo)</strong>. '
-        +'Plausible variations in your inputs could account for:</p>'
+        +'Here is what the known input variables can and cannot explain:</p>'
         +'<ul style="margin:4px 0 6px 16px;padding:0">'
-        +'<li>Higher blood loss (e.g. heavier flow than entered): up to −'+extraLossUg+' µg/L/mo</li>'
-        +'<li>Lower adherence (e.g. taking half your supplement dose): up to −'+halfDoseReductionUg+' µg/L/mo</li>'
+        +explainItems.map(function(s){return '<li style="margin-bottom:4px">'+s+'</li>';}).join('')
         +'</ul>'
-        +'<p style="margin:4px 0">Together these could account for up to <strong>'+explainedUg+' µg/L/mo</strong> of the gap. ';
-      if(remainingGapUg<=1){
-        explainBlock+='This fully explains the observed difference — '
-          +'review whether your flow and supplement adherence inputs accurately '
-          +'reflect your real situation before looking further.';
+        +'<p style="margin:4px 0">';
+      if(explainedUg>0.2&&fullyExplained){
+        explainBlock+='The plausible input variations above could account for up to '
+          +'<strong>'+explainedUg+' µg/L/mo</strong> — broadly explaining the gap. '
+          +'Before investigating further, review whether your entered flow and '
+          +'supplement dose accurately reflect your real pattern. '
+          +'A third blood test would confirm whether this trend is real.';
+      } else if(explainedUg>0.2&&!fullyExplained){
+        explainBlock+='These variations could account for up to '
+          +'<strong>'+explainedUg+' µg/L/mo</strong>, leaving a residual gap of '
+          +'<strong>'+remainingGapUg+' µg/L/mo</strong> unexplained by input variations alone. '
+          +'If your inputs accurately reflect your real situation, this persistent gap may '
+          +'suggest reduced iron absorption — for example due to gut inflammation, '
+          +'coeliac disease, or H. pylori infection. Worth discussing with your GP '
+          +'if the pattern is confirmed across multiple results.';
       } else {
-        explainBlock+='This still leaves an unexplained gap of approximately '
-          +'<strong>'+remainingGapUg+' µg/L/mo</strong>. '
-          +'If your inputs are accurate, this residual gap may suggest '
-          +'reduced iron absorption — for example due to gut inflammation, '
-          +'coeliac disease, or H. pylori — worth discussing with your GP '
-          +'if the pattern persists across multiple results.';
+        explainBlock+='Based on your inputs, the known plausible explanations (flow, adherence) '
+          +'have been largely ruled out. A gap of <strong>'+gapUgPM+' µg/L/mo</strong> despite '
+          +'these factors being at their limits suggests a real difference between your modelled '
+          +'and actual absorption. This may indicate reduced iron absorption — for example due to '
+          +'gut inflammation, coeliac disease, or H. pylori infection. '
+          +'Worth discussing with your GP if confirmed across multiple results.';
       }
       explainBlock+='</p></div>';
       commentary+=explainBlock;

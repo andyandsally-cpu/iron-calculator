@@ -4,156 +4,115 @@
 READY
 
 ## Goal
-Add narrative explanation to the Balance Model tab explaining why
-iron balance is difficult for pre-menopausal women, using the user's
-actual calculated values from lc to make it personal.
+Rewrite the explainBlock section in renderBalChartE() to be contextually
+aware of user inputs. Only show factors that are actually plausible given
+what the user has entered. Fix the "fully explains" threshold logic.
 
-## Where to insert
-Grep for `id="balanceChartSection"`. Insert immediately BEFORE this
-div.
+## Location: lines 2363–2396
 
-## Implementation
-This is a dynamically rendered div — populate it from lc values in
-a new function `renderBalanceNarrative()` called at the end of calc()
-alongside renderBalanceCharts().
-
-### HTML placeholder — insert before balanceChartSection:
-```html
-<div id="balanceNarrative" style="margin-bottom:20px"></div>
-```
-
-### New function renderBalanceNarrative()
-Add near renderBalanceCharts(). Call it at end of calc() after
-renderBalanceCharts().
+## Replace lines 2363–2396 entirely with:
 
 ```javascript
-function renderBalanceNarrative(){
-  var el=document.getElementById('balanceNarrative');
-  if(!el||!lc)return;
+var gapUgPM=+(rate-obsRate).toFixed(1);
+var gapMgPM=+(gapUgPM*8).toFixed(1);
 
-  var losses=lc.totalLossMonth;
-  var dietAbs=lc.dietNetMonth;
-  var suppAbs=Math.max(0,lc.mgAbsMonth-dietAbs);
-  var totalAbs=lc.mgAbsMonth;
-  var net=lc.netMonth;
-  var mlPerCycle=lc.mlPerCycle||0;
-  var mgLostMonth=lc.mgLostMonth||0;
-  var basal=lc.basalLossMonth||30;
-  var dietSufficient=dietAbs>=losses;
-  var suppSufficient=!dietSufficient&&totalAbs>=losses;
-  var netUg=+(net/8).toFixed(1);
+// Build contextually relevant explanation items
+var explainItems=[];
+var explainedUg=0;
 
-  // Opening explanation — always shown
-  var html='<div style="padding:16px 20px;background:#f8fafc;'
-    +'border-radius:10px;border:1px solid #e2e8f0;font-size:13px;'
-    +'line-height:1.8;color:#1e293b;margin-bottom:4px">'
-    +'<div style="font-weight:700;font-size:14px;margin-bottom:10px;'
-    +'color:#1e3a5f">Why is iron balance so difficult for women '
-    +'with periods?</div>'
-    +'<p style="margin:0 0 10px">Iron deficiency is the most common '
-    +'nutritional deficiency in pre-menopausal women — and the reason '
-    +'is straightforward once you see the numbers. '
-    +'<strong>Menstrual blood loss is the dominant driver.</strong> '
-    +'Each millilitre of blood contains approximately 0.5mg of iron. ';
-
-  if(mgLostMonth>0){
-    html+='Based on your cycle settings, you are losing approximately '
-      +'<strong>'+rnd(mgLostMonth)+' mg of iron per month</strong> '
-      +'through bleeding alone. ';
+// Flow: only suggest if NOT already at very heavy (flowIdx < 4)
+var flowIdx=lc.flowIdx||0;
+if(flowIdx<4){
+  var VERY_HEAVY_MG=+(flowMl[4]*(lc.bleedDays/5)*0.5*(30/lc.cycleLen)).toFixed(1);
+  var extraLossMg=Math.max(0,+(VERY_HEAVY_MG-(lc.mgLostMonth||0)).toFixed(1));
+  var extraLossUg=+(extraLossMg/8).toFixed(1);
+  if(extraLossUg>0.2){
+    explainItems.push('Heavier blood loss than entered (e.g. flow intensity set to '
+      +(['Very light','Light','Medium','Heavy'][flowIdx])+' — if actually heavier, '
+      +'losses could be up to <strong>'+extraLossUg+' µg/L/mo more</strong> than modelled)');
+    explainedUg=+(explainedUg+extraLossUg).toFixed(1);
   }
-
-  html+='On top of this, everyone loses around <strong>'+rnd(basal)
-    +' mg/month</strong> through skin cell shedding, gut lining '
-    +'renewal, and sweat — these are unavoidable background losses. '
-    +'Your total monthly iron requirement is therefore '
-    +'<strong>'+rnd(losses)+' mg/month</strong>.</p>'
-
-    +'<p style="margin:0 0 10px">A good diet provides real help — '
-    +'your current diet setting contributes an estimated '
-    +'<strong>'+rnd(dietAbs)+' mg/month</strong> of absorbable iron. ';
-
-  if(dietSufficient){
-    html+='<strong style="color:#16a34a">This covers your losses '
-      +'— diet alone appears sufficient for your situation.</strong> '
-      +'Your low monthly losses mean a good diet can realistically '
-      +'keep stores stable without supplementation. This is not the '
-      +'case for most pre-menopausal women, but with low bleeding '
-      +'and a good omnivore diet it is achievable.</p>';
-  } else {
-    var gap=rnd(losses-dietAbs);
-    html+='This leaves a gap of approximately <strong>'+gap
-      +' mg/month</strong> that diet alone cannot bridge. ';
-
-    if(suppAbs>0){
-      html+='Your current supplement contributes a further '
-        +'<strong>'+rnd(suppAbs)+' mg/month</strong> absorbed, ';
-      if(suppSufficient){
-        html+='which <strong style="color:#16a34a">closes the gap'
-          +' — your current plan covers losses.</strong></p>';
-      } else {
-        var remaining=rnd(losses-totalAbs);
-        html+='leaving a remaining deficit of <strong>'
-          +remaining+' mg/month</strong> ('
-          +Math.abs(netUg)+' µg/L/month). '
-          +'The Strategy tab shows what dose would close this gap.</p>';
-      }
-    } else {
-      html+='Without supplementation, stores are likely depleting '
-        +'at approximately <strong>'+Math.abs(netUg)
-        +' µg/L per month</strong>. The Strategy tab shows what '
-        +'would be needed to correct this.</p>';
-    }
-  }
-
-  // Why diet alone is often not enough — shown when diet insufficient
-  if(!dietSufficient){
-    html+='<p style="margin:0 0 10px;color:#475569;font-size:12px">'
-      +'<strong>Why can\'t diet alone fix this?</strong> '
-      +'Even a good omnivore diet only delivers ~30–40mg of absorbable '
-      +'iron per month. When monthly losses exceed this — as they do '
-      +'for most women with moderate to heavy periods — the shortfall '
-      +'is simply too large for food alone to cover. '
-      +'This is not a failure of diet quality; it is a mismatch '
-      +'between the scale of menstrual loss and the limits of '
-      +'intestinal iron absorption. Supplementation bridges this gap '
-      +'reliably and safely.</p>';
-  }
-
-  // Recovery gets easier note — shown when currently supplementing
-  // and ferritin is below target
-  if(suppAbs>0&&lc.startFerr<50){
-    html+='<p style="margin:0;color:#475569;font-size:12px">'
-      +'<strong>Recovery then maintenance — why it gets easier:</strong> '
-      +'During recovery (Phase 1), your supplement needs to cover '
-      +'losses AND rebuild depleted stores — a larger ask. '
-      +'Once ferritin reaches a healthy level, Phase 2 maintenance '
-      +'only needs to replace monthly losses. This is a much smaller '
-      +'target, which is why the maintenance dose is lower than the '
-      +'recovery dose. Think of it as filling an empty tank versus '
-      +'simply keeping a full one topped up.</p>';
-  }
-
-  html+='</div>';
-  el.innerHTML=html;
+} else {
+  // Already at very heavy — can't explain by flow
+  explainItems.push('Flow is already set to Very heavy — higher blood loss cannot '
+    +'explain this gap. This factor has been ruled out.');
 }
+
+// Supplement adherence: only suggest if user has a supplement entered
+var suppAbsNow=Math.max(0,+((lc.mgAbsMonth||0)-(lc.dietNetMonth||0)).toFixed(1));
+if(suppAbsNow>2){
+  var halfDoseReductionUg=+(suppAbsNow*0.5/8).toFixed(1);
+  explainItems.push('Lower supplement adherence (e.g. taking half the entered dose '
+    +lc.suppDose+'mg/day — if actually taking ~'+Math.round(lc.suppDose/2)+'mg/day, '
+    +'this could account for up to <strong>'+halfDoseReductionUg+' µg/L/mo</strong> of the gap)');
+  explainedUg=+(explainedUg+halfDoseReductionUg).toFixed(1);
+} else if(suppAbsNow<=2){
+  explainItems.push('No significant supplement entered — reduced adherence cannot '
+    +'explain this gap. Diet-only absorption is already fully modelled.');
+}
+
+var remainingGapUg=+(gapUgPM-explainedUg).toFixed(1);
+var fullyExplained=remainingGapUg<=1.5;
+
+var explainBlock='<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0">'
+  +'<strong>Could this gap be explained by known factors?</strong>'
+  +'<p style="margin:6px 0">The gap between your modelled and observed rate is '
+  +'<strong>'+gapUgPM+' µg/L/mo ('+gapMgPM+' mg/mo)</strong>. '
+  +'Here is what the known input variables can and cannot explain:</p>'
+  +'<ul style="margin:4px 0 6px 16px;padding:0">'
+  +explainItems.map(function(s){return '<li style="margin-bottom:4px">'+s+'</li>';}).join('')
+  +'</ul>'
+  +'<p style="margin:4px 0">';
+
+if(explainedUg>0.2&&fullyExplained){
+  explainBlock+='The plausible input variations above could account for up to '
+    +'<strong>'+explainedUg+' µg/L/mo</strong> — broadly explaining the gap. '
+    +'Before investigating further, review whether your entered flow and '
+    +'supplement dose accurately reflect your real pattern. '
+    +'A third blood test would confirm whether this trend is real.';
+} else if(explainedUg>0.2&&!fullyExplained){
+  explainBlock+='These variations could account for up to '
+    +'<strong>'+explainedUg+' µg/L/mo</strong>, leaving a residual gap of '
+    +'<strong>'+remainingGapUg+' µg/L/mo</strong> unexplained by input variations alone. '
+    +'If your inputs accurately reflect your real situation, this persistent gap may '
+    +'suggest reduced iron absorption — for example due to gut inflammation, '
+    +'coeliac disease, or H. pylori infection. Worth discussing with your GP '
+    +'if the pattern is confirmed across multiple results.';
+} else {
+  // Known factors ruled out — gap likely real
+  explainBlock+='Based on your inputs, the known plausible explanations (flow, adherence) '
+    +'have been largely ruled out. A gap of <strong>'+gapUgPM+' µg/L/mo</strong> despite '
+    +'these factors being at their limits suggests a real difference between your modelled '
+    +'and actual absorption. This may indicate reduced iron absorption — for example due to '
+    +'gut inflammation, coeliac disease, or H. pylori infection. '
+    +'Worth discussing with your GP if confirmed across multiple results.';
+}
+
+explainBlock+='</p></div>';
+commentary+=explainBlock;
 ```
 
+## Key improvements
+- Flow factor: skipped entirely if already at Very heavy; shown with
+  actual current flow label if lower
+- Supplement factor: uses actual lc.suppDose value in the text;
+  skipped with explanation if no supplement entered
+- "Fully explains" threshold raised from <=1 to <=1.5 µg/L/mo
+- When all factors are ruled out, says so directly rather than
+  showing −0 values
+- All bullet text is specific to user's actual inputs
+
 ## Files involved
-- index.html — one HTML placeholder div before balanceChartSection,
-  new renderBalanceNarrative() function, one call in calc()
+- index.html — renderBalChartE() lines 2363–2396 only
 
 ## Out of scope
-- Any calculation logic
-- Any other tab or function
-
-## Clinical language
-All text framed as estimates. No prescriptive language.
-Uses "appears sufficient", "likely depleting", "estimated".
+- Commentary branches for rateDiff>1.5 or within ±1.5 — do not touch
+- Any other function or tab
 
 ## Acceptance checks
-- Narrative renders on Balance Model tab using live lc values
-- Updates when sliders change
-- Diet sufficient message shown correctly for pill/light flow users
-- Gap and deficit figures match the Iron Balance scales below
-- Recovery note shown only when supplementing AND ferritin < 50
+- Very heavy flow user: flow bullet says "ruled out", no −0 shown
+- User with no supplement: supplement bullet says "cannot explain",
+  no meaningless reduction shown
+- Remaining gap calculation uses correct threshold (1.5 not 1.0)
+- Text references actual user values (flow label, dose in mg)
 - No paywall / DEV_MODE regression
