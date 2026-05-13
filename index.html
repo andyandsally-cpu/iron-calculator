@@ -4675,8 +4675,9 @@ function handleImportFile(input){
       if(!parsed.sliders||!parsed.actuals){alert('Invalid session file — please use a file exported from this app.');input.value='';return;}
       applySessionData(parsed);
       var today=new Date();
-      var ds=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
-      document.getElementById('sessionName').value='Imported '+ds;
+      var ddmmyy=String(today.getDate()).padStart(2,'0')+String(today.getMonth()+1).padStart(2,'0')+String(today.getFullYear()).slice(2);
+      var baseName=(parsed.name||'').trim();
+      document.getElementById('sessionName').value=(baseName?baseName+'_':'')+'import_'+ddmmyy;
       var msg=document.getElementById('copyMsg');
       if(msg){msg.textContent='Session imported';msg.style.display='block';setTimeout(function(){msg.style.display='none';msg.textContent='Copied to clipboard';},2500);}
     }catch(err){
