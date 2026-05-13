@@ -408,7 +408,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
     <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">÷ 8 — ferritin ↔ iron stores</strong><p style="margin:4px 0 0">1 µg/L of serum ferritin = approximately 8 mg of stored iron. This is a validated clinical conversion used in haematology to estimate total body iron stores from a blood test result.</p></div>
     <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">0.5 mg/ml — iron in menstrual blood</strong><p style="margin:4px 0 0">Menstrual blood contains approximately 0.5 mg of iron per ml of blood lost. Used to convert your flow volume inputs into monthly iron loss in mg.</p></div>
     <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">30 mg/month — basal iron loss</strong><p style="margin:4px 0 0">The average person loses approximately 1 mg of iron per day through skin cell shedding, gut lining renewal, and sweat. This is a fixed baseline used in clinical iron balance models.</p></div>
-    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">4% — dietary absorption baseline</strong><p style="margin:4px 0 0">The average absorption rate for non-haem iron from a typical Western diet. Haem iron (meat) absorbs at 15–35%; non-haem at 1–10% depending on diet and gut health. 4% is the standard clinical estimate for a mixed diet.</p></div>
+    <div><strong style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1e293b">8% / 4% — dietary absorption rate</strong><p style="margin:4px 0 0">For omnivore diets, a blended rate of ~8% is used, reflecting haem iron (~40% of intake, absorbing at ~20%) combined with non-haem iron (~60%, absorbing at ~5%). For vegan/vegetarian diets, 4% is used (non-haem only). Source: WHO/FAO 2004; Hallberg &amp; Hultén 2000.</p></div>
   </div>
   <p style="font-size:11px;color:#94a3b8;margin:10px 0 0;line-height:1.5">Ferritin is reported by blood tests in µg/L. The mg figure shown in brackets throughout this tool is an approximate modelled estimate of stored iron — not a separate blood test result.</p>
 </details>
@@ -674,6 +674,7 @@ span[data-ctip]{border-bottom:1px dotted #94a3b8}
 </div>
 </div>
 
+<div id="balanceNarrative" style="margin-bottom:20px"></div>
 <div id="balanceChartSection">
   <div style="margin-bottom:24px">
     <div class="st">Iron balance</div>
@@ -1742,7 +1743,8 @@ function calc(){
   var dietIronMgDay=conds.vegan?dietQmg[dietQIdx]*0.75:dietQmg[dietQIdx];
   // Net dietary contribution to stores (iron-deficient state boosts absorption;
   // net = gross absorbed minus basal utilisation; calibrated to ~10-15mg/month for average diet)
-  var dietNetMonth=dietIronMgDay*0.04*30; // ~4% of total dietary iron reaches stores net (Camaschella NEJM 2015)
+  var dietAbsRate=conds.vegan?0.04:0.08; // omnivore blended haem+non-haem ~8%; vegan non-haem 4% (WHO/FAO 2004; Hallberg & Hultén 2000)
+  var dietNetMonth=dietIronMgDay*dietAbsRate*30;
 
   var suppDose=gv('suppDose');
   var startFerr=gv('startFerr')||25;
@@ -2056,6 +2058,7 @@ function calc(){
   }
   autoSave();
   renderBalanceCharts();
+  renderBalanceNarrative();
   // Render cycle chart on actuals tab if visible
   if(document.getElementById('tab-actual').style.display!=='none') renderCycleChart();
 }
@@ -2105,6 +2108,111 @@ function updateAnalysis(){
   box.className='analysis-box'+(severity==='danger'?' danger-box':severity==='warn'?' warn':severity==='balanced'?' balanced':severity==='positive'?' positive':'');
   title.textContent=severity==='danger'?'Clinical analysis — action recommended':severity==='warn'?'Clinical analysis — monitor closely':severity==='balanced'?'✅ Clinical analysis — balanced':'↑ Clinical analysis — iron stores rising';
   text.innerHTML=lines.map(function(l){return '<p style="margin-bottom:6px">'+l+'</p>';}).join('');
+}
+
+function renderBalanceNarrative(){
+  var el=document.getElementById('balanceNarrative');
+  if(!el||!lc)return;
+
+  var losses=lc.totalLossMonth;
+  var dietAbs=lc.dietNetMonth;
+  var suppAbs=Math.max(0,lc.mgAbsMonth-dietAbs);
+  var totalAbs=lc.mgAbsMonth;
+  var net=lc.netMonth;
+  var mgLostMonth=lc.mgLostMonth||0;
+  var basal=lc.basalLossMonth||30;
+  var dietSufficient=dietAbs>=losses;
+  var suppSufficient=!dietSufficient&&totalAbs>=losses;
+  var netUg=+(net/8).toFixed(1);
+
+  var html='<div style="padding:16px 20px;background:#f8fafc;'
+    +'border-radius:10px;border:1px solid #e2e8f0;font-size:13px;'
+    +'line-height:1.8;color:#1e293b;margin-bottom:4px">'
+    +'<div style="font-weight:700;font-size:14px;margin-bottom:10px;'
+    +'color:#1e3a5f">Why is iron balance so difficult for women '
+    +'with periods?</div>'
+    +'<p style="margin:0 0 10px">Iron deficiency is the most common '
+    +'nutritional deficiency in pre-menopausal women — and the reason '
+    +'is straightforward once you see the numbers. '
+    +'<strong>Menstrual blood loss is the dominant driver.</strong> '
+    +'Each millilitre of blood contains approximately 0.5mg of iron. ';
+
+  if(mgLostMonth>0){
+    html+='Based on your cycle settings, you are losing approximately '
+      +'<strong>'+rnd(mgLostMonth)+' mg of iron per month</strong> '
+      +'through bleeding alone. ';
+  }
+
+  html+='On top of this, everyone loses around <strong>'+rnd(basal)
+    +' mg/month</strong> through skin cell shedding, gut lining '
+    +'renewal, and sweat — these are unavoidable background losses. '
+    +'Your total monthly iron requirement is therefore '
+    +'<strong>'+rnd(losses)+' mg/month</strong>.</p>'
+
+    +'<p style="margin:0 0 10px">A good diet provides real help — '
+    +'your current diet setting contributes an estimated '
+    +'<strong>'+rnd(dietAbs)+' mg/month</strong> of absorbable iron. ';
+
+  if(dietSufficient){
+    html+='<strong style="color:#16a34a">This covers your losses '
+      +'— diet alone appears sufficient for your situation.</strong> '
+      +'Your low monthly losses mean a good diet can realistically '
+      +'keep stores stable without supplementation. This is not the '
+      +'case for most pre-menopausal women, but with low bleeding '
+      +'and a good omnivore diet it is achievable.</p>';
+  } else {
+    var gap=rnd(losses-dietAbs);
+    html+='This leaves a gap of approximately <strong>'+gap
+      +' mg/month</strong> that diet alone cannot bridge. ';
+
+    if(suppAbs>0){
+      html+='Your current supplement contributes a further '
+        +'<strong>'+rnd(suppAbs)+' mg/month</strong> absorbed, ';
+      if(suppSufficient){
+        html+='which <strong style="color:#16a34a">closes the gap'
+          +' — your current plan covers losses.</strong></p>';
+      } else {
+        var remaining=rnd(losses-totalAbs);
+        html+='leaving a remaining deficit of <strong>'
+          +remaining+' mg/month</strong> ('
+          +Math.abs(netUg)+' µg/L/month). '
+          +'The Strategy tab shows what dose would close this gap.</p>';
+      }
+    } else {
+      html+='Without supplementation, stores are likely depleting '
+        +'at approximately <strong>'+Math.abs(netUg)
+        +' µg/L per month</strong>. The Strategy tab shows what '
+        +'would be needed to correct this.</p>';
+    }
+  }
+
+  if(!dietSufficient){
+    html+='<p style="margin:0 0 10px;color:#475569;font-size:12px">'
+      +'<strong>Why can\'t diet alone fix this?</strong> '
+      +'Even a good omnivore diet only delivers ~30–40mg of absorbable '
+      +'iron per month. When monthly losses exceed this — as they do '
+      +'for most women with moderate to heavy periods — the shortfall '
+      +'is simply too large for food alone to cover. '
+      +'This is not a failure of diet quality; it is a mismatch '
+      +'between the scale of menstrual loss and the limits of '
+      +'intestinal iron absorption. Supplementation bridges this gap '
+      +'reliably and safely.</p>';
+  }
+
+  if(suppAbs>0&&lc.startFerr<50){
+    html+='<p style="margin:0;color:#475569;font-size:12px">'
+      +'<strong>Recovery then maintenance — why it gets easier:</strong> '
+      +'During recovery (Phase 1), your supplement needs to cover '
+      +'losses AND rebuild depleted stores — a larger ask. '
+      +'Once ferritin reaches a healthy level, Phase 2 maintenance '
+      +'only needs to replace monthly losses. This is a much smaller '
+      +'target, which is why the maintenance dose is lower than the '
+      +'recovery dose. Think of it as filling an empty tank versus '
+      +'simply keeping a full one topped up.</p>';
+  }
+
+  html+='</div>';
+  el.innerHTML=html;
 }
 
 function renderBalanceCharts(){
@@ -2360,6 +2468,40 @@ function renderBalChartE(){
         +'<li>An absorption issue such as coeliac disease or gut inflammation could be reducing how much iron reaches your stores — worth discussing with your GP if the gap persists</li>'
         +'<li>Note: this is based on only two results — a third test would give a much more reliable trend</li>'
         +'</ul>';
+      var gapUgPM=+(rate-obsRate).toFixed(1);
+      var gapMgPM=+(gapUgPM*8).toFixed(1);
+      var VERY_HEAVY_LOSS_MG_MONTH=40*12/13;
+      var extraLossMg=Math.max(0,Math.min(20,VERY_HEAVY_LOSS_MG_MONTH-(lc.mgLostMonth||0)));
+      var extraLossUg=+(extraLossMg/8).toFixed(1);
+      var suppAbsNow=Math.max(0,+((lc.mgAbsMonth||0)-(lc.dietNetMonth||0)).toFixed(1));
+      var halfDoseReductionMg=+(suppAbsNow*0.5).toFixed(1);
+      var halfDoseReductionUg=+(halfDoseReductionMg/8).toFixed(1);
+      var explainedUg=+(extraLossUg+halfDoseReductionUg).toFixed(1);
+      var remainingGapUg=+(gapUgPM-explainedUg).toFixed(1);
+      var explainBlock='<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0">'
+        +'<strong>Could this gap be explained by known factors?</strong>'
+        +'<p style="margin:6px 0">The gap between your modelled and observed rate is '
+        +'<strong>'+gapUgPM+' µg/L/mo ('+gapMgPM+' mg/mo)</strong>. '
+        +'Plausible variations in your inputs could account for:</p>'
+        +'<ul style="margin:4px 0 6px 16px;padding:0">'
+        +'<li>Higher blood loss (e.g. heavier flow than entered): up to −'+extraLossUg+' µg/L/mo</li>'
+        +'<li>Lower adherence (e.g. taking half your supplement dose): up to −'+halfDoseReductionUg+' µg/L/mo</li>'
+        +'</ul>'
+        +'<p style="margin:4px 0">Together these could account for up to <strong>'+explainedUg+' µg/L/mo</strong> of the gap. ';
+      if(remainingGapUg<=1){
+        explainBlock+='This fully explains the observed difference — '
+          +'review whether your flow and supplement adherence inputs accurately '
+          +'reflect your real situation before looking further.';
+      } else {
+        explainBlock+='This still leaves an unexplained gap of approximately '
+          +'<strong>'+remainingGapUg+' µg/L/mo</strong>. '
+          +'If your inputs are accurate, this residual gap may suggest '
+          +'reduced iron absorption — for example due to gut inflammation, '
+          +'coeliac disease, or H. pylori — worth discussing with your GP '
+          +'if the pattern persists across multiple results.';
+      }
+      explainBlock+='</p></div>';
+      commentary+=explainBlock;
     } else if(rateDiff>1.5){
       commentary='<strong>Your observed trend is better than the model predicts</strong> — '
         +'the orange line is rising faster (or declining more slowly) than the blue line suggests. '
